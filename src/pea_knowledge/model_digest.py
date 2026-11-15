@@ -15,6 +15,8 @@ What keeps this safe to run on text a stranger wrote:
   the start of a transcript line, later than the chapter before; a moment is checked like a quote;
 - every text and list has a limit; the brief form and the recap cards are rebuilt from the checked full form;
 - anything short of a whole, valid digest means the extractive digest is used instead;
+- topics, when the config asks for them, are no part of the digest: the model may only name ids of the vocabulary, and
+  each is kept only when the checked digest text bears it out (topics.py); otherwise the keyword tagger decides;
 - tokens and money are capped per item and per run, and what was spent is written to the health report.
 
 The key is read from the environment and is sent only to the configured server.
@@ -61,6 +63,21 @@ line where that part starts}.
 "moments": up to 5 objects {"text": a passage worth saving, copied character for character from one transcript line (at most 220)}.
 Write in the language of the transcript. No links, no markup, no line breaks inside a value."""
 
+# Asked for only when the config switches model topics on. The ids are listed in the request and are the only ones read.
+TOPICS = """
+
+Also add the member "topics": up to 4 objects {"id": one of the topic ids listed below, exactly as written, "score": a number \
+from 0 to 1 saying how much of the episode is about it}, best first. Only topics the episode is really about; an empty list \
+when none fits. Never an id that is not in this list:
+%s"""
+
+
+def system_prompt(vocabulary=None):
+    """What the model is told. With a vocabulary, also the request for topics and the ids it may choose from."""
+    if not vocabulary:
+        return SYSTEM
+    return SYSTEM + TOPICS % "\n".join("%s: %s" % (t["id"], t["label"]) for t in vocabulary)
+
 
 class Settings:
     """The `model` part of config/sources.json, with its defaults. Prices are US dollars per million tokens."""
@@ -79,6 +96,7 @@ class Settings:
         self.max_cost_usd_per_run = float(raw.get("max_cost_usd_per_run", 0.25))
         self.price_input = float(raw.get("price_per_million_input_usd", 0.10))
         self.price_output = float(raw.get("price_per_million_output_usd", 0.40))
+        self.topics = bool(raw.get("topics", False))      # the model may also propose topics (checked; off by default)
         self.key = environment.get(KEY_VARIABLE, "")
 
     def cost(self, prompt_tokens, completion_tokens):
@@ -130,7 +148,7 @@ def transcript_prompt(transcript, limit):
     return "\n".join(lines)
 
 
-def call(settings, title, prompt, notes=""):
+def call(settings, title, prompt, notes="", system=SYSTEM):
     """One chat completion. Returns (the answer text, prompt tokens, completion tokens, cost or None). Raises ModelError."""
     parts = urlsplit(settings.base_url)
     local = parts.hostname in ("127.0.0.1", "localhost", "::1")
@@ -138,7 +156,7 @@ def call(settings, title, prompt, notes=""):
         raise ModelError("the model server must be reached over https")
     body = json.dumps({
         "model": settings.model,
-        "messages": [{"role": "system", "content": SYSTEM},
+        "messages": [{"role": "system", "content": system},
                      {"role": "user", "content": "Episode title (untrusted): %s\n\nShow notes (untrusted): %s\n\nTranscript (untrusted):\n%s" % (title, notes or "none", prompt)}],
         "temperature": 0,
         "max_tokens": settings.max_output_tokens,
@@ -196,8 +214,10 @@ def _seconds(value):
     return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
-def shape(answer, source, item, transcript):
-    """The model's answer turned into a digest, or ValueError. See the top of this file for what is checked."""
+def shape(answer, source, item, transcript, proposed=None):
+    """The model's answer turned into a digest, or ValueError. See the top of this file for what is checked. The
+    answer's `topics`, when it has any, are put in the list `proposed` as they came: they are no part of the digest
+    and are checked by the tagger (topics.Tagger.from_model) before anything is made of them."""
     text = answer.strip()
     if text.startswith("```"):
         text = re.sub(r"^```[a-zA-Z]*\s*|\s*```$", "", text)
@@ -318,6 +338,8 @@ def shape(answer, source, item, transcript):
         raise ValueError("fewer than %d usable talking points" % dg.POINTS_WANTED)
     if len(d["starters"]) < 1:
         raise ValueError("no usable conversation starter")
+    if proposed is not None and isinstance(raw.get("topics"), list):
+        proposed.append(raw["topics"][:16])
     d["quality"]["grade"] = "partial" if transcript.partial is not None else "full"
     d["quality"]["notes"] = ["written by a model from the transcript; quotes, names and numbers were checked against it"]
     if transcript.partial is not None:
@@ -325,19 +347,21 @@ def shape(answer, source, item, transcript):
     return dg.enforce(d)
 
 
-def digest(settings, budget, source, item, transcript, excerpt_budget=None, earlier=(), log=None):
-    """A model digest of `item`, or None when the extractive one must be used (the reason goes to `log`)."""
+def digest(settings, budget, source, item, transcript, excerpt_budget=None, earlier=(), log=None, vocabulary=None, proposed=None):
+    """A model digest of `item`, or None when the extractive one must be used (the reason goes to `log`). With a
+    `vocabulary` the model is also asked for topics; what it answers is appended to the list `proposed`, unchecked."""
     log = log or (lambda message: None)
     prompt = transcript_prompt(transcript, settings.max_input_chars)
     notes = textrules.shorten(item.get("notes", "") or item.get("summary", ""), settings.max_notes_chars)
-    refused = budget.allows(len(SYSTEM) + len(prompt) + len(notes) + len(item["title"]) + 120)
+    system = system_prompt(vocabulary)
+    refused = budget.allows(len(system) + len(prompt) + len(notes) + len(item["title"]) + 120)
     if refused:
         budget.skipped_for_budget += 1
         log("model digest skipped for %s: %s" % (item["id"], refused))
         return None
     budget.calls += 1
     try:
-        answer, prompt_tokens, completion_tokens, cost = call(settings, item["title"], prompt, notes)
+        answer, prompt_tokens, completion_tokens, cost = call(settings, item["title"], prompt, notes, system)
     except ModelError as e:
         budget.fell_back += 1
         budget.cost_usd += 0.0
@@ -347,7 +371,7 @@ def digest(settings, budget, source, item, transcript, excerpt_budget=None, earl
     budget.completion_tokens += completion_tokens
     budget.cost_usd += cost if cost is not None else settings.cost(prompt_tokens, completion_tokens)
     try:
-        d = shape(answer, source, item, transcript)
+        d = shape(answer, source, item, transcript, proposed if vocabulary else None)
     except ValueError as e:
         budget.fell_back += 1
         log("model digest rejected for %s: %s" % (item["id"], e))

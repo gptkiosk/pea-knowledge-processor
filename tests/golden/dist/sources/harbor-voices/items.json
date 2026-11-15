@@ -1,6 +1,6 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "items": [
     {
       "bytes": 8854,
@@ -11,7 +11,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-12-8a5b8d3d14.digest.json",
-        "sha256": "a9f49b779c5d450ca303a5af6cb9a3e5b977a7fee3241f2b2200c1bd1b6b459b"
+        "sha256": "46d2522045619acc1ba2338d25d1b36f137e5b1bfea5632db0d44a1eb057cdb2"
       },
       "duration_seconds": 540,
       "id": "2026-11-12-8a5b8d3d14",
@@ -25,6 +25,8 @@
       ],
       "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
       "title": "Who counts the ships at Grey Point?",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -47,7 +49,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-11-667e185af5.digest.json",
-        "sha256": "2915a72eace3938dc6efe269d4803e5f24868a4ed606b64f8b8aa85418a378c5"
+        "sha256": "0fcf39ab465ef997838062328e83231269835f1a5101bfccb7647dc6282276da"
       },
       "duration_seconds": 540,
       "id": "2026-11-11-667e185af5",
@@ -61,6 +63,8 @@
       ],
       "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
       "title": "The lamp that the Grey Point Trust would not replace",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -83,7 +87,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-10-1aeaa6c4e4.digest.json",
-        "sha256": "36f30a21c29c22d6c1e7731e63b05c68e0424088bf2c3fdde0e3adea6d10df44"
+        "sha256": "cc4bfa50bb7f840df0e92bb925ad8faa01a143b94d02b3c9a0e5f716c3d91364"
       },
       "duration_seconds": 540,
       "id": "2026-11-10-1aeaa6c4e4",
@@ -97,6 +101,8 @@
       ],
       "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
       "title": "A ledger since 1902",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -119,7 +125,7 @@
         "grade": "headline",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-09-95827ccd6b.digest.json",
-        "sha256": "01bb5a047021364f000bfed5eba6b57b22af7d82e7b48406a3b1cd9637c8895c"
+        "sha256": "a8b7ef2551ab11124f2e2e2bf4020cf1978bc6cc0fef40ba5fc65cdf1ea751c2"
       },
       "duration_seconds": 300,
       "id": "2026-11-09-95827ccd6b",
@@ -130,6 +136,8 @@
       "tags": [],
       "teaser": "A short edition.",
       "title": "An edition without a transcript",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,

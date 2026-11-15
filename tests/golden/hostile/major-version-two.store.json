@@ -4,7 +4,7 @@
   "generated_at": "2026-11-15T18:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "min_app_version": null,
   "sources": [
@@ -36,7 +36,7 @@
       "items_file": {
         "bytes": 4419,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "f11d9507aa0699a2e5944b1053e956520bdd317c82bf1b50fbe1f388f1afe229"
+        "sha256": "416c234604e73374a8b078043d1d5b6c807d4f1031d9a171f2a4cf5d789d34db"
       },
       "kind": "podcast",
       "language": "en",
@@ -92,7 +92,7 @@
       "items_file": {
         "bytes": 7408,
         "path": "sources/tide-tables/items.json",
-        "sha256": "70c003cd7c84d440d711a29adad68fc1ebba55e2ec43d4657a6f194a21280129"
+        "sha256": "c82859081438fe37d445fc4476b19a74007772df141c602e74f18535e38919cb"
       },
       "kind": "podcast",
       "language": "en",
@@ -145,7 +145,7 @@
       "items_file": {
         "bytes": 2012,
         "path": "sources/quay-notes/items.json",
-        "sha256": "9b0be878c7b03cc2f0c22a3552fa50d4cb76924efb7736ce53c4956f7e9ab932"
+        "sha256": "f77aacbaca9d70437556070ee3b4e887d0425c16e79a918a44ba44b6ab001bb3"
       },
       "kind": "podcast",
       "language": "en",
@@ -197,7 +197,7 @@
       "items_file": {
         "bytes": 3614,
         "path": "sources/port-gazette/items.json",
-        "sha256": "bf2572cf3242f3a84040004af34eda2f250ef4ddb1199a87e123b23f578ed0da"
+        "sha256": "8298e0a5694cc27b878fa46ced5c7dfce8f26021af042fa387565e3548d96e42"
       },
       "kind": "news",
       "language": "en",
@@ -250,7 +250,7 @@
       "items_file": {
         "bytes": 4415,
         "path": "sources/lamp-room/items.json",
-        "sha256": "26bf468778ae93f5282c24496e0aabc4ee44506e9023f7d4f9b8761bf9af1014"
+        "sha256": "655073ab23341b274d3685c520e5c9c4e08147a50e75501a4bf11f5ce1d64e91"
       },
       "kind": "podcast",
       "language": "en",

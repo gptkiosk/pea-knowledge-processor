@@ -44,6 +44,13 @@
         "business",
         "news"
       ],
+      "topics": [
+        "ai",
+        "technology",
+        "business",
+        "economics-finance",
+        "policy-law"
+      ],
       "icon": {
         "symbol": "sparkles",
         "colour": "indigo"
@@ -91,6 +98,12 @@
         "podcasting",
         "technology",
         "open-standards"
+      ],
+      "topics": [
+        "podcasting-media",
+        "technology",
+        "software-engineering",
+        "crypto"
       ],
       "icon": {
         "symbol": "waveform",
@@ -140,6 +153,11 @@
         "business",
         "startups",
         "software"
+      ],
+      "topics": [
+        "startups-investing",
+        "business",
+        "software-engineering"
       ],
       "icon": {
         "symbol": "briefcase",
@@ -195,6 +213,11 @@
         "how-to",
         "audio"
       ],
+      "topics": [
+        "podcasting-media",
+        "creativity-writing",
+        "technology"
+      ],
       "icon": {
         "symbol": "microphone",
         "colour": "green"
@@ -246,6 +269,14 @@
         "business",
         "self-improvement"
       ],
+      "topics": [
+        "health",
+        "business",
+        "self-improvement",
+        "mental-health",
+        "relationships-family",
+        "wellness"
+      ],
       "icon": {
         "symbol": "people",
         "colour": "purple"
@@ -295,6 +326,13 @@
         "startups",
         "careers",
         "business"
+      ],
+      "topics": [
+        "business",
+        "startups-investing",
+        "leadership-management",
+        "careers-work",
+        "technology"
       ],
       "icon": {
         "symbol": "briefcase",
@@ -347,6 +385,11 @@
         "technology",
         "true-stories"
       ],
+      "topics": [
+        "security-privacy",
+        "technology",
+        "policy-law"
+      ],
       "icon": {
         "symbol": "shield",
         "colour": "red"
@@ -397,6 +440,14 @@
         "science",
         "careers"
       ],
+      "topics": [
+        "ai",
+        "policy-law",
+        "philosophy",
+        "careers-work",
+        "science",
+        "world-news"
+      ],
       "icon": {
         "symbol": "globe",
         "colour": "teal"
@@ -445,6 +496,11 @@
         "python",
         "software",
         "technology"
+      ],
+      "topics": [
+        "software-engineering",
+        "technology",
+        "ai"
       ],
       "icon": {
         "symbol": "chip",
@@ -495,6 +551,10 @@
         "software",
         "news"
       ],
+      "topics": [
+        "software-engineering",
+        "technology"
+      ],
       "icon": {
         "symbol": "chip",
         "colour": "blue"
@@ -543,6 +603,12 @@
         "engineering",
         "hardware",
         "software"
+      ],
+      "topics": [
+        "technology",
+        "software-engineering",
+        "business",
+        "history"
       ],
       "icon": {
         "symbol": "chip",
@@ -594,6 +660,11 @@
         "news",
         "business"
       ],
+      "topics": [
+        "podcasting-media",
+        "business",
+        "culture-media"
+      ],
       "icon": {
         "symbol": "newspaper",
         "colour": "grey"
@@ -644,6 +715,14 @@
         "technology",
         "history",
         "ai"
+      ],
+      "topics": [
+        "science",
+        "technology",
+        "ai",
+        "history",
+        "politics",
+        "philosophy"
       ],
       "icon": {
         "symbol": "people",

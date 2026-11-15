@@ -54,7 +54,11 @@
         },
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
-      }
+      },
+      "topics": [
+        "history",
+        "business"
+      ]
     },
     {
       "id": "tide-tables",
@@ -94,7 +98,11 @@
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
       },
-      "suggested_keep": 3
+      "suggested_keep": 3,
+      "topics": [
+        "history",
+        "environment-climate"
+      ]
     },
     {
       "id": "quay-notes",
@@ -133,7 +141,10 @@
         },
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
-      }
+      },
+      "topics": [
+        "business"
+      ]
     },
     {
       "id": "port-gazette",
@@ -172,7 +183,11 @@
         },
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
-      }
+      },
+      "topics": [
+        "politics",
+        "business"
+      ]
     },
     {
       "id": "lamp-room",
@@ -212,6 +227,10 @@
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
       },
+      "topics": [
+        "history",
+        "technology"
+      ],
       "transcript_page": {
         "from": "notes_link",
         "host": "lamp.example.org",

@@ -96,8 +96,12 @@ class OneRun(Base):
                 value = json.loads(data)
                 value["format_version"] = "1.0"
                 for item in value.get("items", []) if isinstance(value.get("items"), list) else []:
-                    item.pop("link_kind", None)
-                    item.pop("transcript_source", None)
+                    for key in ("link_kind", "transcript_source", "topics", "topics_by"):
+                        item.pop(key, None)
+                if path == "store.json":   # 1.0 had no vocabulary of topics
+                    value.pop("topics")
+                    for listing in value["sources"]:
+                        listing.pop("topics")
                 for key in ("link_kind", "guests", "mentioned_resources", "chapters", "snippable_moments", "recap_cards"):
                     value.pop(key, None)
                 if path == "state.json":   # 0.1.0 made its item keys another way, so none of them is the key of today
@@ -127,16 +131,19 @@ class OneRun(Base):
                     listing["avg_bytes"] = sum(i["bytes"] for i in index["items"]) // len(index["items"])
             with open(os.path.join(self.out, "store.json"), "w", encoding="utf-8") as f:
                 f.write(js.dumps(store))
-        self.assertEqual(self.codes(), [], "a 1.0 output is valid for a 1.1 reader")
+        self.assertEqual(self.codes(), [], "a 1.0 output is valid for a reader of 1.2")
         health = support.run(self.out, LATER)
         self.assertEqual(self.codes(), [])
-        self.assertTrue(all("link_kind" in i for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)))
+        self.assertTrue(all("link_kind" in i and "topics" in i for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)))
         self.assertEqual(health["totals"]["items"], 20)
 
     def test_the_store_listing_has_what_a_store_card_and_the_storage_choice_need(self):
         support.run(self.out)
         raw = support.tree(self.out)["store.json"]
-        self.assertLess(len(raw), 16_000, "the listing is small: the store screen needs nothing else")
+        listed = json.loads(raw)
+        vocabulary = listed.pop("topics")
+        self.assertLess(len(js.dumps(listed)), 16_000, "the listing is small: the store screen needs nothing else")
+        self.assertLess(len(js.dumps(vocabulary)), 16_000, "and so is the vocabulary of topics it carries since 1.2")
         tide = support.listing(self.out, "tide-tables")
         self.assertEqual((tide["state"], tide["freshness"], tide["purge"], tide["message"]), ("active", {"status": "fresh", "last_ok": None, "failed_runs": 0}, False, None))
         self.assertEqual((tide["item_count"], tide["latest_date"], tide["cadence"], tide["typical_duration_seconds"]), (6, "2026-11-12", "daily", 518))

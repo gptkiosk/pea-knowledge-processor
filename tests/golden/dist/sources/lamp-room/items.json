@@ -1,6 +1,6 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "items": [
     {
       "bytes": 8955,
@@ -11,7 +11,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-13-ff7b73e406.digest.json",
-        "sha256": "93cd6f01959de522f2c91407a39978d16a3c72faefe690562c37506a6e209834"
+        "sha256": "48a94e9e6e65e429c4f81514b6b1bb9e7df6380c4045b47d2c1c2fe6c7644443"
       },
       "duration_seconds": 518,
       "id": "2026-11-13-ff7b73e406",
@@ -22,6 +22,8 @@
       "tags": [],
       "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
       "title": "The night the lamp went out",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -58,7 +60,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-12-b9234208e9.digest.json",
-        "sha256": "18036f406d4798b306e892238915b16491b3a23a0810687024977ff751b3e465"
+        "sha256": "f928371d0eb0da90a77a6f55660f8c39df2ddd9e1fbf1d09f79ae6a020c462b3"
       },
       "duration_seconds": 518,
       "id": "2026-11-12-b9234208e9",
@@ -69,6 +71,8 @@
       "tags": [],
       "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
       "title": "A page that hides its orders",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -105,7 +109,7 @@
         "grade": "headline",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-11-23c6c8ee22.digest.json",
-        "sha256": "8b6a195736367cbd1e5abca4c3705eb8ec852180ae352314b44dd45fa68e9147"
+        "sha256": "acd6740e4788bd8c31ca32b473f2225f8da992b2c4c6e6fa332f3cf97a85a180"
       },
       "duration_seconds": 518,
       "id": "2026-11-11-23c6c8ee22",
@@ -116,6 +120,8 @@
       "tags": [],
       "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
       "title": "The keeper's winter",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -132,7 +138,7 @@
         "grade": "headline",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-10-05a3c75e16.digest.json",
-        "sha256": "456e910aa902c069a544d71bf8b65b6710c5127d9f6e319fb72cbbe443418c66"
+        "sha256": "ea40e7eed146f3fe3bb44571612958716243e447c3ddbf35a7c42eb720b35685"
       },
       "duration_seconds": 518,
       "id": "2026-11-10-05a3c75e16",
@@ -143,6 +149,8 @@
       "tags": [],
       "teaser": "Mara and Tobias in the lamp room at Grey Point. Sponsors: a sponsor",
       "title": "An episode whose transcript is not out yet",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,

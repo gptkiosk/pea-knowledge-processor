@@ -137,6 +137,58 @@
    "expect": "address",
    "kind": "store"
   },
+  "topics-as-they-should-be.store.json": {
+   "expect": "ok",
+   "kind": "store"
+  },
+  "topics-description-with-hidden-direction-marks.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "topics-id-not-plain.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-label-with-a-link.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "topics-same-id-twice.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "topics-source-has-seven.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-source-names-an-unknown-id.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "topics-source-names-one-without-a-vocabulary.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "topics-synonym-that-gives-orders.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-synonym-with-markup.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-thirteen-synonyms.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-too-many.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "topics-unknown-member-in-a-topic.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
   "unknown-member-newer-minor.store.json": {
    "expect": "ok",
    "kind": "store"

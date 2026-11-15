@@ -105,10 +105,10 @@ def walk_lifecycle(base, snapshot):
     broken = web_copy(os.path.join(base, "web-broken"), broken_tide)
     step = [0]
 
-    def go(config=None, web=WEB, days=0):
+    def go(change=None, web=WEB, days=0):
         now = T0 + datetime.timedelta(hours=6 * step[0], days=days)
         step[0] += 1
-        return run(out, now, config, web)
+        return run(out, now, load_config(chain(no_topics, change) if change else no_topics), web)
 
     def manual(sid, **values):
         def change(raw):
@@ -122,6 +122,10 @@ def walk_lifecycle(base, snapshot):
             for c in changes:
                 c(raw)
         return change
+
+    def no_topics(raw):
+        """The walk is about states, so it leaves the vocabulary out: each store.json stays small enough to read."""
+        raw["topics"] = {"enabled": False}
 
     def drop(sid):
         def change(raw):
@@ -138,16 +142,16 @@ def walk_lifecycle(base, snapshot):
     go()
     snapshot("04-recovered", out)
     pause = manual("harbor-voices", state="paused", message="Paused while the publisher changes its transcript format. What you have stays readable.")
-    go(load_config(pause))
+    go(pause)
     snapshot("05-paused-by-the-curator", out)
     withdraw = manual("quay-notes", state="withdrawn", state_reason="quality", message="Removed because the notes were too thin to talk about.")
-    go(load_config(chain(pause, withdraw)))
+    go(chain(pause, withdraw))
     snapshot("06-withdrawn", out)
     purge = manual("port-gazette", state="withdrawn", state_reason="takedown", purge=True, message="Removed at the publisher's request. Local copies must be deleted.")
-    go(load_config(chain(pause, withdraw, purge)))
+    go(chain(pause, withdraw, purge))
     snapshot("07-withdrawn-with-purge", out)
-    go(load_config(chain(withdraw, purge, drop("harbor-voices"))))
+    go(chain(withdraw, purge, drop("harbor-voices")))
     snapshot("08-removed-from-the-config", out)
-    go(load_config(chain(drop("quay-notes"), drop("port-gazette"), drop("harbor-voices"))), days=100)
+    go(chain(drop("quay-notes"), drop("port-gazette"), drop("harbor-voices")), days=100)
     snapshot("09-notices-expired", out)
     return out

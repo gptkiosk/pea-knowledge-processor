@@ -366,6 +366,40 @@
                 }
               }
             }
+          },
+          "topics": {
+            "description": "Since 1.2. What the item is about, as ids of the vocabulary in store.json, best first. Empty when no topic is confident enough: a reader then falls back to the topics of the source. Always together with `topics_by`.",
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "score"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]{0,31}$",
+                  "description": "An id of the vocabulary."
+                },
+                "score": {
+                  "description": "How strongly the item's text points to the topic, from 0 to 1 with at most two decimals. Not a probability.",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          },
+          "topics_by": {
+            "description": "Since 1.2. How `topics` was made: \"keywords\" (words and phrases counted in the item's text, no model) or \"model\" (proposed by the model that wrote the digest, then checked).",
+            "type": "string",
+            "enum": [
+              "keywords",
+              "model"
+            ]
           }
         }
       }

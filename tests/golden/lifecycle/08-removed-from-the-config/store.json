@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-store",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "generated_at": "2026-11-16T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "min_app_version": null,
   "sources": [
@@ -36,7 +36,7 @@
       "items_file": {
         "bytes": 7408,
         "path": "sources/tide-tables/items.json",
-        "sha256": "70c003cd7c84d440d711a29adad68fc1ebba55e2ec43d4657a6f194a21280129"
+        "sha256": "c82859081438fe37d445fc4476b19a74007772df141c602e74f18535e38919cb"
       },
       "kind": "podcast",
       "language": "en",
@@ -185,7 +185,7 @@
       "items_file": {
         "bytes": 4415,
         "path": "sources/lamp-room/items.json",
-        "sha256": "26bf468778ae93f5282c24496e0aabc4ee44506e9023f7d4f9b8761bf9af1014"
+        "sha256": "655073ab23341b274d3685c520e5c9c4e08147a50e75501a4bf11f5ce1d64e91"
       },
       "kind": "podcast",
       "language": "en",

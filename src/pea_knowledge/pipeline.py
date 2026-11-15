@@ -18,7 +18,7 @@ import shutil
 import statistics
 from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, textrules, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, textrules, topics as tp, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
@@ -112,7 +112,34 @@ def load_config(path):
             except ValueError as e:
                 raise ConfigError("%s: transcript_page.extract: %s" % (s["id"], e)) from None
     config["defaults"] = dict(DEFAULTS, **config.get("defaults", {}))
+    try:
+        known = set(tagger(config).ids) if tagger(config) else set()
+    except tp.TopicsError as e:
+        raise ConfigError(str(e)) from None
+    for s in config["sources"]:
+        for tid in s.get("topics", []):
+            if tagger(config) and tid not in known:
+                raise ConfigError("%s: the topic %s is not in config/topics.json" % (s["id"], tid))
     return config
+
+
+_TAGGER = []
+
+
+def tagger(config):
+    """The topic tagger (the vocabulary and the lexicon beside the code), or None when the config switches topics off."""
+    if not config.get("topics", {}).get("enabled", True):
+        return None
+    if not _TAGGER:
+        _TAGGER.append(tp.Tagger())
+    return _TAGGER[0]
+
+
+def topics_key(config):
+    """What an item's topics depend on besides its own text: the vocabulary, the lexicon, and who may tag. A change
+    makes every item anew, so no item keeps a tag from an older vocabulary."""
+    t = tagger(config)
+    return "topics off" if t is None else "topics %s %s" % (t.fingerprint, "model" if config.get("model", {}).get("topics") else "keywords")
 
 
 def setting(config, source, name):
@@ -133,7 +160,7 @@ class Previous:
         self.store = store
         for listing in store["sources"]:
             self.listings[listing["id"]] = listing
-            if listing["items_file"] is not None and not validate.check_source_folder(folder, listing):
+            if listing["items_file"] is not None and not validate.check_source_folder(folder, listing, topics=store.get("topics", [])):
                 loaded = jsonschema_lite.loads(read(os.path.join(folder, *listing["items_file"]["path"].split("/"))))
                 self.items[listing["id"]] = {i["id"]: i for i in loaded["items"]}
         path = os.path.join(folder, "state.json")
@@ -286,9 +313,11 @@ def normalize_transcript(fetcher, source, item, listed, link="", links=()):
     return outcome
 
 
-def item_key(entry, source):
-    """What an item's digest depends on at the publisher. The same key next run means there is nothing to redo."""
+def item_key(entry, source, config=None):
+    """What an item's digest and topics depend on at the publisher. The same key next run means there is nothing to redo."""
     parts = [entry.title, entry.date, entry.link, entry.summary[:200], source["publish"], source["kind"]] + [a for a, _ in entry.transcripts]
+    if config is not None:
+        parts += [topics_key(config), ",".join(source.get("topics", []))]
     rule = source.get("transcript_page")
     if rule and rule["from"] != "page_link":   # a transcript page that appears in the notes later makes the item anew
         parts.append(htmlpage.page_from_feed(rule, entry.link, entry.links) or "")
@@ -298,7 +327,8 @@ def item_key(entry, source):
 
 def source_key(config, source):
     """What a source's item list depends on in the config. When it changes, an unchanged feed is still read again."""
-    parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION, "generator %s" % __version__, ",".join(source.get("hosts", []))] \
+    parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION, "generator %s" % __version__, ",".join(source.get("hosts", [])),
+             topics_key(config), ",".join(source.get("topics", []))] \
         + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")] \
         + ([jsonschema_lite.dumps(source["transcript_page"])] if "transcript_page" in source else [])
     return sha256("\x1f".join(parts).encode("utf-8"))
@@ -357,7 +387,7 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                     "people": [] if news else [list(p) for p in e.people], "chapters": [] if news else [list(c) for c in e.chapters],
                     "soundbites": [] if news else [list(b) for b in e.soundbites], "resources": [] if news else list(e.resources),
                     "summary": textrules.first_sentences(e.summary, NEWS_SUMMARY_CHARS, most=2) if news else e.summary,
-                    "notes": "" if news else e.notes, "key": item_key(e, source), "reuse": False,
+                    "notes": "" if news else e.notes, "key": item_key(e, source, config), "reuse": False,
                     "transcript": {"status": "no", "reason": "none_published", "detail": "", "file": None}}
             known = before.get("items", {}).get(e.id)
             old = before_items.get(e.id)
@@ -390,6 +420,7 @@ def digest_stage(config, work, environment=None, log=print):
     budget = model_digest.Budget(settings)
     use_model = settings.enabled and bool(settings.key)
     by_id = {s["id"]: s for s in config["sources"]}
+    tags = tagger(config)
     for sid, record in state["sources"].items():
         source = by_id[sid]
         excerpt = None if source["publish"] == "full" else setting(config, source, "excerpt_budget_chars")
@@ -400,12 +431,19 @@ def digest_stage(config, work, environment=None, log=print):
             transcript = None
             if item["transcript"]["file"]:
                 transcript = pt.parse(read(os.path.join(work, *item["transcript"]["file"].split("/"))).decode("utf-8"))
-            made = None
+            made, proposed = None, []
             if use_model and transcript is not None:
-                made = model_digest.digest(settings, budget, source, item, transcript, excerpt, earlier, log)
+                made = model_digest.digest(settings, budget, source, item, transcript, excerpt, earlier, log,
+                                           vocabulary=tags.topics if tags and settings.topics else None, proposed=proposed)
             if made is None:
-                made = dg.extractive(source, item, transcript, excerpt, earlier)
+                made, proposed = dg.extractive(source, item, transcript, excerpt, earlier), []
             write(os.path.join(work, "digests", sid, item["id"] + ".json"), jsonschema_lite.dumps(made))
+            if tags is not None:
+                # Topics. The keyword tagger always can; a model's topics are taken only when they hold up against the digest.
+                fields = tp.fields_of(item, made, transcript)
+                checked = tags.from_model(proposed[0], fields) if proposed else []
+                item["topics"] = checked or tags.tag(fields, source.get("topics", ()))
+                item["topics_by"] = "model" if checked else "keywords"
     report = dict(budget.report(), requested=settings.enabled, used=use_model and budget.accepted > 0, model=settings.model[:80] if use_model else None,
                   note=None if use_model or not settings.enabled else "a model digest is switched on but no key was given, so every digest is extractive")
     state["model"] = report
@@ -438,7 +476,10 @@ def _whats_new(items):
 
 def _listing(config, source, items, items_ref, state, state_reason, message, purge, state_since, freshness):
     durations = [i["duration_seconds"] for i in items if i["duration_seconds"] is not None]
+    known = set(tagger(config).ids) if tagger(config) else None
+    beat = {} if known is None else {"topics": [t for t in source.get("topics", []) if t in known]}
     return {
+        **beat,
         "id": source["id"], "name": source["name"], "description": source["description"], "overview": source["overview"],
         "categories": source["categories"], "language": source["language"], "kind": source["kind"], "publisher": source["publisher"],
         "site": source["site"], "icon": source["icon"], "cadence": _cadence([i["date"] for i in items]),
@@ -482,7 +523,22 @@ def _new_item(config, source, work, item):
              "transcript": transcript}
     if t.get("source") and t["file"]:   # where the publisher itself offers the transcript, for a reader that fetches it there
         entry["transcript_source"] = t["source"]
+    if tagger(config) is not None and "topics" in item:
+        entry["topics"], entry["topics_by"] = item["topics"], item["topics_by"]
     return entry, files
+
+
+def _fit_topics(config, entry):
+    """An index entry kept from an earlier run, with its topics made to fit this run's vocabulary: none when topics
+    are switched off, and no id the vocabulary no longer has."""
+    if "topics" not in entry:
+        return entry
+    t = tagger(config)
+    if t is None:
+        return {k: v for k, v in entry.items() if k not in ("topics", "topics_by")}
+    if all(x["id"] in t.order for x in entry["topics"]):
+        return entry
+    return dict(entry, topics=[x for x in entry["topics"] if x["id"] in t.order])
 
 
 def transcript_read(entry):
@@ -529,6 +585,7 @@ def build_stage(config, work, previous, out, now, log=print):
     listings, health_sources, memory, total_items = [], [], {}, 0
     pause_after = config["defaults"]["auto_pause_after_failed_runs"]
     last_run = previous.store["generated_at"] if previous.store else None
+    vocabulary = {"topics": tagger(config).topics} if tagger(config) else {}
 
     def tombstone(source, old, why, message, purge):
         since = old["state_since"] if old and old["state"] == "withdrawn" else stamp
@@ -541,7 +598,7 @@ def build_stage(config, work, previous, out, now, log=print):
         sid = source["id"]
         record = state["sources"].get(sid, {"outcome": "skipped", "reason": None, "notes": [], "items": []})
         old = previous.listings.get(sid)
-        old_items = previous.items.get(sid, {})
+        old_items = {iid: _fit_topics(config, entry) for iid, entry in previous.items.get(sid, {}).items()}
         report = {"id": sid, "outcome": record["outcome"], "state": "active", "reason": record["reason"], "items": 0, "new": 0, "reused": 0, "kept": 0,
                   "stale": 0, "pruned": 0, "transcripts": dict.fromkeys(("yes", "partial", "none_published", "fetch_failed", "unreadable", "withheld_terms"), 0),
                   "digests": {"extractive": 0, "model": 0}, "notes": list(record["notes"])}
@@ -637,10 +694,10 @@ def build_stage(config, work, previous, out, now, log=print):
         listing = _listing(config, source, kept, items_ref, lifecycle, why, message, False, since, freshness)
         for path, data in files.items():
             write(os.path.join(staging, *path.split("/")), data)
-        problems = validate.check_source_folder(staging, listing)
-        _, listing_problems = validate.read_json(jsonschema_lite.dumps({"format": "pea-knowledge-store", "format_version": FORMAT_VERSION, "generated_at": stamp,
-                                                                         "generator": {"name": GENERATOR_NAME, "version": __version__}, "min_app_version": None,
-                                                                         "sources": [listing]}).encode("utf-8"), "store", "store.json", validate.STORE_BYTES)
+        problems = validate.check_source_folder(staging, listing, topics=vocabulary.get("topics", []))
+        _, listing_problems = validate.check_store(jsonschema_lite.dumps({"format": "pea-knowledge-store", "format_version": FORMAT_VERSION, "generated_at": stamp,
+                                                                           "generator": {"name": GENERATOR_NAME, "version": __version__}, "min_app_version": None,
+                                                                           "sources": [listing], **vocabulary}).encode("utf-8"))
         problems += listing_problems
         if problems:
             # Never publish a source that does not check out: put back its last good copy, count the run as failed.
@@ -652,6 +709,10 @@ def build_stage(config, work, previous, out, now, log=print):
             items_ref = old["items_file"] if old and kept else None
             if kept:
                 shutil.copytree(os.path.join(previous.folder, "sources", sid), os.path.join(staging, "sources", sid))
+                if old_items != previous.items.get(sid):   # the last good copy named topics this run's vocabulary does not have
+                    data = jsonschema_lite.dumps({"format": "pea-knowledge-items", "format_version": FORMAT_VERSION, "source_id": sid, "items": kept}).encode("utf-8")
+                    items_ref = {"path": "sources/%s/items.json" % sid, "sha256": sha256(data), "bytes": len(data)}
+                    write(os.path.join(staging, *items_ref["path"].split("/")), data)
             paused = failed >= pause_after and manual != "active" or manual == "paused"
             listing = _listing(config, source, kept, items_ref, "paused" if paused else "active", why,
                                ("This source could not be read %d times in a row. What is shown is the last good copy." % failed) if paused else None, False,
@@ -690,7 +751,7 @@ def build_stage(config, work, previous, out, now, log=print):
 
     generator = {"name": GENERATOR_NAME, "version": __version__}
     store = {"format": "pea-knowledge-store", "format_version": FORMAT_VERSION, "generated_at": stamp, "generator": generator,
-             "min_app_version": config.get("min_app_version"), "sources": listings}
+             "min_app_version": config.get("min_app_version"), "sources": listings, **vocabulary}
     write(os.path.join(staging, "store.json"), jsonschema_lite.dumps(store))
     write(os.path.join(staging, "state.json"), jsonschema_lite.dumps({"format": "pea-knowledge-state", "format_version": FORMAT_VERSION, "sources": memory}))
     total = sum(os.path.getsize(os.path.join(d, f)) for d, _, names in os.walk(staging) for f in names)

@@ -1,0 +1,356 @@
+{
+  "format": "pea-knowledge-store",
+  "format_version": "1.2",
+  "generated_at": "2026-11-14T12:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.4.0"
+  },
+  "min_app_version": null,
+  "sources": [
+    {
+      "attribution": "Harbor Voices, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 6945,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "blue",
+        "symbol": "microphone"
+      },
+      "id": "harbor-voices",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 4623,
+        "path": "sources/harbor-voices/items.json",
+        "sha256": "1a0c7ae4a196e9aa198dfd340ba053baa65e75681be4c7833409e45fc0df925d"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "Who counts the ships at Grey Point?",
+        "The lamp that the Grey Point Trust would not replace",
+        "A ledger since 1902"
+      ],
+      "message": null,
+      "name": "Harbor Voices",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Harbor Voices (made up)",
+      "purge": false,
+      "site": "https://harbor.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "technology"
+      ],
+      "typical_duration_seconds": 540,
+      "whats_new": "Newest: Who counts the ships at Grey Point? (2026-11-12). Before that: The lamp that the Grey Point Trust would not replace (2026-11-11)."
+    },
+    {
+      "attribution": "Tide Tables, a made-up source",
+      "available": {
+        "digest": 6,
+        "link_back": true,
+        "transcript": 4
+      },
+      "avg_bytes": 10910,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "teal",
+        "symbol": "waveform"
+      },
+      "id": "tide-tables",
+      "item_count": 6,
+      "items_file": {
+        "bytes": 7714,
+        "path": "sources/tide-tables/items.json",
+        "sha256": "984e41332f0b9d24eecf16208dc528d975d064d65e1b7ab840d18693efee9811"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "The keeper's ledger, read aloud",
+        "Colza oil and clockwork",
+        "Times that are not times"
+      ],
+      "message": null,
+      "name": "Tide Tables",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "full",
+      "publisher": "Tide Tables (made up)",
+      "purge": false,
+      "site": "https://tide.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 3,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "technology"
+      ],
+      "typical_duration_seconds": 518,
+      "whats_new": "Newest: The keeper's ledger, read aloud (2026-11-12). Before that: Colza oil and clockwork (2026-11-11)."
+    },
+    {
+      "attribution": "Quay Notes, a made-up source",
+      "available": {
+        "digest": 2,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 2700,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "orange",
+        "symbol": "book"
+      },
+      "id": "quay-notes",
+      "item_count": 2,
+      "items_file": {
+        "bytes": 2205,
+        "path": "sources/quay-notes/items.json",
+        "sha256": "d3ad1c6e6ce2516197e83e08e6c360e149b2a5a9eb3d88c7874f8aaf499ae348"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-11",
+      "latest_titles": [
+        "Four generations of ice",
+        "A short note"
+      ],
+      "message": null,
+      "name": "Quay Notes",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Quay Notes (made up)",
+      "purge": false,
+      "site": "https://quay.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "technology"
+      ],
+      "typical_duration_seconds": 1501,
+      "whats_new": "Newest: Four generations of ice (2026-11-11). Before that: A short note (2026-11-04)."
+    },
+    {
+      "attribution": "The Port Gazette, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 1525,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "grey",
+        "symbol": "newspaper"
+      },
+      "id": "port-gazette",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 3818,
+        "path": "sources/port-gazette/items.json",
+        "sha256": "5bdba16ce7be40329f18624d0c88a3ed55e77b8d1ead79fce55ae2f7a07a7561"
+      },
+      "kind": "news",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "Harbour Board to publish radar logs after ledger dispute",
+        "County moves visitor centre plan to North Quay",
+        "Dredging budget rises 12 percent"
+      ],
+      "message": null,
+      "name": "The Port Gazette",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "The Port Gazette (made up)",
+      "purge": false,
+      "site": "https://gazette.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "technology"
+      ],
+      "typical_duration_seconds": null,
+      "whats_new": "Newest: Harbour Board to publish radar logs after ledger dispute (2026-11-12). Before that: County moves visitor centre plan to North Quay (2026-11-11)."
+    },
+    {
+      "attribution": "The Lamp Room, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 5276,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "yellow",
+        "symbol": "book"
+      },
+      "id": "lamp-room",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 4619,
+        "path": "sources/lamp-room/items.json",
+        "sha256": "9424b141acc612b8141334e55a9e433d9391a655a30615961c32818d4242eaf2"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-13",
+      "latest_titles": [
+        "The night the lamp went out",
+        "A page that hides its orders",
+        "The keeper's winter"
+      ],
+      "message": null,
+      "name": "The Lamp Room",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "The Lamp Room (made up)",
+      "purge": false,
+      "site": "https://lamp.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "technology"
+      ],
+      "typical_duration_seconds": 518,
+      "whats_new": "Newest: The night the lamp went out (2026-11-13). Before that: A page that hides its orders (2026-11-12)."
+    }
+  ],
+  "topics": [
+    {
+      "description": "The technology industry, its companies, hardware, chips, devices and the internet.",
+      "id": "Tech Stuff",
+      "label": "Technology",
+      "synonyms": [
+        "tech",
+        "technology",
+        "gadgets",
+        "computers",
+        "hardware",
+        "chips",
+        "the internet",
+        "devices",
+        "robots"
+      ]
+    },
+    {
+      "description": "AI models, the labs that build them, what they can do, and AI safety.",
+      "id": "ai",
+      "label": "Artificial intelligence",
+      "synonyms": [
+        "ai",
+        "artificial intelligence",
+        "machine learning",
+        "chatbots",
+        "language models",
+        "llms",
+        "agi",
+        "robots"
+      ]
+    },
+    {
+      "description": "Writing and running software: languages, tools, libraries, open source and systems.",
+      "id": "software-engineering",
+      "label": "Software engineering",
+      "synonyms": [
+        "software",
+        "programming",
+        "coding",
+        "code",
+        "developers",
+        "python",
+        "open source",
+        "engineering",
+        "web development"
+      ]
+    },
+    {
+      "description": "Hacking, breaches, online crime, surveillance, and keeping data and people safe.",
+      "id": "security-privacy",
+      "label": "Security and privacy",
+      "synonyms": [
+        "security",
+        "cybersecurity",
+        "hacking",
+        "hackers",
+        "privacy",
+        "surveillance",
+        "breaches",
+        "scams",
+        "cybercrime"
+      ]
+    }
+  ]
+}

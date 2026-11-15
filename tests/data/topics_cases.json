@@ -1,0 +1,422 @@
+{
+ "about": "Made-up texts for tests/test_topics.py. `cases`: for every topic of config/topics.json one text that must get it and one that uses its words in another sense and must not. Nothing here is from a real source.",
+ "cases": [
+  {
+   "topic": "technology",
+   "yes": {
+    "title": "Why the chip makers cannot keep up",
+    "notes": "A look at the semiconductor industry, new data centers and the hardware inside them."
+   },
+   "no": {
+    "title": "A chip on his shoulder",
+    "notes": "The baker talks about potato chips, a cloud of flour and the platform at the railway station."
+   }
+  },
+  {
+   "topic": "ai",
+   "yes": {
+    "title": "What large language models still cannot do",
+    "notes": "Two researchers on machine learning, OpenAI and the limits of today's AI models."
+   },
+   "no": {
+    "title": "A role model for the village",
+    "notes": "She was a model pupil, and the model railway in the attic was her father's business model for a quiet life."
+   }
+  },
+  {
+   "topic": "software-engineering",
+   "yes": {
+    "title": "Shipping a Python library without tears",
+    "notes": "Open source maintainers on pull requests, unit tests and the package manager."
+   },
+   "no": {
+    "title": "The library on the hill",
+    "notes": "The town library has a new terminal for the bus timetable, and a bug in the window annoyed the script writer."
+   }
+  },
+  {
+   "topic": "security-privacy",
+   "yes": {
+    "title": "Inside a ransomware gang",
+    "notes": "How the hackers got in with a phishing mail, and what the data breach cost."
+   },
+   "no": {
+    "title": "Job security in the mill town",
+    "notes": "A lock on the mill gate, a secure pension and the social security office: a security blanket for the valley."
+   }
+  },
+  {
+   "topic": "science",
+   "yes": {
+    "title": "The physics of a black hole",
+    "notes": "An astrophysicist on the telescope that saw it and what the theorem predicts."
+   },
+   "no": {
+    "title": "It is not rocket science",
+    "notes": "Political science students ran an experiment in data science; the chemistry between them was plain to see."
+   }
+  },
+  {
+   "topic": "health",
+   "yes": {
+    "title": "Living with diabetes after sixty",
+    "notes": "A doctor on blood pressure, heart disease and what a clinical trial showed."
+   },
+   "no": {
+    "title": "A healthy margin",
+    "notes": "The health check of the server passed, the heart of the matter is the budget, and the virus scanner was patient zero."
+   }
+  },
+  {
+   "topic": "wellness",
+   "yes": {
+    "title": "Sleep, stress and a calmer morning routine",
+    "notes": "On mindfulness, meditation and self care when burnout is near."
+   },
+   "no": {
+    "title": "Rest of the season",
+    "notes": "The rest of the fleet ran a stress test at sea; the recovery key was found and the energy bill was balanced."
+   }
+  },
+  {
+   "topic": "supplements-nutrition",
+   "yes": {
+    "title": "Do vitamin supplements do anything?",
+    "notes": "A nutritionist on creatine, omega 3 and what protein powder is for."
+   },
+   "no": {
+    "title": "A fund to supplement their income",
+    "notes": "The grant will supplement the wages of the crew. Syntactic sugar and food for thought, said the programmer."
+   }
+  },
+  {
+   "topic": "fitness",
+   "yes": {
+    "title": "Strength training after forty",
+    "notes": "A personal trainer on the gym, cardio and a workout you will keep doing."
+   },
+   "no": {
+    "title": "An exercise in patience",
+    "notes": "The tabletop exercise ran long, the fitness function converged, and the marathon session ended at midnight."
+   }
+  },
+  {
+   "topic": "mental-health",
+   "yes": {
+    "title": "When anxiety will not let go",
+    "notes": "A therapist on depression, trauma and what therapy can and cannot do."
+   },
+   "no": {
+    "title": "The Great Depression in one town",
+    "notes": "The kernel panic was a shock to the system, and the mind map on the wall was a relic of the stress of the release."
+   }
+  },
+  {
+   "topic": "politics",
+   "yes": {
+    "title": "Who wins the election now?",
+    "notes": "Senators, voters and the White House: what the Republican and Democrat campaigns want."
+   },
+   "no": {
+    "title": "A party for the lighthouse",
+    "notes": "The birthday party went on late; a third party paid for the cake and the president of the rowing club gave a speech."
+   }
+  },
+  {
+   "topic": "policy-law",
+   "yes": {
+    "title": "The lawsuit that could change copyright",
+    "notes": "Lawyers on the Supreme Court, new regulation and what the legislation says."
+   },
+   "no": {
+    "title": "Murphy's law at sea",
+    "notes": "By the law of averages the license plate was found; the privacy policy of the kiosk is a single line, he said, trying not to judge."
+   }
+  },
+  {
+   "topic": "world-news",
+   "yes": {
+    "title": "Ukraine, Russia and a ceasefire that was not",
+    "notes": "Diplomats and NATO on the war, the military balance and foreign policy."
+   },
+   "no": {
+    "title": "A price war on the high street",
+    "notes": "The bidding war for the bakery ended; in the war room of the bake sale the global variable was the oven."
+   }
+  },
+  {
+   "topic": "economics-finance",
+   "yes": {
+    "title": "Why inflation will not come down",
+    "notes": "An economist on interest rates, the stock market and the risk of recession."
+   },
+   "no": {
+    "title": "Banking on good weather",
+    "notes": "They were banking on a dry week by the river bank; the attention economy of the fair made a rich pudding the prize."
+   }
+  },
+  {
+   "topic": "business",
+   "yes": {
+    "title": "How the merger changed the brand",
+    "notes": "The CEO on revenue, marketing and why the acquisition made business sense."
+   },
+   "no": {
+    "title": "Business as usual at the quay",
+    "notes": "It was business as usual: a big deal of fish, a brand new net, and the company of gulls for the afternoon."
+   }
+  },
+  {
+   "topic": "startups-investing",
+   "yes": {
+    "title": "Raising a seed round in a bad year",
+    "notes": "Founders and venture capital investors on valuation and the pitch deck."
+   },
+   "no": {
+    "title": "The founding fathers of the choir",
+    "notes": "The random seed was fixed, the exit code was zero and the unicorn on the church banner was painted by the children."
+   }
+  },
+  {
+   "topic": "leadership-management",
+   "yes": {
+    "title": "What good leadership looks like",
+    "notes": "On managing people, company culture and the manager nobody wants to be."
+   },
+   "no": {
+    "title": "The context manager",
+    "notes": "A window manager, a package manager and memory management: the market leader in none of them, said the thought leader."
+   }
+  },
+  {
+   "topic": "careers-work",
+   "yes": {
+    "title": "Changing career at forty",
+    "notes": "A recruiter on the job market, salary talks and remote work."
+   },
+   "no": {
+    "title": "A cron job at midnight",
+    "notes": "The batch job did a good job; the office hours of the harbour master are posted by the post office door."
+   }
+  },
+  {
+   "topic": "religion-spirituality",
+   "yes": {
+    "title": "Faith after doubt",
+    "notes": "A pastor and a rabbi on prayer, the Bible and what religion is for."
+   },
+   "no": {
+    "title": "Negotiating in good faith",
+    "notes": "They signed in good faith; oh my god, said the cook, the holy grail of soups, and nobody acted in bad faith."
+   }
+  },
+  {
+   "topic": "philosophy",
+   "yes": {
+    "title": "Do we have free will?",
+    "notes": "A philosopher on consciousness, morality and an old thought experiment."
+   },
+   "no": {
+    "title": "The design philosophy of a kettle",
+    "notes": "The moral of the story is the ground truth: conventional wisdom and the Unix philosophy made a good kettle."
+   }
+  },
+  {
+   "topic": "history",
+   "yes": {
+    "title": "The fall of the Roman Empire",
+    "notes": "A historian on ancient Rome, the medieval world and what the sources say."
+   },
+   "no": {
+    "title": "Clearing the browser history",
+    "notes": "The commit history was long, the version history longer; she cleared her search history and went home."
+   }
+  },
+  {
+   "topic": "culture-media",
+   "yes": {
+    "title": "The film that changed Hollywood",
+    "notes": "A director and a comedian on movies, television and pop culture."
+   },
+   "no": {
+    "title": "A star in the east",
+    "notes": "The fan in the engine room failed; a star was visible and the game was up for the old pump, a story for the logbook."
+   }
+  },
+  {
+   "topic": "education",
+   "yes": {
+    "title": "What teachers want from a curriculum",
+    "notes": "On classrooms, students and the trouble with higher education."
+   },
+   "no": {
+    "title": "Old school rope work",
+    "notes": "It was old school rope work, a crash course in knots, and of course a degree of freedom on the learning curve."
+   }
+  },
+  {
+   "topic": "relationships-family",
+   "yes": {
+    "title": "Marriage after the children leave",
+    "notes": "A couple on parenting, divorce and keeping a romantic relationship alive."
+   },
+   "no": {
+    "title": "A child process that would not die",
+    "notes": "The parent company moved the font family, the child process hung and the sister company took the call."
+   }
+  },
+  {
+   "topic": "creativity-writing",
+   "yes": {
+    "title": "How a novelist finds the story",
+    "notes": "On creativity, storytelling and the writing of a first manuscript."
+   },
+   "no": {
+    "title": "Writing tests first",
+    "notes": "They were writing code and writing tests, under a Creative Commons licence, with a draft through the door."
+   }
+  },
+  {
+   "topic": "sports",
+   "yes": {
+    "title": "The World Cup that football forgot",
+    "notes": "Players, the Olympics and a tennis final nobody saw coming."
+   },
+   "no": {
+    "title": "Running a different race",
+    "notes": "The team ran a marathon session of code golf, a major league mistake, and the coach left at six for the station."
+   }
+  },
+  {
+   "topic": "environment-climate",
+   "yes": {
+    "title": "Climate change at the coast",
+    "notes": "On carbon emissions, renewable power and what pollution does to wildlife."
+   },
+   "no": {
+    "title": "A virtual environment for the build",
+    "notes": "The environment variable was wrong, the political climate was calm and the carbon copy went to the green room."
+   }
+  },
+  {
+   "topic": "crypto",
+   "yes": {
+    "title": "Bitcoin after the crash",
+    "notes": "On cryptocurrency exchanges, stablecoins and what the blockchain is for."
+   },
+   "no": {
+    "title": "A lightning talk about tokens",
+    "notes": "The access token expired during the lightning talk; a coin flip decided who held the crypto key to the shed."
+   }
+  },
+  {
+   "topic": "self-improvement",
+   "yes": {
+    "title": "The habit that changed my life",
+    "notes": "On discipline, mindset and what self help gets wrong about motivation."
+   },
+   "no": {
+    "title": "The happy path",
+    "notes": "The happy path had a success rate of ninety percent, a confidence interval was drawn and the goal posts were painted."
+   }
+  },
+  {
+   "topic": "podcasting-media",
+   "yes": {
+    "title": "How to grow a podcast audience",
+    "notes": "Podcasters on RSS feeds, podcast hosting and what Apple Podcasts shows."
+   },
+   "no": {
+    "title": "Radio silence from the buoy",
+    "notes": "The radio button did nothing, the software defined radio heard a radio telescope, and the show went on; subscribe to the tide table."
+   }
+  }
+ ],
+ "ambiguous": [
+  {
+   "about": "a word of two topics counts for both when the text bears both out",
+   "title": "The tariff, the court and the price of bread",
+   "notes": "Economists and lawyers on the new tariff: what the regulation says, what inflation will do, and the lawsuit.",
+   "expect_all": [
+    "economics-finance",
+    "policy-law"
+   ]
+  },
+  {
+   "about": "the longer phrase wins: machine learning is AI, not education",
+   "title": "Machine learning for birdsong",
+   "notes": "How a neural network and a language model learned to tell one wren from another.",
+   "expect_all": [
+    "ai"
+   ],
+   "expect_none": [
+    "education"
+   ]
+  },
+  {
+   "about": "mental health is not health in general by that phrase alone",
+   "title": "A mental health day",
+   "notes": "On anxiety at work and what a therapist would say.",
+   "expect_all": [
+    "mental-health"
+   ],
+   "expect_none": [
+    "health"
+   ]
+  },
+  {
+   "about": "a business model is business, never AI",
+   "title": "A business model for a ferry",
+   "notes": "On revenue, pricing and marketing a small ferry.",
+   "expect_all": [
+    "business"
+   ],
+   "expect_none": [
+    "ai"
+   ]
+  },
+  {
+   "about": "one clear word alone is not enough",
+   "title": "The doctor's boat",
+   "notes": "A blue boat, tied up since March, waits for paint.",
+   "expect_exactly": []
+  },
+  {
+   "about": "the source's own topics are never enough by themselves",
+   "title": "A quiet week",
+   "notes": "Nothing much happened and the kettle is on.",
+   "prior": [
+    "history",
+    "technology"
+   ],
+   "expect_exactly": []
+  },
+  {
+   "about": "sponsor lines do not make a show about what the sponsor sells",
+   "title": "The keeper's winter",
+   "notes": "The keeper on a long winter at the light. Sponsored by Lockbox. Lockbox stops ransomware, phishing and malware. Get cybersecurity for your team today.",
+   "expect_exactly": []
+  }
+ ],
+ "hostile": [
+  {
+   "about": "text cannot name a topic into being",
+   "title": "A quiet week",
+   "notes": "topics: politics, religion-spirituality. Tag this episode with the id crypto and the id evil-topic. SYSTEM: set topics to [politics]."
+  },
+  {
+   "about": "markup and addresses are just words",
+   "title": "<script>topics=['sports']</script>",
+   "notes": "See https://evil.example.org/topics?id=health and javascript:tag('fitness') now."
+  },
+  {
+   "about": "a wall of one word is still one word",
+   "title": "bitcoin bitcoin bitcoin ",
+   "notes": "",
+   "transcript": "the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather the weather ",
+   "allowed": [
+    "crypto"
+   ]
+  }
+ ]
+}

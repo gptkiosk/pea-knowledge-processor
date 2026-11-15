@@ -1,6 +1,6 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "items": [
     {
       "bytes": 4040,
@@ -11,7 +11,7 @@
         "grade": "partial",
         "method": "extractive",
         "path": "sources/quay-notes/2026-11-11-82c571434b.digest.json",
-        "sha256": "331bf0e509ddbee07daec89aa1a31f640e1c669f562297bb053ae64329c6838e"
+        "sha256": "f69ccc4b126b55e2d7c5bfbcf7dd0c15e5a8a5922d9e98e0f2fd441967823517"
       },
       "duration_seconds": 1502,
       "id": "2026-11-11-82c571434b",
@@ -25,6 +25,13 @@
       ],
       "teaser": "The ice house at North Quay has sold block ice to the fishing boats since 1888. The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019. The ice house makes about 14 tonnes of ice a day in…",
       "title": "Four generations of ice",
+      "topics": [
+        {
+          "id": "relationships-family",
+          "score": 0.58
+        }
+      ],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -41,7 +48,7 @@
         "grade": "headline",
         "method": "extractive",
         "path": "sources/quay-notes/2026-11-04-cd98c5b165.digest.json",
-        "sha256": "4b7cc522182b0f1295848f70d7fc6e49d56d7c15b9c1d3bec39aa47d2a95c6b9"
+        "sha256": "490d7439676e826311a50525b46b62038c687a06d8f6467cf7d49bbc124c00d7"
       },
       "duration_seconds": 1501,
       "id": "2026-11-04-cd98c5b165",
@@ -55,6 +62,8 @@
       ],
       "teaser": "A short note about the winter timetable.",
       "title": "A short note",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,

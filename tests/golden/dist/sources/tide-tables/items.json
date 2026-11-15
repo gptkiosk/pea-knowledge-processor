@@ -1,6 +1,6 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "items": [
     {
       "bytes": 14768,
@@ -11,7 +11,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-12-49be7f43a2.digest.json",
-        "sha256": "98080f640151e1ae0e0271b5a6b2a0e75b3c57ea8ebfd9f857968332203f0719"
+        "sha256": "20162d90ad85af779f3b2f8bc4d2b4d13944f25e837cfc481f2fd3d87060da05"
       },
       "duration_seconds": 518,
       "id": "2026-11-12-49be7f43a2",
@@ -24,6 +24,8 @@
       ],
       "teaser": "Mara and Tobias at the Grey Point lighthouse. Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.",
       "title": "The keeper's ledger, read aloud",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "yes",
         "file": {
@@ -50,7 +52,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-11-90db1628c6.digest.json",
-        "sha256": "0154fe51d1655fd7d44056d23ad1126b97f50cd34c1ab9d8fd043696ea3420fe"
+        "sha256": "2bf67998223ba3e8de901cfb08ceb542204a9daa69dbb9513923cf173c1ff4ce"
       },
       "duration_seconds": 518,
       "id": "2026-11-11-90db1628c6",
@@ -63,6 +65,8 @@
       ],
       "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 35 votes to nine. An electric lamp would have cost the Trust 115 thousand dollars before a single night of light.",
       "title": "Colza oil and clockwork",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "yes",
         "file": {
@@ -89,7 +93,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-10-bbf6b9d195.digest.json",
-        "sha256": "523cb327c417a715cab594b7d050531083fc4cc777dfcd1e5beb1981ed9d82e9"
+        "sha256": "c494eba39dab1804947f990a0a7bbee167f66e15a760e1eb50a8d58f2b731cd2"
       },
       "duration_seconds": null,
       "id": "2026-11-10-bbf6b9d195",
@@ -102,6 +106,8 @@
       ],
       "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine. An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.",
       "title": "Times that are not times",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "yes",
         "file": {
@@ -128,7 +134,7 @@
         "grade": "partial",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-09-8e6fef9855.digest.json",
-        "sha256": "af01766e79f83076f6ab342735ecfbde32b94ca1dad32a2c02b7b77d854e8afd"
+        "sha256": "7c7dbcd7ef009625122f87d1aaf23d5a1123d2692c95566134614a5566747ba6"
       },
       "duration_seconds": 1740,
       "id": "2026-11-09-8e6fef9855",
@@ -141,6 +147,8 @@
       ],
       "teaser": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history. The gate…",
       "title": "The tide gate at North Quay",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -157,7 +165,7 @@
         "grade": "headline",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-08-97bd63e880.digest.json",
-        "sha256": "5e985e774ebe673d8176e2cebc774e2154de8d31ca0fca0baf31f277c7ff49ff"
+        "sha256": "becb6f9977992c31ff421ad80804aa14bc732c0a4ce103e8225243e63e95417b"
       },
       "duration_seconds": 518,
       "id": "2026-11-08-97bd63e880",
@@ -170,6 +178,8 @@
       ],
       "teaser": "Mara and Tobias at the Grey Point lighthouse.",
       "title": "The episode whose transcript is gone",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "no",
         "file": null,
@@ -186,7 +196,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-07-420826b378.digest.json",
-        "sha256": "3f6d01238414b5dcd73cf313843cca7b66b3e7fa4c49a85e10d1d5dac6b164af"
+        "sha256": "a1c1af8a07ae6edc8425a98f9c77d8fe3eaca6263dad38a52719ea32bcec70ef"
       },
       "duration_seconds": 518,
       "id": "2026-11-07-420826b378",
@@ -199,6 +209,8 @@
       ],
       "teaser": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 21 years. An electric lamp would have cost the Trust 95 thousand dollars before a single night of light.",
       "title": "A transcript that shouts orders & links",
+      "topics": [],
+      "topics_by": "keywords",
       "transcript": {
         "available": "yes",
         "file": {

@@ -150,6 +150,10 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1000
+        },
+        "topics": {
+          "description": "True: the model that writes a digest may also propose the item's topics, from the vocabulary only. Off by default; the keyword tagger is used whenever the model's answer does not hold up.",
+          "type": "boolean"
         }
       }
     },
@@ -601,7 +605,29 @@
                 }
               }
             }
+          },
+          "topics": {
+            "description": "The source's overall beat: up to six ids of config/topics.json, most typical first.",
+            "type": "array",
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"
+            }
           }
+        }
+      }
+    },
+    "topics": {
+      "description": "Topic tagging (docs/FORMAT.md, \"Topics\"). On unless switched off here.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "enabled": {
+          "description": "False: the output carries no vocabulary and no topics.",
+          "type": "boolean"
         }
       }
     }

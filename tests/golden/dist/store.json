@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-store",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "generated_at": "2026-11-14T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "min_app_version": null,
   "sources": [
@@ -34,9 +34,9 @@
       "id": "harbor-voices",
       "item_count": 4,
       "items_file": {
-        "bytes": 4419,
+        "bytes": 4623,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "f11d9507aa0699a2e5944b1053e956520bdd317c82bf1b50fbe1f388f1afe229"
+        "sha256": "1a0c7ae4a196e9aa198dfd340ba053baa65e75681be4c7833409e45fc0df925d"
       },
       "kind": "podcast",
       "language": "en",
@@ -58,6 +58,10 @@
       "state_since": null,
       "suggested_keep": 4,
       "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "history",
+        "business"
+      ],
       "typical_duration_seconds": 540,
       "whats_new": "Newest: Who counts the ships at Grey Point? (2026-11-12). Before that: The lamp that the Grey Point Trust would not replace (2026-11-11)."
     },
@@ -87,9 +91,9 @@
       "id": "tide-tables",
       "item_count": 6,
       "items_file": {
-        "bytes": 7408,
+        "bytes": 7714,
         "path": "sources/tide-tables/items.json",
-        "sha256": "70c003cd7c84d440d711a29adad68fc1ebba55e2ec43d4657a6f194a21280129"
+        "sha256": "984e41332f0b9d24eecf16208dc528d975d064d65e1b7ab840d18693efee9811"
       },
       "kind": "podcast",
       "language": "en",
@@ -111,6 +115,10 @@
       "state_since": null,
       "suggested_keep": 3,
       "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "history",
+        "environment-climate"
+      ],
       "typical_duration_seconds": 518,
       "whats_new": "Newest: The keeper's ledger, read aloud (2026-11-12). Before that: Colza oil and clockwork (2026-11-11)."
     },
@@ -140,9 +148,9 @@
       "id": "quay-notes",
       "item_count": 2,
       "items_file": {
-        "bytes": 2012,
+        "bytes": 2205,
         "path": "sources/quay-notes/items.json",
-        "sha256": "9b0be878c7b03cc2f0c22a3552fa50d4cb76924efb7736ce53c4956f7e9ab932"
+        "sha256": "d3ad1c6e6ce2516197e83e08e6c360e149b2a5a9eb3d88c7874f8aaf499ae348"
       },
       "kind": "podcast",
       "language": "en",
@@ -163,6 +171,9 @@
       "state_since": null,
       "suggested_keep": 4,
       "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "business"
+      ],
       "typical_duration_seconds": 1501,
       "whats_new": "Newest: Four generations of ice (2026-11-11). Before that: A short note (2026-11-04)."
     },
@@ -192,9 +203,9 @@
       "id": "port-gazette",
       "item_count": 4,
       "items_file": {
-        "bytes": 3614,
+        "bytes": 3818,
         "path": "sources/port-gazette/items.json",
-        "sha256": "bf2572cf3242f3a84040004af34eda2f250ef4ddb1199a87e123b23f578ed0da"
+        "sha256": "5bdba16ce7be40329f18624d0c88a3ed55e77b8d1ead79fce55ae2f7a07a7561"
       },
       "kind": "news",
       "language": "en",
@@ -216,6 +227,10 @@
       "state_since": null,
       "suggested_keep": 4,
       "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "politics",
+        "business"
+      ],
       "typical_duration_seconds": null,
       "whats_new": "Newest: Harbour Board to publish radar logs after ledger dispute (2026-11-12). Before that: County moves visitor centre plan to North Quay (2026-11-11)."
     },
@@ -245,9 +260,9 @@
       "id": "lamp-room",
       "item_count": 4,
       "items_file": {
-        "bytes": 4415,
+        "bytes": 4619,
         "path": "sources/lamp-room/items.json",
-        "sha256": "26bf468778ae93f5282c24496e0aabc4ee44506e9023f7d4f9b8761bf9af1014"
+        "sha256": "9424b141acc612b8141334e55a9e433d9391a655a30615961c32818d4242eaf2"
       },
       "kind": "podcast",
       "language": "en",
@@ -269,8 +284,509 @@
       "state_since": null,
       "suggested_keep": 4,
       "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "topics": [
+        "history",
+        "technology"
+      ],
       "typical_duration_seconds": 518,
       "whats_new": "Newest: The night the lamp went out (2026-11-13). Before that: A page that hides its orders (2026-11-12)."
+    }
+  ],
+  "topics": [
+    {
+      "description": "The technology industry, its companies, hardware, chips, devices and the internet.",
+      "id": "technology",
+      "label": "Technology",
+      "synonyms": [
+        "tech",
+        "technology",
+        "gadgets",
+        "computers",
+        "hardware",
+        "chips",
+        "the internet",
+        "devices",
+        "robots"
+      ]
+    },
+    {
+      "description": "AI models, the labs that build them, what they can do, and AI safety.",
+      "id": "ai",
+      "label": "Artificial intelligence",
+      "synonyms": [
+        "ai",
+        "artificial intelligence",
+        "machine learning",
+        "chatbots",
+        "language models",
+        "llms",
+        "agi",
+        "robots"
+      ]
+    },
+    {
+      "description": "Writing and running software: languages, tools, libraries, open source and systems.",
+      "id": "software-engineering",
+      "label": "Software engineering",
+      "synonyms": [
+        "software",
+        "programming",
+        "coding",
+        "code",
+        "developers",
+        "python",
+        "open source",
+        "engineering",
+        "web development"
+      ]
+    },
+    {
+      "description": "Hacking, breaches, online crime, surveillance, and keeping data and people safe.",
+      "id": "security-privacy",
+      "label": "Security and privacy",
+      "synonyms": [
+        "security",
+        "cybersecurity",
+        "hacking",
+        "hackers",
+        "privacy",
+        "surveillance",
+        "breaches",
+        "scams",
+        "cybercrime"
+      ]
+    },
+    {
+      "description": "Physics, biology, mathematics, space and how research finds things out.",
+      "id": "science",
+      "label": "Science",
+      "synonyms": [
+        "science",
+        "physics",
+        "biology",
+        "chemistry",
+        "space",
+        "math",
+        "mathematics",
+        "research",
+        "astronomy",
+        "neuroscience"
+      ]
+    },
+    {
+      "description": "Medicine, disease, the body and the brain, longevity and health care.",
+      "id": "health",
+      "label": "Health",
+      "synonyms": [
+        "health",
+        "medicine",
+        "medical",
+        "disease",
+        "doctors",
+        "longevity",
+        "aging",
+        "healthcare",
+        "the body",
+        "the brain"
+      ]
+    },
+    {
+      "description": "Everyday wellbeing: sleep, stress, rest, mindfulness and healthy routines.",
+      "id": "wellness",
+      "label": "Wellness",
+      "synonyms": [
+        "wellness",
+        "wellbeing",
+        "self care",
+        "sleep",
+        "stress",
+        "mindfulness",
+        "meditation",
+        "relaxation",
+        "healthy living"
+      ]
+    },
+    {
+      "description": "What people eat and take: diet, nutrients, vitamins, supplements and fasting.",
+      "id": "supplements-nutrition",
+      "label": "Supplements and nutrition",
+      "synonyms": [
+        "supplements",
+        "vitamins",
+        "nutrition",
+        "diet",
+        "food",
+        "eating",
+        "fasting",
+        "protein",
+        "healthy eating"
+      ]
+    },
+    {
+      "description": "Exercise and training: strength, cardio, endurance and staying in shape.",
+      "id": "fitness",
+      "label": "Fitness",
+      "synonyms": [
+        "fitness",
+        "exercise",
+        "working out",
+        "workouts",
+        "training",
+        "the gym",
+        "strength",
+        "running",
+        "cardio"
+      ]
+    },
+    {
+      "description": "The mind and its troubles: psychology, therapy, anxiety, depression, trauma and addiction.",
+      "id": "mental-health",
+      "label": "Mental health",
+      "synonyms": [
+        "mental health",
+        "psychology",
+        "therapy",
+        "anxiety",
+        "depression",
+        "trauma",
+        "addiction",
+        "stress",
+        "mindfulness",
+        "emotions"
+      ]
+    },
+    {
+      "description": "Elections, parties, governments and the people who run for and hold office.",
+      "id": "politics",
+      "label": "Politics",
+      "synonyms": [
+        "politics",
+        "political",
+        "elections",
+        "government",
+        "democracy",
+        "congress",
+        "parliament",
+        "politicians",
+        "washington"
+      ]
+    },
+    {
+      "description": "Laws, regulation, courts and public policy, and how the rules get made.",
+      "id": "policy-law",
+      "label": "Policy and law",
+      "synonyms": [
+        "policy",
+        "law",
+        "legal",
+        "regulation",
+        "courts",
+        "lawsuits",
+        "government",
+        "rules",
+        "legislation",
+        "rights"
+      ]
+    },
+    {
+      "description": "Wars, diplomacy and what is happening between countries around the world.",
+      "id": "world-news",
+      "label": "World news",
+      "synonyms": [
+        "news",
+        "world news",
+        "current events",
+        "world affairs",
+        "geopolitics",
+        "war",
+        "foreign policy",
+        "international",
+        "conflict"
+      ]
+    },
+    {
+      "description": "The economy, markets, banking, investing and personal money matters.",
+      "id": "economics-finance",
+      "label": "Economics and finance",
+      "synonyms": [
+        "money",
+        "economics",
+        "the economy",
+        "finance",
+        "markets",
+        "investing",
+        "stocks",
+        "personal finance",
+        "inflation",
+        "wealth"
+      ]
+    },
+    {
+      "description": "How companies are run and compete: strategy, marketing, sales, deals and results.",
+      "id": "business",
+      "label": "Business",
+      "synonyms": [
+        "business",
+        "companies",
+        "strategy",
+        "marketing",
+        "sales",
+        "brands",
+        "industry",
+        "commerce",
+        "entrepreneurs"
+      ]
+    },
+    {
+      "description": "Starting companies and funding them: founders, venture capital and fundraising.",
+      "id": "startups-investing",
+      "label": "Startups and investing",
+      "synonyms": [
+        "startups",
+        "founders",
+        "venture capital",
+        "vc",
+        "fundraising",
+        "investing",
+        "entrepreneurship",
+        "entrepreneurs",
+        "funding"
+      ]
+    },
+    {
+      "description": "Leading people and running teams: management, culture, hiring and hard decisions.",
+      "id": "leadership-management",
+      "label": "Leadership and management",
+      "synonyms": [
+        "leadership",
+        "management",
+        "leading",
+        "managing",
+        "managers",
+        "teams",
+        "bosses",
+        "company culture",
+        "hiring"
+      ]
+    },
+    {
+      "description": "Working life: careers, jobs, the workplace, pay and how work is changing.",
+      "id": "careers-work",
+      "label": "Careers and work",
+      "synonyms": [
+        "careers",
+        "career",
+        "work",
+        "jobs",
+        "job hunting",
+        "the workplace",
+        "remote work",
+        "salary",
+        "hiring",
+        "professional life"
+      ]
+    },
+    {
+      "description": "Religions, faith, belief, spiritual practice and the questions they answer.",
+      "id": "religion-spirituality",
+      "label": "Religion and spirituality",
+      "synonyms": [
+        "religion",
+        "faith",
+        "spirituality",
+        "god",
+        "church",
+        "christianity",
+        "islam",
+        "judaism",
+        "buddhism",
+        "prayer",
+        "meditation"
+      ]
+    },
+    {
+      "description": "Ethics, meaning, consciousness and the big questions, old and new.",
+      "id": "philosophy",
+      "label": "Philosophy",
+      "synonyms": [
+        "philosophy",
+        "ethics",
+        "morality",
+        "meaning",
+        "the meaning of life",
+        "consciousness",
+        "big questions",
+        "stoicism",
+        "deep thoughts"
+      ]
+    },
+    {
+      "description": "The past: wars, empires, people and events, and how things came to be.",
+      "id": "history",
+      "label": "History",
+      "synonyms": [
+        "history",
+        "the past",
+        "historical",
+        "ancient history",
+        "world war",
+        "empires",
+        "historians",
+        "how things began"
+      ]
+    },
+    {
+      "description": "Film, television, music, books, games, journalism, social media and the people in them.",
+      "id": "culture-media",
+      "label": "Culture and media",
+      "synonyms": [
+        "culture",
+        "pop culture",
+        "entertainment",
+        "movies",
+        "film",
+        "tv",
+        "music",
+        "books",
+        "games",
+        "journalism",
+        "social media",
+        "celebrities"
+      ]
+    },
+    {
+      "description": "Schools, universities, teaching and how people learn.",
+      "id": "education",
+      "label": "Education",
+      "synonyms": [
+        "education",
+        "school",
+        "schools",
+        "college",
+        "university",
+        "teaching",
+        "learning",
+        "students",
+        "teachers",
+        "studying"
+      ]
+    },
+    {
+      "description": "Love, marriage, dating, friendship, parenting and family life.",
+      "id": "relationships-family",
+      "label": "Relationships and family",
+      "synonyms": [
+        "relationships",
+        "family",
+        "parenting",
+        "kids",
+        "children",
+        "marriage",
+        "dating",
+        "love",
+        "friendship",
+        "parents"
+      ]
+    },
+    {
+      "description": "Making things: writing, storytelling, art, design and the creative process.",
+      "id": "creativity-writing",
+      "label": "Creativity and writing",
+      "synonyms": [
+        "creativity",
+        "writing",
+        "writers",
+        "storytelling",
+        "art",
+        "design",
+        "creative work",
+        "poetry",
+        "authors"
+      ]
+    },
+    {
+      "description": "Sports, athletes, teams, competition and coaching.",
+      "id": "sports",
+      "label": "Sports",
+      "synonyms": [
+        "sports",
+        "sport",
+        "football",
+        "soccer",
+        "basketball",
+        "baseball",
+        "athletes",
+        "the olympics",
+        "tennis",
+        "racing",
+        "fighting"
+      ]
+    },
+    {
+      "description": "Climate change, energy, nature and looking after the planet.",
+      "id": "environment-climate",
+      "label": "Environment and climate",
+      "synonyms": [
+        "climate",
+        "climate change",
+        "environment",
+        "the environment",
+        "energy",
+        "nature",
+        "sustainability",
+        "green",
+        "pollution",
+        "wildlife"
+      ]
+    },
+    {
+      "description": "Bitcoin, blockchains, stablecoins and the crypto industry.",
+      "id": "crypto",
+      "label": "Crypto",
+      "synonyms": [
+        "crypto",
+        "cryptocurrency",
+        "bitcoin",
+        "blockchain",
+        "ethereum",
+        "web3",
+        "stablecoins",
+        "digital money"
+      ]
+    },
+    {
+      "description": "Getting better at life: habits, discipline, motivation, mindset and purpose.",
+      "id": "self-improvement",
+      "label": "Self-improvement",
+      "synonyms": [
+        "self improvement",
+        "self help",
+        "personal growth",
+        "personal development",
+        "habits",
+        "productivity",
+        "motivation",
+        "mindset",
+        "success",
+        "discipline",
+        "happiness"
+      ]
+    },
+    {
+      "description": "The podcast and audio business: making shows, apps, hosting, standards and money.",
+      "id": "podcasting-media",
+      "label": "Podcasting and audio",
+      "synonyms": [
+        "podcasting",
+        "podcasts",
+        "podcast industry",
+        "audio",
+        "radio",
+        "making a podcast",
+        "broadcasting",
+        "rss",
+        "creators"
+      ]
     }
   ]
 }

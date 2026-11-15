@@ -11,7 +11,7 @@ import json
 import os
 import re
 
-from . import FORMAT_MAJOR, FORMAT_MINOR, digest as dg, jsonschema_lite, textrules
+from . import FORMAT_MAJOR, FORMAT_MINOR, digest as dg, jsonschema_lite, textrules, topics as tp
 from .fetch import validate_url
 from .transcript import pea_transcript as pt
 
@@ -124,8 +124,14 @@ def check_store(data):
     if store is None:
         return None, problems
     seen = set()
+    vocabulary = store.get("topics", [])
+    known = {t["id"] for t in vocabulary}
+    if tp.duplicate_id(vocabulary):
+        problems.append(Problem("inconsistent", "store.json.topics", "the topic id %s is listed twice" % tp.duplicate_id(vocabulary)))
     for n, s in enumerate(store["sources"]):
         where = "store.json.sources[%d]" % n
+        if any(t not in known for t in s.get("topics", [])):
+            problems.append(Problem("inconsistent", where, "the topic %s is not in the vocabulary of this file" % next(t for t in s["topics"] if t not in known)))
         if s["id"] in seen:
             problems.append(Problem("inconsistent", where, "the id %s is listed twice" % s["id"]))
         seen.add(s["id"])
@@ -149,8 +155,11 @@ def check_store(data):
     return (None if problems else store), problems
 
 
-def check_items(data, listing):
-    """A source's items file, against its store listing."""
+def check_items(data, listing, topics=None):
+    """A source's items file, against its store listing. `topics` is the vocabulary of the store.json that named the
+    file (its `topics`, or an empty list when it has none): an item may only hold its ids. None skips that check,
+    for a caller that holds no store listing."""
+    known = None if topics is None else {t["id"] for t in topics}
     where = "sources/%s/items.json" % listing["id"]
     problems = check_file(data, listing["items_file"], where)
     if problems:
@@ -195,6 +204,8 @@ def check_items(data, listing):
                 problems.append(Problem("inconsistent", at, "transcript_source.extract goes with format html, and only with it"))
         if item["stale"] != (item["stale_reason"] is not None):
             problems.append(Problem("inconsistent", at, "stale and stale_reason disagree"))
+        for why in tp.check_item(item.get("topics"), item.get("topics_by"), known):
+            problems.append(Problem("inconsistent", at, why))
     dates = [(i["date"], i["id"]) for i in items["items"]]
     if dates != sorted(dates, reverse=True):
         problems.append(Problem("inconsistent", where, "the items are not newest first"))
@@ -291,8 +302,9 @@ def _read(folder, relative):
         return f.read()
 
 
-def check_source_folder(folder, listing, report=None):
-    """Every file of one source under `folder`. Returns the list of problems (also added to `report`)."""
+def check_source_folder(folder, listing, report=None, topics=None):
+    """Every file of one source under `folder`. Returns the list of problems (also added to `report`). `topics` is the
+    vocabulary of the store.json the listing is from (see check_items)."""
     report = report or Report()
     problems, listed = [], set()
     ref = listing["items_file"]
@@ -302,7 +314,7 @@ def check_source_folder(folder, listing, report=None):
         if data is None:
             problems.append(Problem("missing", ref["path"], "the items file is not there"))
         else:
-            items, found = check_items(data, listing)
+            items, found = check_items(data, listing, topics)
             problems += found
             report.files += 1
             report.bytes += len(data)
@@ -356,7 +368,7 @@ def check_folder(folder):
         return report
     for listing in store["sources"]:
         report.sources += 1
-        check_source_folder(folder, listing, report)
+        check_source_folder(folder, listing, report, store.get("topics", []))
     known = {s["id"] for s in store["sources"]}
     base = os.path.join(folder, "sources")
     for name in sorted(os.listdir(base)) if os.path.isdir(base) else []:

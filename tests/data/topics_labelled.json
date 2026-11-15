@@ -1,0 +1,1428 @@
+{
+ "about": "Real items of the live sources, labelled by hand on 2026-11-15, for measuring the keyword tagger (tests/eval_topics.py). Only ids, dates and titles are kept: no description, notes or transcript text. `topics` are the topics the item is mainly about (used for recall); `also` are topics that would not be wrong on it (a tag outside both lists counts as wrong). `split`: the lexicon was tuned on \"dev\"; \"held-out\" items were labelled before the tagger was run on them.",
+ "labelled_on": "2026-11-15",
+ "items": [
+  {
+   "source": "80000-hours",
+   "id": "2026-10-21-93c96eab2a",
+   "date": "2026-10-21",
+   "title": "AI lab staff: Has your project been overtaken by events? 8 strategic updates | Rob Wiblin",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "careers-work"
+   ],
+   "also": [
+    "technology",
+    "policy-law"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-10-23-8ac7e92de5",
+   "date": "2026-10-23",
+   "title": "#257 – Tom Milton on how we could verify a US–China deal on AI",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "world-news"
+   ],
+   "also": [
+    "policy-law",
+    "technology",
+    "politics",
+    "security-privacy"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-10-27-cf9841dc8a",
+   "date": "2026-10-27",
+   "title": "Why Silicon Valley can’t slow down AI on its own | Luisa Rodriguez",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "policy-law",
+    "business",
+    "politics",
+    "economics-finance"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-10-29-9c3a3c62ef",
+   "date": "2026-10-29",
+   "title": "#258 – Luke Muehlhauser on the most important AI safety work nobody is doing",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "policy-law"
+   ],
+   "also": [
+    "politics",
+    "technology",
+    "careers-work"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-03-2233442425",
+   "date": "2026-11-03",
+   "title": "3 new scandals show being a pain in the ass for AI labs is a legit job now | Rob Wiblin",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "policy-law",
+    "careers-work",
+    "business",
+    "technology",
+    "politics"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-05-efd6806683",
+   "date": "2026-11-05",
+   "title": "An AI disaster hits. The president calls Xi. Then what? | Jeremie Harris (crosspost from NonZero)",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "world-news"
+   ],
+   "also": [
+    "politics",
+    "policy-law",
+    "technology"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-06-84af739579",
+   "date": "2026-11-06",
+   "title": "Your AI crash course starts here: Our best episodes to get up to speed on transformative AI",
+   "split": "dev",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "philosophy",
+    "careers-work"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-10-3cb5bb6baf",
+   "date": "2026-11-10",
+   "title": "The US is building the smartest AI. China is running a different race | Luisa Rodriguez",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "world-news"
+   ],
+   "also": [
+    "technology",
+    "policy-law",
+    "politics"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-12-ec1e882848",
+   "date": "2026-11-12",
+   "title": "Is Anthropic on the cusp of RSI? Inside the redacted METR report | Luisa Rodriguez",
+   "split": "dev",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "science",
+    "policy-law"
+   ]
+  },
+  {
+   "source": "80000-hours",
+   "id": "2026-11-13-ade16d9093",
+   "date": "2026-11-13",
+   "title": "How the New Congress Can Save Us From AI Disaster | Rob Wiblin",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "politics",
+    "policy-law"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-02-be59d1f43f",
+   "date": "2026-11-02",
+   "title": "How to Deslopify Your AI",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "creativity-writing",
+    "technology",
+    "careers-work",
+    "self-improvement"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-03-40b948e441",
+   "date": "2026-11-03",
+   "title": "AI Lurches Toward Recursive Self-Improvement",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "economics-finance",
+    "science",
+    "business"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-04-fff69f215e",
+   "date": "2026-11-04",
+   "title": "How the Midterm Results Change AI",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "politics"
+   ],
+   "also": [
+    "policy-law",
+    "technology",
+    "environment-climate"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-05-422bfc604d",
+   "date": "2026-11-05",
+   "title": "Why a Data Center Slowdown Benefits Big Tech",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "technology"
+   ],
+   "also": [
+    "economics-finance",
+    "politics",
+    "business",
+    "policy-law",
+    "environment-climate"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-06-13c0a52adf",
+   "date": "2026-11-06",
+   "title": "Companies Are Spending 5x More on AI Now",
+   "split": "held-out",
+   "topics": [
+    "ai",
+    "business"
+   ],
+   "also": [
+    "economics-finance",
+    "technology"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-08-8b7b1c9949",
+   "date": "2026-11-08",
+   "title": "Agentic Video Is Real and Here’s What You Should Try",
+   "split": "dev",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "culture-media",
+    "creativity-writing",
+    "software-engineering"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-09-5dd98d69f6",
+   "date": "2026-11-09",
+   "title": "Nvidia CEO Admits Affair With Suspected Chinese Spy",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "technology"
+   ],
+   "also": [
+    "business",
+    "economics-finance",
+    "world-news",
+    "policy-law",
+    "security-privacy",
+    "politics"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-10-4e0663f4a9",
+   "date": "2026-11-10",
+   "title": "Fable 5.2 Is the Best AI Ever. So Why Am I Not Switching Yet?",
+   "split": "dev",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "software-engineering"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-11-3e37010ebd",
+   "date": "2026-11-11",
+   "title": "Wall Street Has No Idea What Anthropic Is Worth",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "economics-finance"
+   ],
+   "also": [
+    "business",
+    "technology",
+    "startups-investing"
+   ]
+  },
+  {
+   "source": "ai-daily-brief",
+   "id": "2026-11-12-f7a07b7355",
+   "date": "2026-11-12",
+   "title": "Jensen Huang Is Out. Everything in AI Is Now Up for Grabs.",
+   "split": "dev",
+   "topics": [
+    "ai",
+    "technology"
+   ],
+   "also": [
+    "business",
+    "politics",
+    "policy-law",
+    "economics-finance",
+    "world-news"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-09-11-3b013fd358",
+   "date": "2026-09-11",
+   "title": "Turn Your Best Episodes Into A Conference Talk",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "ai",
+    "creativity-writing",
+    "careers-work",
+    "self-improvement"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-09-18-73920d2dd5",
+   "date": "2026-09-18",
+   "title": "We Built Our Own Reliable Remote Recording Software",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "software-engineering",
+    "technology"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-09-25-9c9655d445",
+   "date": "2026-09-25",
+   "title": "Keeping The Indie Spirit Alive As Podcasting Grows",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-10-02-e7281dcedf",
+   "date": "2026-10-02",
+   "title": "How Teens Turn Podcast Episodes Into Secret Chat Rooms",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "culture-media",
+    "relationships-family",
+    "technology"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-10-09-a523b7ae13",
+   "date": "2026-10-09",
+   "title": "These Podcasting Features Will Save You So Much Time",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-10-16-c666382ecb",
+   "date": "2026-10-16",
+   "title": "Buzzsprout Gets A Dark Side",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "software-engineering",
+    "creativity-writing",
+    "technology"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-10-23-915e327a5d",
+   "date": "2026-10-23",
+   "title": "Why Your Podcast Stats Don't Add Up (And What Metrics Actually Matter)",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-10-30-1cd76f5fa8",
+   "date": "2026-10-30",
+   "title": "Your Podcast Idea Doesn’t Have To Be Perfect To Get Started",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "self-improvement",
+    "creativity-writing"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-11-06-5ba1593902",
+   "date": "2026-11-06",
+   "title": "Can AI Find Your Podcast? A Real-World AEO Test",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "buzzcast",
+   "id": "2026-11-13-a9a94500e7",
+   "date": "2026-11-13",
+   "title": "Rodecaster Studio Review For Faster Podcast Editing",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-07-21-aceab764d8",
+   "date": "2026-07-21",
+   "title": "177: National Public Data",
+   "split": "held-out",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "policy-law",
+    "technology"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-08-04-ac5334f431",
+   "date": "2026-08-04",
+   "title": "178: Ubiquiti",
+   "split": "held-out",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "policy-law",
+    "technology",
+    "business",
+    "careers-work"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-09-01-9017987122",
+   "date": "2026-09-01",
+   "title": "179: The Courthouse - Revisited",
+   "split": "dev",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "policy-law"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-09-22-0c4bcadb02",
+   "date": "2026-09-22",
+   "title": "LOW - Now Available",
+   "split": "dev",
+   "topics": [],
+   "also": [
+    "culture-media",
+    "podcasting-media",
+    "creativity-writing"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-10-06-47a78e772e",
+   "date": "2026-10-06",
+   "title": "180: Conti",
+   "split": "dev",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "technology",
+    "world-news"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-10-20-c4c27b9c4f",
+   "date": "2026-10-20",
+   "title": "181: Ricky",
+   "split": "dev",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "technology",
+    "policy-law",
+    "crypto"
+   ]
+  },
+  {
+   "source": "darknet-diaries",
+   "id": "2026-11-03-b72f761d9b",
+   "date": "2026-11-03",
+   "title": "182: Blackshades",
+   "split": "dev",
+   "topics": [
+    "security-privacy"
+   ],
+   "also": [
+    "policy-law",
+    "technology"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-10-23-0ae176c3e6",
+   "date": "2026-10-23",
+   "title": "Most Replayed Moment: How AI Companies Are Gaslighting You - Karen Hao",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "culture-media",
+    "business",
+    "politics",
+    "policy-law",
+    "environment-climate"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-10-26-1a8e5c4ace",
+   "date": "2026-10-26",
+   "title": "Mark Cuban: Sales, AI and What It Really Takes to Build a Business",
+   "split": "held-out",
+   "topics": [
+    "business",
+    "ai"
+   ],
+   "also": [
+    "startups-investing",
+    "careers-work",
+    "self-improvement",
+    "economics-finance",
+    "technology"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-10-29-2ca95f67ec",
+   "date": "2026-10-29",
+   "title": "90 Million People: Why Iran Is The Most Incompetent War In Human History",
+   "split": "held-out",
+   "topics": [
+    "world-news",
+    "history"
+   ],
+   "also": [
+    "politics"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-10-30-3f22968cde",
+   "date": "2026-10-30",
+   "title": "Most Replayed Moment: Why You Need A Prenup And How To Avoid Divorce!",
+   "split": "held-out",
+   "topics": [
+    "relationships-family"
+   ],
+   "also": [
+    "policy-law",
+    "economics-finance"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-02-38034784c5",
+   "date": "2026-11-02",
+   "title": "James Talarico: The Biden Administration Failed Us!",
+   "split": "held-out",
+   "topics": [
+    "politics"
+   ],
+   "also": [
+    "economics-finance",
+    "religion-spirituality",
+    "policy-law"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-05-54c9c64d91",
+   "date": "2026-11-05",
+   "title": "Iran War Expert: The 8 Most Dangerous Weeks Begin Now, A Cyberattack Could Knock Out The Internet! | Prof Robert Pape",
+   "split": "dev",
+   "topics": [
+    "world-news",
+    "politics"
+   ],
+   "also": [
+    "security-privacy",
+    "history"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-06-17a7340f0e",
+   "date": "2026-11-06",
+   "title": "Most Replayed Moment: The One Habit Behind Every Breakthrough Idea - Spotify Founder",
+   "split": "dev",
+   "topics": [
+    "startups-investing"
+   ],
+   "also": [
+    "business",
+    "self-improvement",
+    "technology",
+    "health",
+    "creativity-writing",
+    "leadership-management"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-09-c1b3aea97a",
+   "date": "2026-11-09",
+   "title": "Katt Williams: I Lied My Way Into Comedy! List The 300 People Ahead Of You, Then Outwork Each One!",
+   "split": "dev",
+   "topics": [
+    "culture-media",
+    "self-improvement"
+   ],
+   "also": [
+    "careers-work",
+    "relationships-family"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-12-5d49328456",
+   "date": "2026-11-12",
+   "title": "Dr David Perlmutter: Dementia Risk, Blood Sugar, Sleep and Alcohol",
+   "split": "dev",
+   "topics": [
+    "health"
+   ],
+   "also": [
+    "supplements-nutrition",
+    "wellness",
+    "science",
+    "fitness"
+   ]
+  },
+  {
+   "source": "diary-of-a-ceo",
+   "id": "2026-11-13-3b81081930",
+   "date": "2026-11-13",
+   "title": "Most Replayed Moment: The Childhood Scripts Still Running Your Life! Chase Hughes",
+   "split": "dev",
+   "topics": [
+    "mental-health",
+    "self-improvement"
+   ],
+   "also": [
+    "relationships-family"
+   ]
+  },
+  {
+   "source": "lex-fridman",
+   "id": "2026-08-26-fb91d441a9",
+   "date": "2026-08-26",
+   "title": "#501 – DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux",
+   "split": "dev",
+   "topics": [
+    "software-engineering",
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "sports",
+    "business",
+    "careers-work"
+   ]
+  },
+  {
+   "source": "lex-fridman",
+   "id": "2026-09-17-3b2c67e29b",
+   "date": "2026-09-17",
+   "title": "#502 – Psychiatry, Insane Asylums, Mental Illness, ECT, Lobotomies, Freud & Jung",
+   "split": "dev",
+   "topics": [
+    "mental-health",
+    "history"
+   ],
+   "also": [
+    "health",
+    "science"
+   ]
+  },
+  {
+   "source": "lex-fridman",
+   "id": "2026-10-26-7d63addabb",
+   "date": "2026-10-26",
+   "title": "#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis & Complexity Theory",
+   "split": "dev",
+   "topics": [
+    "science",
+    "ai"
+   ],
+   "also": [
+    "technology",
+    "education"
+   ]
+  },
+  {
+   "source": "lex-fridman",
+   "id": "2026-11-10-559221f486",
+   "date": "2026-11-10",
+   "title": "#504 – Russia-Ukraine War: Putin, Zelenskyy, Drones and the Future of Warfare",
+   "split": "dev",
+   "topics": [
+    "world-news"
+   ],
+   "also": [
+    "politics",
+    "history",
+    "technology"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-08-25-2565d92121",
+   "date": "2026-08-25",
+   "title": "The Return to the Chamber of Mysteries",
+   "split": "held-out",
+   "topics": [
+    "technology"
+   ],
+   "also": [
+    "policy-law",
+    "software-engineering",
+    "business"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-09-03-79df6f663e",
+   "date": "2026-09-03",
+   "title": "AI Detection with Max Spero",
+   "split": "held-out",
+   "topics": [
+    "ai"
+   ],
+   "also": [
+    "creativity-writing",
+    "education",
+    "technology",
+    "software-engineering",
+    "startups-investing"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-09-11-20a4ccba72",
+   "date": "2026-09-11",
+   "title": "Emulating Oxide: How Faux Can You Go?",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-09-16-33f2c927af",
+   "date": "2026-09-16",
+   "title": "For Want of a Resistor",
+   "split": "dev",
+   "topics": [
+    "technology"
+   ],
+   "also": [
+    "business",
+    "software-engineering"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-10-16-ef85adc1da",
+   "date": "2026-10-16",
+   "title": "Working on Wicked Problems",
+   "split": "dev",
+   "topics": [],
+   "also": [
+    "philosophy",
+    "software-engineering",
+    "technology",
+    "policy-law",
+    "leadership-management",
+    "politics",
+    "science"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-10-18-818d385c84",
+   "date": "2026-10-18",
+   "title": "Oxide's $445M Series D",
+   "split": "dev",
+   "topics": [
+    "startups-investing"
+   ],
+   "also": [
+    "business",
+    "economics-finance",
+    "technology"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-10-24-f636266c22",
+   "date": "2026-10-24",
+   "title": "Dead Printers Tell No Tales",
+   "split": "dev",
+   "topics": [
+    "security-privacy",
+    "technology"
+   ],
+   "also": [
+    "software-engineering"
+   ]
+  },
+  {
+   "source": "oxide-and-friends",
+   "id": "2026-10-29-39daf5d09d",
+   "date": "2026-10-29",
+   "title": "Books in the Box VI",
+   "split": "dev",
+   "topics": [
+    "culture-media"
+   ],
+   "also": [
+    "creativity-writing",
+    "technology",
+    "history",
+    "software-engineering",
+    "science"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-08-28-4baca9df0b",
+   "date": "2026-08-28",
+   "title": "Episode 269: Verbal Pollution",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-09-11-3843029e71",
+   "date": "2026-09-11",
+   "title": "Episode 270: YOLO Guy",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-09-18-bec9363cd2",
+   "date": "2026-09-18",
+   "title": "Episode 271: Foot Terminal",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-09-25-a51e3bce85",
+   "date": "2026-09-25",
+   "title": "Episode 272: \"Is this Y'all?\"",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-10-02-e9ed70b085",
+   "date": "2026-10-02",
+   "title": "Episode 273: \"Advertising is the Horse and Buggies of Podcasting\"",
+   "split": "held-out",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai",
+    "business"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-10-09-73c443928a",
+   "date": "2026-10-09",
+   "title": "Episode 274: \"Vibe Cloning\"",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-10-16-46c2ca1b26",
+   "date": "2026-10-16",
+   "title": "Episode 275: \"Off The Rails\"",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-10-23-f0eb4ee9ee",
+   "date": "2026-10-23",
+   "title": "Episode 276: \"Jackleg leechers\"",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-10-30-8d3fb54dc1",
+   "date": "2026-10-30",
+   "title": "Episode 277: \"x402 Bitch!\"",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai"
+   ]
+  },
+  {
+   "source": "podcasting-20",
+   "id": "2026-11-13-6ce296d152",
+   "date": "2026-11-13",
+   "title": "Episode 278: \"1 Billion Tokens!\"",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "technology",
+    "software-engineering",
+    "crypto",
+    "ai"
+   ]
+  },
+  {
+   "source": "podnews-daily",
+   "id": "2026-11-09-46ae7c7ec3",
+   "date": "2026-11-09",
+   "title": "For 18-34s, time with podcasts nears time with radio",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "podnews-daily",
+   "id": "2026-11-10-158ee770a3",
+   "date": "2026-11-10",
+   "title": "Action on copycat podcasts",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "policy-law",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "podnews-daily",
+   "id": "2026-11-11-53a0e3e72b",
+   "date": "2026-11-11",
+   "title": "More fake shows on the way, as Meta’s Muse gets into podcasting",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "ai",
+    "culture-media",
+    "technology"
+   ]
+  },
+  {
+   "source": "podnews-daily",
+   "id": "2026-11-12-044c2cab8d",
+   "date": "2026-11-12",
+   "title": "iHeart podcast division (not) for sale?",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "economics-finance",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "podnews-daily",
+   "id": "2026-11-13-7a6f1a9429",
+   "date": "2026-11-13",
+   "title": "Bartlett’s crown snatched",
+   "split": "dev",
+   "topics": [
+    "podcasting-media"
+   ],
+   "also": [
+    "business",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-09-08-d2eb8d0cb1",
+   "date": "2026-09-08",
+   "title": "#495 Banned",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-09-15-ded5e215c9",
+   "date": "2026-09-15",
+   "title": "#496 A lake house in Seattle",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-09-23-f2713d733e",
+   "date": "2026-09-23",
+   "title": "#497 Faster than light profiling",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-09-29-a734837877",
+   "date": "2026-09-29",
+   "title": "#498 A Tiny Episode",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai",
+    "security-privacy"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-10-06-2e440c9431",
+   "date": "2026-10-06",
+   "title": "#499 So many questions??",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-10-14-ba603d23f5",
+   "date": "2026-10-14",
+   "title": "#500 Episode 500!",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-10-20-fccc900fa2",
+   "date": "2026-10-20",
+   "title": "#501 A Nod to Sir-Mix-Alot",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-10-27-5db5f28554",
+   "date": "2026-10-27",
+   "title": "#502 Introducing chameleon-rs",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-11-03-899c8424fa",
+   "date": "2026-11-03",
+   "title": "#503 It’s not 85% HTML",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "python-bytes",
+   "id": "2026-11-10-2cc6d04148",
+   "date": "2026-11-10",
+   "title": "#504 Who turned the GIL back on?",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-08-19-b00af47749",
+   "date": "2026-08-19",
+   "title": "#559: 12 Things You Should (and Shouldn't) Do in AWS",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "security-privacy",
+    "business"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-08-26-38e2c61698",
+   "date": "2026-08-26",
+   "title": "#560: Building a Research OS: From Django to 30,000 Samples",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "science",
+    "health",
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-09-04-eaec9b1f32",
+   "date": "2026-09-04",
+   "title": "#561: TonIO, a Multi-threaded Async Runtime for Python",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-09-10-07bd946bdb",
+   "date": "2026-09-10",
+   "title": "#562: DuckLake: The Lakehouse That's Just SQL and Parquet",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-09-16-7495cc1eb6",
+   "date": "2026-09-16",
+   "title": "#563: Getting Started with Rust as Python Devs",
+   "split": "held-out",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-09-22-f4b963df87",
+   "date": "2026-09-22",
+   "title": "#564: EVE Online Departs for Python 3",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "culture-media"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-10-02-9b61adc0c1",
+   "date": "2026-10-02",
+   "title": "#565: Tachyon, Python 3.15's Built-in Sampling Profiler",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-10-17-b2853d2d79",
+   "date": "2026-10-17",
+   "title": "#566: State of the art in Python 2026",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology",
+    "ai"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-10-27-278dfa0ddc",
+   "date": "2026-10-27",
+   "title": "#567: Personal AI Agents for Pythonistas",
+   "split": "dev",
+   "topics": [
+    "software-engineering",
+    "ai"
+   ],
+   "also": [
+    "technology"
+   ]
+  },
+  {
+   "source": "talk-python",
+   "id": "2026-11-03-4989fcf522",
+   "date": "2026-11-03",
+   "title": "#568: Cloudflare Python Workers",
+   "split": "dev",
+   "topics": [
+    "software-engineering"
+   ],
+   "also": [
+    "technology"
+   ]
+  }
+ ]
+}

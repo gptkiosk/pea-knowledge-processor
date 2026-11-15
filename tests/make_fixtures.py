@@ -270,12 +270,12 @@ def config():
                          "min_full_transcript_share": 0},   # the made-up sources include ones without transcripts, on purpose; the rule has its own tests
             "model": {"enabled": False, "model": "test/model-small", "max_cost_usd_per_run": 0.05},
             "sources": [
-                source("harbor-voices", "Harbor Voices", "podcast", "agent_index", "https://harbor.example.org/agent.json", "https://harbor.example.org/", "digest_only", "microphone", "blue"),
-                source("tide-tables", "Tide Tables", "podcast", "feed", "https://tide.example.org/feed.xml", "https://tide.example.org/", "full", "waveform", "teal", suggested_keep=3),
-                source("quay-notes", "Quay Notes", "podcast", "json_feed", "https://quay.example.org/feed.json", "https://quay.example.org/", "digest_only", "book", "orange"),
-                source("port-gazette", "The Port Gazette", "news", "feed", "https://gazette.example.org/feed.atom", "https://gazette.example.org/", "digest_only", "newspaper", "grey"),
+                source("harbor-voices", "Harbor Voices", "podcast", "agent_index", "https://harbor.example.org/agent.json", "https://harbor.example.org/", "digest_only", "microphone", "blue", topics=["history", "business"]),
+                source("tide-tables", "Tide Tables", "podcast", "feed", "https://tide.example.org/feed.xml", "https://tide.example.org/", "full", "waveform", "teal", suggested_keep=3, topics=["history", "environment-climate"]),
+                source("quay-notes", "Quay Notes", "podcast", "json_feed", "https://quay.example.org/feed.json", "https://quay.example.org/", "digest_only", "book", "orange", topics=["business"]),
+                source("port-gazette", "The Port Gazette", "news", "feed", "https://gazette.example.org/feed.atom", "https://gazette.example.org/", "digest_only", "newspaper", "grey", topics=["politics", "business"]),
                 # A publisher whose transcripts are pages of its own site, linked from the notes of each episode.
-                source("lamp-room", "The Lamp Room", "podcast", "feed", "https://lamp.example.org/feed.xml", "https://lamp.example.org/", "digest_only", "book", "yellow",
+                source("lamp-room", "The Lamp Room", "podcast", "feed", "https://lamp.example.org/feed.xml", "https://lamp.example.org/", "digest_only", "book", "yellow", topics=["history", "technology"],
                        transcript_page={"from": "notes_link", "host": "lamp.example.org", "path_ends": "-transcript",
                                         "extract": {"row": [".turn"], "speaker": [".who"], "time": [".at"], "drop": [".aside"]}}),
             ]}

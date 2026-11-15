@@ -82,7 +82,7 @@ class Golden(unittest.TestCase):
     def test_the_hostile_samples_are_the_ones_the_generator_writes(self):
         paused = json.loads(self.states["05-paused-by-the-curator"]["store.json"])
         item = support.items(self.out, "tide-tables")[0]
-        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"])):
+        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"]), support.store(self.out)):
             with open(os.path.join(support.GOLDEN, "hostile", "%s.%s.json" % (name, kind)), encoding="utf-8", newline="") as f:
                 self.assertEqual(f.read(), text, "%s: %s" % (name, REMAKE))
 

@@ -130,6 +130,16 @@
             },
             "uniqueItems": true
           },
+          "topics": {
+            "description": "Since 1.2. The source's overall beat as ids of the vocabulary (`topics` at the top of this file), most typical first. A fallback for an item that has no topics of its own.",
+            "type": "array",
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"
+            }
+          },
           "language": {
             "description": "The language of the items (BCP 47).",
             "type": "string",
@@ -448,6 +458,52 @@
                 }
               }
             ]
+          }
+        }
+      }
+    },
+    "topics": {
+      "description": "Since 1.2. The controlled vocabulary of topics, the same for every source: the only ids a `topics` member of a source or an item may hold. In the curator's order; an id never changes once published. Absent when the output carries no topics.",
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "description": "One topic.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "synonyms",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,31}$",
+            "description": "The topic's id: lower-case words joined by hyphens, at most 32 characters."
+          },
+          "label": {
+            "description": "The topic's name, for showing.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "synonyms": {
+            "description": "Plain lower-case words and phrases a person might say for this topic. A word may stand under more than one topic.",
+            "type": "array",
+            "maxItems": 12,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:'[a-z]+)?(?: [a-z0-9]+(?:'[a-z]+)?){0,7}$",
+              "maxLength": 48
+            }
+          },
+          "description": {
+            "description": "One line on what the topic covers.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
           }
         }
       }

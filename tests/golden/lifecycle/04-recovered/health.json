@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-health",
-  "format_version": "1.1",
+  "format_version": "1.2",
   "generated_at": "2026-11-15T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "mode": "offline",
   "model": {

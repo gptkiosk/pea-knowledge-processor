@@ -133,7 +133,7 @@ def cmd_restore(args):
             if ref is None:
                 continue
             data = get(ref["path"], validate.ITEMS_BYTES)
-            items, problems = validate.check_items(data, listing)
+            items, problems = validate.check_items(data, listing, store.get("topics", []))
             if items is None:
                 _log("%s: the published items file does not validate (%s)" % (listing["id"], problems[0]))
                 continue
