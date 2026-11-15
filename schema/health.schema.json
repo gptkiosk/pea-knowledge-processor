@@ -1,0 +1,361 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:health",
+  "title": "PEA knowledge run report (health.json)",
+  "description": "What the last run did, per source. For the curator; an app does not need it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "generated_at",
+    "generator",
+    "mode",
+    "model",
+    "sources",
+    "totals"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-health"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "generator": {
+      "description": "What wrote the file.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "description": "The program that wrote the file.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Its version."
+        }
+      }
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "live",
+        "offline"
+      ]
+    },
+    "model": {
+      "description": "What the model digest cost.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "used",
+        "model",
+        "calls",
+        "accepted",
+        "fell_back",
+        "skipped_for_budget",
+        "prompt_tokens",
+        "completion_tokens",
+        "cost_usd",
+        "note"
+      ],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "used": {
+          "type": "boolean"
+        },
+        "model": {
+          "description": "The model id.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "accepted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "fell_back": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "skipped_for_budget": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "note": {
+          "description": "Why the model was not used.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "sources": {
+      "description": "One entry per source.",
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "outcome",
+          "state",
+          "reason",
+          "items",
+          "new",
+          "reused",
+          "kept",
+          "stale",
+          "pruned",
+          "transcripts",
+          "digests",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "outcome": {
+            "description": "What this run did with the source.",
+            "type": "string",
+            "enum": [
+              "ok",
+              "unchanged",
+              "failed",
+              "skipped",
+              "removed"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "withdrawn"
+            ]
+          },
+          "reason": {
+            "description": "Why the source is in this state or stale: a typed code and one plain sentence. Null when there is nothing to say.",
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "detail"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "manual",
+                      "fetch_failed",
+                      "robots_disallowed",
+                      "format_changed",
+                      "empty",
+                      "invalid_output",
+                      "licence",
+                      "takedown",
+                      "quality",
+                      "removed"
+                    ]
+                  },
+                  "detail": {
+                    "description": "One plain sentence.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  }
+                }
+              }
+            ]
+          },
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "new": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "reused": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "kept": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "stale": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "pruned": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "transcripts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "yes",
+              "partial",
+              "none_published",
+              "fetch_failed",
+              "unreadable",
+              "withheld_terms"
+            ],
+            "properties": {
+              "yes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "partial": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "none_published": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "fetch_failed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "unreadable": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "withheld_terms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              }
+            }
+          },
+          "digests": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "extractive",
+              "model"
+            ],
+            "properties": {
+              "extractive": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "model": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              }
+            }
+          },
+          "notes": {
+            "description": "What was noticed.",
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "description": "A plain sentence.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources",
+        "items",
+        "bytes",
+        "requests"
+      ],
+      "properties": {
+        "sources": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    }
+  }
+}

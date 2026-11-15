@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:items",
+  "title": "PEA knowledge items file (sources/<id>/items.json)",
+  "description": "The items of one source, newest first, with the hash and size of every file. It has no time of its own, so it changes only when an item does.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "source_id",
+    "items"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-items"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "items": {
+      "description": "Newest first.",
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "description": "One item of a source.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "date",
+          "link",
+          "duration_seconds",
+          "tags",
+          "teaser",
+          "stale",
+          "stale_reason",
+          "bytes",
+          "digest",
+          "transcript"
+        ],
+        "properties": {
+          "id": {
+            "description": "The item's id, unique within its source and stable across runs.",
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "title": {
+            "description": "The item's title.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "date": {
+            "description": "The day it was published.",
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+          },
+          "link": {
+            "description": "The publisher's page for this item: where to send the owner for the original.",
+            "type": "string",
+            "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+            "maxLength": 2000
+          },
+          "duration_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 359999,
+            "description": "Its length, or null."
+          },
+          "tags": {
+            "description": "The publisher's tags.",
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,23}$"
+            },
+            "uniqueItems": true
+          },
+          "teaser": {
+            "description": "One or two sentences, so the assistant can propose the item without opening its digest.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "stale": {
+            "description": "True when the last attempt to refresh this item failed and the files are from an earlier run.",
+            "type": "boolean"
+          },
+          "stale_reason": {
+            "description": "Why, when stale.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              null,
+              "fetch_failed",
+              "unreadable"
+            ]
+          },
+          "bytes": {
+            "description": "The size of the item's files together.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2000000
+          },
+          "digest": {
+            "description": "The item's digest file, and what kind of digest it is (repeated from the file so a reader can choose without opening it).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "bytes",
+              "basis",
+              "grade",
+              "method"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^sources/[a-z0-9][a-z0-9-]{0,63}/[a-z0-9][a-z0-9-]{0,63}\\.digest\\.json$",
+                "maxLength": 200
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 24000
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "transcript",
+                  "notes",
+                  "headline"
+                ]
+              },
+              "grade": {
+                "type": "string",
+                "enum": [
+                  "full",
+                  "partial",
+                  "headline"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "extractive",
+                  "model"
+                ]
+              }
+            }
+          },
+          "transcript": {
+            "description": "The item's transcript (PEA transcript v1), when the output carries one.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "available",
+              "reason",
+              "file"
+            ],
+            "properties": {
+              "available": {
+                "description": "Whether a transcript file is in the output: all of it, its first part, or none.",
+                "type": "string",
+                "enum": [
+                  "yes",
+                  "partial",
+                  "no"
+                ]
+              },
+              "reason": {
+                "description": "Null for yes; \"cut\" for partial; for no, why there is none.",
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  null,
+                  "none_published",
+                  "fetch_failed",
+                  "unreadable",
+                  "cut",
+                  "withheld_terms"
+                ]
+              },
+              "file": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "sha256",
+                      "bytes"
+                    ],
+                    "properties": {
+                      "path": {
+                        "description": "Where the file is, relative to the folder store.json is in. Never absolute, never with \"..\".",
+                        "type": "string",
+                        "pattern": "^sources/[a-z0-9][a-z0-9-]{0,63}/[a-z0-9][a-z0-9-]{0,63}\\.transcript\\.pea\\.txt$",
+                        "maxLength": 200
+                      },
+                      "sha256": {
+                        "description": "SHA-256 of the file's bytes, lower-case hexadecimal.",
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "bytes": {
+                        "description": "The file's size in bytes.",
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

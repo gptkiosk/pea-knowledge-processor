@@ -1,0 +1,540 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:digest",
+  "title": "PEA knowledge digest (sources/<id>/<item>.digest.json)",
+  "description": "Everything the assistant needs to talk about one item without the transcript. docs/FORMAT.md says what each member is for.",
+  "$defs": {
+    "at": {
+      "description": "A pointer into the transcript, for drilling in. Both null when there is nothing to point at.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_seconds",
+        "segment"
+      ],
+      "properties": {
+        "time_seconds": {
+          "description": "Seconds from the start of the episode, or null.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 359999
+        },
+        "segment": {
+          "description": "The number of the transcript segment (0 is the first line after the header), or null.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100000
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "source_id",
+    "source_name",
+    "item_id",
+    "title",
+    "date",
+    "link",
+    "language",
+    "duration_seconds",
+    "basis",
+    "about",
+    "brief",
+    "talking_points",
+    "quotes",
+    "glossary",
+    "numbers",
+    "background",
+    "strongest_claim",
+    "contested",
+    "connections",
+    "starters",
+    "follow_ups",
+    "tone",
+    "provenance",
+    "quality"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-digest"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "source_name": {
+      "description": "The source's name.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "title": {
+      "description": "The item's title.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "link": {
+      "type": "string",
+      "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+      "maxLength": 2000
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$"
+    },
+    "duration_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 359999
+    },
+    "basis": {
+      "description": "What the digest was made from.",
+      "type": "string",
+      "enum": [
+        "transcript",
+        "notes",
+        "headline"
+      ]
+    },
+    "about": {
+      "description": "The framing: what this item is about, in plain spoken sentences.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "brief": {
+      "description": "The compact form, for when two digests must fit in one prompt. All its text together is at most 900 characters (checked by the validator, not by this schema).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "about",
+        "points",
+        "quote",
+        "hook"
+      ],
+      "properties": {
+        "about": {
+          "description": "The framing, shortened.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "points": {
+          "description": "Up to three points: first, middle, last.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "description": "A point.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 170
+          }
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "text",
+                "speaker",
+                "time_seconds"
+              ],
+              "properties": {
+                "text": {
+                  "description": "The quote.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 170
+                },
+                "speaker": {
+                  "description": "Who said it.",
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "time_seconds": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 359999
+                }
+              }
+            }
+          ]
+        },
+        "hook": {
+          "description": "One thing to offer.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 140
+        }
+      }
+    },
+    "talking_points": {
+      "description": "The points in the order of the story. A whole digest has five to eight.",
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "point",
+          "why",
+          "at",
+          "ask"
+        ],
+        "properties": {
+          "point": {
+            "description": "The point, in one or two sentences.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 280
+          },
+          "why": {
+            "description": "Why it matters. Null when not written.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "at": {
+            "$ref": "#/$defs/at"
+          },
+          "ask": {
+            "description": "A question worth asking about it.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      }
+    },
+    "quotes": {
+      "description": "Short notable quotes.",
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "speaker",
+          "at",
+          "exact"
+        ],
+        "properties": {
+          "text": {
+            "description": "The words.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "speaker": {
+            "description": "Who said them, when known.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "at": {
+            "$ref": "#/$defs/at"
+          },
+          "exact": {
+            "description": "True when the text is, character for character, in the transcript segment `at` points to.",
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "glossary": {
+      "description": "The people, organisations and products that come up, each with a one-line gloss.",
+      "type": "array",
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "term",
+          "kind",
+          "gloss"
+        ],
+        "properties": {
+          "term": {
+            "description": "The name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "person",
+              "organisation",
+              "product",
+              "other"
+            ]
+          },
+          "gloss": {
+            "description": "One line on who or what it is.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 140
+          }
+        }
+      }
+    },
+    "numbers": {
+      "description": "The figures that matter, each with its context.",
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "value",
+          "context",
+          "at"
+        ],
+        "properties": {
+          "value": {
+            "description": "The figure as written.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "context": {
+            "description": "What it measures.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "at": {
+            "$ref": "#/$defs/at"
+          }
+        }
+      }
+    },
+    "background": {
+      "description": "What a listener needs to know beforehand.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "strongest_claim": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text",
+            "at"
+          ],
+          "properties": {
+            "text": {
+              "description": "The claim.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 280
+            },
+            "at": {
+              "$ref": "#/$defs/at"
+            }
+          }
+        }
+      ],
+      "description": "The strongest claim the item makes."
+    },
+    "contested": {
+      "description": "What is uncertain or contested.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "description": "One uncertain or disputed thing.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "connections": {
+      "description": "Earlier items of the same source that this one continues. A reader ignores an id it does not have.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "why"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "why": {
+            "description": "What links them.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "starters": {
+      "description": "Things the assistant can offer to open with.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "description": "An opener.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "follow_ups": {
+      "description": "Follow-up questions the assistant can offer.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "description": "A question.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "tone": {
+      "description": "A hint about register.",
+      "type": "string",
+      "enum": [
+        "news",
+        "analysis",
+        "technical",
+        "interview",
+        "conversational",
+        "light",
+        "unknown"
+      ]
+    },
+    "provenance": {
+      "description": "How the digest was made.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "model",
+        "transcript_sha256"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "extractive",
+            "model"
+          ]
+        },
+        "model": {
+          "description": "The model's id when method is model.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "transcript_sha256": {
+          "description": "SHA-256 of the normalized transcript the digest was made from, or null.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "quality": {
+      "description": "How far to trust it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grade",
+        "notes"
+      ],
+      "properties": {
+        "grade": {
+          "description": "full: from a whole transcript, with at least five talking points. partial: from a cut transcript, from show notes, or with fewer points. headline: title and short description only.",
+          "type": "string",
+          "enum": [
+            "full",
+            "partial",
+            "headline"
+          ]
+        },
+        "notes": {
+          "description": "What a reader should know about this digest's limits.",
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "description": "A plain sentence.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      }
+    }
+  }
+}

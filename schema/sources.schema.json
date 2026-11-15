@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:sources",
+  "title": "The curated source list (config/sources.json)",
+  "description": "Which sources the pipeline reads, what may be published from each, and the limits of a run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "sources"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-sources"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "min_app_version": {
+      "description": "The oldest app version that should read this output, or null. An older app keeps what it has and asks for an update.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{1,4}\\.\\d{1,4}(\\.\\d{1,4})?$"
+    },
+    "defaults": {
+      "description": "Limits that apply to every source unless it says otherwise.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "max_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "auto_pause_after_failed_runs": {
+          "description": "A source that cannot be read this many runs in a row is paused.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "tombstone_days": {
+          "description": "How long a withdrawn source stays listed, so that apps learn of it.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "excerpt_budget_chars": {
+          "description": "For digest_only sources: the most characters a digest may take from the transcript.",
+          "type": "integer",
+          "minimum": 500,
+          "maximum": 20000
+        },
+        "suggested_keep": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "max_total_bytes": {
+          "description": "The run fails rather than publish more than this.",
+          "type": "integer",
+          "minimum": 100000,
+          "maximum": 900000000
+        }
+      }
+    },
+    "model": {
+      "description": "The optional model digest.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "model": {
+          "description": "The model id at the server.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "base_url": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "max_input_chars": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 400000
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 8000
+        },
+        "max_items_per_run": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 500
+        },
+        "max_cost_usd_per_item": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "max_cost_usd_per_run": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "price_per_million_input_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "price_per_million_output_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        }
+      }
+    },
+    "sources": {
+      "description": "The sources, in the order the store shows them.",
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "description": "One curated source.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "adapter",
+          "url",
+          "site",
+          "publisher",
+          "language",
+          "description",
+          "overview",
+          "categories",
+          "icon",
+          "publish",
+          "attribution",
+          "terms"
+        ],
+        "properties": {
+          "id": {
+            "description": "The source's id: stable for as long as the source exists, safe in a path.",
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "name": {
+            "description": "The source's name, for the store card.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "description": "\"podcast\": spoken episodes. \"news\": articles, as headline, short description and link only.",
+            "type": "string",
+            "enum": [
+              "podcast",
+              "news"
+            ]
+          },
+          "adapter": {
+            "description": "How the address is read.",
+            "type": "string",
+            "enum": [
+              "agent_index",
+              "feed",
+              "json_feed"
+            ]
+          },
+          "url": {
+            "description": "The index or feed to read.",
+            "type": "string",
+            "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+            "maxLength": 400
+          },
+          "site": {
+            "description": "The publisher's site. One of the two kinds of address the format allows.",
+            "type": "string",
+            "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+            "maxLength": 400
+          },
+          "publisher": {
+            "description": "Who publishes the source.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "language": {
+            "description": "The language of the items (BCP 47).",
+            "type": "string",
+            "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$"
+          },
+          "description": {
+            "description": "One or two sentences for the store card: what the owner gets.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "overview": {
+            "description": "What the source is, its beat and voice, and how an item is usually built. For the assistant, so she can talk about the source itself.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600
+          },
+          "categories": {
+            "description": "Topic tags for browsing and filtering.",
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,23}$"
+            },
+            "uniqueItems": true
+          },
+          "icon": {
+            "description": "A hint for drawing the card: a symbol name and a colour name from fixed lists. The format carries no images.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "symbol",
+              "colour"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "enum": [
+                  "microphone",
+                  "newspaper",
+                  "waveform",
+                  "book",
+                  "globe",
+                  "chip",
+                  "briefcase",
+                  "sparkles",
+                  "shield",
+                  "leaf",
+                  "chart",
+                  "people"
+                ]
+              },
+              "colour": {
+                "type": "string",
+                "enum": [
+                  "blue",
+                  "green",
+                  "orange",
+                  "purple",
+                  "red",
+                  "teal",
+                  "grey",
+                  "yellow",
+                  "pink",
+                  "indigo"
+                ]
+              }
+            }
+          },
+          "publish": {
+            "description": "\"full\": transcripts are in the output. \"digest_only\": only digests are; the terms do not clearly allow more.",
+            "type": "string",
+            "enum": [
+              "full",
+              "digest_only"
+            ]
+          },
+          "attribution": {
+            "description": "The credit line to show with anything taken from this source.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "suggested_keep": {
+            "description": "How many items the curator suggests keeping on the device. Only a suggestion: the owner decides.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "max_items": {
+            "description": "How many of the newest items are kept. Overrides the default.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "retention_days": {
+            "description": "Items older than this are dropped. Overrides the default.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3650
+          },
+          "state": {
+            "description": "A manual lifecycle state. It always wins over what the pipeline would decide. Leave it out for automatic.",
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "withdrawn"
+            ]
+          },
+          "state_reason": {
+            "description": "Why, for a manual paused or withdrawn state.",
+            "type": "string",
+            "enum": [
+              "manual",
+              "licence",
+              "takedown",
+              "quality"
+            ]
+          },
+          "message": {
+            "description": "The sentence the owner sees for a manual state. Text only.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "purge": {
+            "description": "With state withdrawn: apps must delete their local copy.",
+            "type": "boolean"
+          },
+          "terms": {
+            "description": "What was verified about the publisher's terms, and when.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "checked",
+              "robots",
+              "licence",
+              "terms_of_use",
+              "summary",
+              "uncertain"
+            ],
+            "properties": {
+              "checked": {
+                "description": "The day the terms were read.",
+                "type": "string",
+                "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+              },
+              "robots": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "url",
+                  "finding"
+                ],
+                "properties": {
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 400
+                  },
+                  "finding": {
+                    "description": "What was found there.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              },
+              "licence": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "url",
+                  "finding"
+                ],
+                "properties": {
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 400
+                  },
+                  "finding": {
+                    "description": "What was found there.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              },
+              "terms_of_use": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "url",
+                  "finding"
+                ],
+                "properties": {
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 400
+                  },
+                  "finding": {
+                    "description": "What was found there.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              },
+              "summary": {
+                "description": "What the publisher's terms were found to allow, in one or two sentences.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "uncertain": {
+                "description": "What could not be settled.",
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "description": "Something the owner should decide or check.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

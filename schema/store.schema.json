@@ -1,0 +1,456 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:store",
+  "title": "PEA knowledge store listing (store.json)",
+  "description": "The entry point: every curated source as a store card, its lifecycle state, and the hash of its items file. See docs/FORMAT.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "generated_at",
+    "generator",
+    "min_app_version",
+    "sources"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-store"
+    },
+    "format_version": {
+      "description": "MAJOR.MINOR. A reader accepts major 1 and ignores members it does not know when the minor is newer than its own.",
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "generated_at": {
+      "description": "When this output was built (UTC).",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "generator": {
+      "description": "What wrote the file.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "description": "The program that wrote the file.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Its version."
+        }
+      }
+    },
+    "min_app_version": {
+      "description": "The oldest app version that should read this output, or null. An older app keeps what it has and asks for an update.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{1,4}\\.\\d{1,4}(\\.\\d{1,4})?$"
+    },
+    "sources": {
+      "description": "The sources, in the curator's order.",
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "description": "One source as the store shows it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "description",
+          "overview",
+          "categories",
+          "language",
+          "kind",
+          "publisher",
+          "site",
+          "icon",
+          "cadence",
+          "typical_duration_seconds",
+          "publish",
+          "terms_summary",
+          "attribution",
+          "state",
+          "state_reason",
+          "message",
+          "purge",
+          "state_since",
+          "freshness",
+          "item_count",
+          "latest_titles",
+          "latest_date",
+          "available",
+          "avg_bytes",
+          "suggested_keep",
+          "whats_new",
+          "items_file"
+        ],
+        "properties": {
+          "id": {
+            "description": "The source's id: stable for as long as the source exists, safe in a path.",
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "name": {
+            "description": "The source's name, for the store card.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "description": "One or two sentences for the store card: what the owner gets.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "overview": {
+            "description": "What the source is, its beat and voice, and how an item is usually built. For the assistant, so she can talk about the source itself.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600
+          },
+          "categories": {
+            "description": "Topic tags for browsing and filtering.",
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,23}$"
+            },
+            "uniqueItems": true
+          },
+          "language": {
+            "description": "The language of the items (BCP 47).",
+            "type": "string",
+            "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$"
+          },
+          "kind": {
+            "description": "\"podcast\": spoken episodes. \"news\": articles, as headline, short description and link only.",
+            "type": "string",
+            "enum": [
+              "podcast",
+              "news"
+            ]
+          },
+          "publisher": {
+            "description": "Who publishes the source.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "site": {
+            "description": "The publisher's site. One of the two kinds of address the format allows.",
+            "type": "string",
+            "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+            "maxLength": 400
+          },
+          "icon": {
+            "description": "A hint for drawing the card: a symbol name and a colour name from fixed lists. The format carries no images.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "symbol",
+              "colour"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "enum": [
+                  "microphone",
+                  "newspaper",
+                  "waveform",
+                  "book",
+                  "globe",
+                  "chip",
+                  "briefcase",
+                  "sparkles",
+                  "shield",
+                  "leaf",
+                  "chart",
+                  "people"
+                ]
+              },
+              "colour": {
+                "type": "string",
+                "enum": [
+                  "blue",
+                  "green",
+                  "orange",
+                  "purple",
+                  "red",
+                  "teal",
+                  "grey",
+                  "yellow",
+                  "pink",
+                  "indigo"
+                ]
+              }
+            }
+          },
+          "cadence": {
+            "description": "How often new items come, measured from the items listed.",
+            "type": "string",
+            "enum": [
+              "daily",
+              "several_per_week",
+              "weekly",
+              "fortnightly",
+              "monthly",
+              "irregular",
+              "unknown"
+            ]
+          },
+          "typical_duration_seconds": {
+            "description": "The median length of the listed items, or null when they have none (articles).",
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 359999
+          },
+          "publish": {
+            "description": "\"full\": transcripts are in the output. \"digest_only\": only digests are; the terms do not clearly allow more.",
+            "type": "string",
+            "enum": [
+              "full",
+              "digest_only"
+            ]
+          },
+          "terms_summary": {
+            "description": "What the publisher's terms were found to allow, in one or two sentences.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "attribution": {
+            "description": "The credit line to show with anything taken from this source.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "state": {
+            "description": "The lifecycle state. A reader MUST act on it (docs/APP-CONTRACT.md).",
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "withdrawn"
+            ]
+          },
+          "state_reason": {
+            "description": "Why the source is in this state or stale: a typed code and one plain sentence. Null when there is nothing to say.",
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "detail"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "manual",
+                      "fetch_failed",
+                      "robots_disallowed",
+                      "format_changed",
+                      "empty",
+                      "invalid_output",
+                      "licence",
+                      "takedown",
+                      "quality",
+                      "removed"
+                    ]
+                  },
+                  "detail": {
+                    "description": "One plain sentence.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  }
+                }
+              }
+            ]
+          },
+          "message": {
+            "description": "A short plain sentence for the owner about the state. Text only. Always present when the state is paused or withdrawn.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "purge": {
+            "description": "True only with state withdrawn: the reader must delete its local copy of this source's items.",
+            "type": "boolean"
+          },
+          "state_since": {
+            "description": "When the source entered a paused or withdrawn state; null while active.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          },
+          "freshness": {
+            "description": "Whether the items are from this run (fresh) or kept from an earlier one (stale).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "last_ok",
+              "failed_runs"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "fresh",
+                  "stale"
+                ]
+              },
+              "last_ok": {
+                "description": "When the source was last read successfully. Null when status is fresh (that time is generated_at) or when it never was.",
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "failed_runs": {
+                "description": "Runs in a row in which the source could not be read.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000
+              }
+            }
+          },
+          "item_count": {
+            "description": "How many items the source's items file lists.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 200
+          },
+          "latest_titles": {
+            "description": "The titles of the newest items, newest first, so the store card needs no second download.",
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "description": "A title.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "latest_date": {
+            "description": "The date of the newest item, or null.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+          },
+          "available": {
+            "description": "What the items carry: how many have a digest, how many have a transcript file, and whether each links back to the original.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "digest",
+              "transcript",
+              "link_back"
+            ],
+            "properties": {
+              "digest": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "transcript": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "link_back": {
+                "type": "boolean"
+              }
+            }
+          },
+          "avg_bytes": {
+            "description": "The average size of one item (its digest plus its transcript, if any) in bytes. A suggestion for the owner's storage choice.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2000000
+          },
+          "suggested_keep": {
+            "description": "How many items the curator suggests keeping on the device. Only a suggestion: the owner decides.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "whats_new": {
+            "description": "One line on what changed with the newest item.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "items_file": {
+            "description": "The source's items file. Null when the source is withdrawn or has no items.",
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "sha256",
+                  "bytes"
+                ],
+                "properties": {
+                  "path": {
+                    "description": "Where the file is, relative to the folder store.json is in. Never absolute, never with \"..\".",
+                    "type": "string",
+                    "pattern": "^sources/[a-z0-9][a-z0-9-]{0,63}/items\\.json$",
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "description": "SHA-256 of the file's bytes, lower-case hexadecimal.",
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "bytes": {
+                    "description": "The file's size in bytes.",
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 512000
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
