@@ -326,7 +326,10 @@
       },
       "hosts": [
         "Lenny Rachitsky"
-      ]
+      ],
+      "state": "withdrawn",
+      "state_reason": "manual",
+      "message": "The publisher's host refuses automated readers (HTTP 403), so this source is not available yet."
     },
     {
       "id": "darknet-diaries",
