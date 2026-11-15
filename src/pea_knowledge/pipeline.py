@@ -13,19 +13,33 @@ output in place: the new folder is written beside it, checked as a whole, and on
 """
 import datetime
 import hashlib
+import math
 import os
 import shutil
 import statistics
+import types
 from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, textrules, topics as tp, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
             "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000,
-            # The rule of the catalog: only sources with full transcripts are carried (docs/SOURCES-TERMS.md).
-            "min_full_transcript_share": 0.6, "transcript_check_items": 5, "withdraw_without_transcripts_days": 30}
-NO_TRANSCRIPTS = "full transcripts for"   # how the detail of that failure starts; the reason code is format_changed
+            # The rule of the catalog: an item is offered only when the assistant has a full path to its whole text, and a source only when
+            # enough of its newest items are (docs/FORMAT.md, "Discussable items"). Of the newest `transcript_check_items`, at least
+            # `min_discussable_items` and at least `min_full_transcript_share` of them must be discussable; 0 and 0 switch the rule off.
+            "min_full_transcript_share": 0.6, "min_discussable_items": 2, "transcript_check_items": 5, "withdraw_without_transcripts_days": 30,
+            # The phone-style probe of the newest discussable item (probe.py); an ok result is reused for this many hours.
+            "phone_probe": True, "phone_probe_reuse_hours": 24,
+            # The item rule itself. Only the tests of what a digest says about a thin item switch it off; the curated list never does.
+            "only_discussable_items": True}
+NO_TRANSCRIPTS = "full transcripts for"   # how the detail of the minimum rule starts; the reason code is empty or format_changed
+REFUSED = probe.SENTENCE                  # how the detail of a failed probe starts; the reason code is fetch_failed
+RULE_DETAILS = (NO_TRANSCRIPTS, REFUSED)
+# Why an item is not in items.json (health.json, `dropped`): no transcript published, it could not be fetched, it could not be read,
+# it was read but gives no address to fetch the whole text from, or the phone-style probe failed for it.
+DROPPED = ("none_published", "fetch_failed", "unreadable", "no_source", "phone_probe")
+RECENT_DAYS = 7          # a dropped item this young is asked for again every run: transcripts often appear a few days after the episode
 TRANSCRIPT_TRIES = 3
 SOURCE_REVISION = 1     # of what an item says about where its transcript is (`transcript_source`); a change makes every item anew
 CHAPTERS_BYTES = 300_000
@@ -262,6 +276,38 @@ def page_transcript(fetcher, source, item, link, links):
     return status, why, detail, text, origin
 
 
+def read_answer(source, item, address, kind, answer, minimum=None):
+    """One fetched transcript file, read: (status, reason, detail, text of the v1 file or None, where it was read or None). Shared by the
+    pipeline and by the phone-style probe, so both read a file the same way."""
+    body = answer.body
+    if answer.truncated:  # the cut may fall inside a character: the last few bytes are dropped until it decodes
+        for trim in range(4):
+            if decode(body[:len(body) - trim]) is not None:
+                body = body[:len(body) - trim]
+                break
+    raw = decode(body)
+    if raw is None or "\x00" in raw[:4000]:
+        return "no", "unreadable", "not UTF-8 text", None, None
+    if convert.detect_format(raw.replace("\ufeff", ""), type=kind, mime=answer.content_type, url=address) == "html":
+        rules = htmlpage.Rules((source.get("transcript_page") or {}).get("extract"))
+        status, why, detail, text = _page(raw, rules, minimum or htmlpage.MINIMUM_CHARS, answer, source, item, address)
+        if text is None:
+            return status, why, detail, None, None
+        return status, why, detail, text, {"link": address, "format": "html", "route": "feed_tag", "bytes": len(answer.body), "extract": rules.published()}
+    try:
+        t = convert.normalize(raw, type=kind, mime=answer.content_type, truncated=answer.truncated, show=source["name"], title=item["title"],
+                              date=item["date"], source=address, duration=item["duration_seconds"], language=source["language"])
+    except convert.Unreadable as e:
+        return "no", "unreadable", str(e), None, None
+    except (RecursionError, MemoryError, ValueError, OverflowError):
+        return "no", "unreadable", "the converter could not read it", None, None
+    text = _checked(t)
+    if text is None:
+        return "no", "unreadable", "the normalized transcript did not pass its own checks", None, None
+    origin = {"link": address, "format": source_format(t.format, kind, answer.content_type, address), "route": "feed_tag", "bytes": len(answer.body)}
+    return ("partial", "cut", t.partial, text, origin) if t.partial is not None else ("yes", None, "", text, origin)
+
+
 def normalize_transcript(fetcher, source, item, listed, link="", links=()):
     """Tries the listed transcripts in order, then the source's transcript page when it has a rule for one. Returns
     (status, reason, detail, text of the v1 file or None, where it was read or None). The last is what the item
@@ -276,38 +322,9 @@ def normalize_transcript(fetcher, source, item, listed, link="", links=()):
         except fetch.FetchError as e:
             outcome = ("no", "fetch_failed", e.detail, None, None)
             continue
-        body = answer.body
-        if answer.truncated:  # the cut may fall inside a character: the last few bytes are dropped until it decodes
-            for trim in range(4):
-                if decode(body[:len(body) - trim]) is not None:
-                    body = body[:len(body) - trim]
-                    break
-        raw = decode(body)
-        if raw is None or "\x00" in raw[:4000]:
-            outcome = ("no", "unreadable", "not UTF-8 text", None, None)
-            continue
-        if convert.detect_format(raw.replace("\ufeff", ""), type=kind, mime=answer.content_type, url=address) == "html":
-            rules = htmlpage.Rules((source.get("transcript_page") or {}).get("extract"))
-            status, why, detail, text = _page(raw, rules, htmlpage.MINIMUM_CHARS, answer, source, item, address)
-            if text is None:
-                outcome = (status, why, detail, None, None)
-                continue
-            return status, why, detail, text, {"link": address, "format": "html", "route": "feed_tag", "bytes": len(answer.body), "extract": rules.published()}
-        try:
-            t = convert.normalize(raw, type=kind, mime=answer.content_type, truncated=answer.truncated, show=source["name"], title=item["title"],
-                                  date=item["date"], source=address, duration=item["duration_seconds"], language=source["language"])
-        except convert.Unreadable as e:
-            outcome = ("no", "unreadable", str(e), None, None)
-            continue
-        except (RecursionError, MemoryError, ValueError, OverflowError):
-            outcome = ("no", "unreadable", "the converter could not read it", None, None)
-            continue
-        text = _checked(t)
-        if text is None:
-            outcome = ("no", "unreadable", "the normalized transcript did not pass its own checks", None, None)
-            continue
-        origin = {"link": address, "format": source_format(t.format, kind, answer.content_type, address), "route": "feed_tag", "bytes": len(answer.body)}
-        return ("partial", "cut", t.partial, text, origin) if t.partial is not None else ("yes", None, "", text, origin)
+        outcome = read_answer(source, item, address, kind, answer)
+        if outcome[3] is not None:
+            return outcome
     if paged:
         return page_transcript(fetcher, source, item, link, links)
     return outcome
@@ -334,13 +351,84 @@ def source_key(config, source):
     return sha256("\x1f".join(parts).encode("utf-8"))
 
 
+def discussable(entry):
+    """True for an index entry the assistant can discuss in depth: the pipeline read its transcript in full or in part, and the entry says where
+    the whole text can be fetched from (`transcript_source`). Only such entries are published."""
+    return transcript_read(entry) != "none" and "transcript_source" in entry
+
+
+def no_text_reason(t):
+    """Why a transcript of the work folder gives no discussable item: one of DROPPED."""
+    if t["status"] in ("yes", "partial"):
+        return "no_source"
+    return t["reason"] if t["reason"] in ("none_published", "fetch_failed", "unreadable") else "none_published"
+
+
+def drop_reason(entry):
+    """Why an index entry of an earlier output is not discussable: one of DROPPED."""
+    if transcript_read(entry) != "none":
+        return "no_source"
+    return entry["transcript"]["reason"] if entry["transcript"]["reason"] in ("none_published", "fetch_failed", "unreadable") else "none_published"
+
+
+def judge(config, source, record, before_items):
+    """None when the source keeps the rule of the catalog, otherwise {"code", "detail"}: of its newest items too few are discussable. Of the newest
+    `transcript_check_items`, at least `min_discussable_items` and at least `min_full_transcript_share` of them must be (one count, one rule: the
+    share is not counted again anywhere). Code `format_changed` when the source had discussable items before (it used to work and no longer does)
+    or still has some; code `empty` when it has none now and never had. The detail is one plain sentence."""
+    share, floor = setting(config, source, "min_full_transcript_share"), setting(config, source, "min_discussable_items")
+    if not share and not floor:
+        return None
+    newest = record["items"][:setting(config, source, "transcript_check_items")]
+    found = sum(1 for i in newest if i["discussable"])
+    needed = max(floor, math.ceil(share * len(newest) - 1e-9))
+    if found >= needed:
+        return None
+    return {"code": "empty" if found == 0 and not any(discussable(e) for e in before_items.values()) else "format_changed",
+            "detail": textrules.clean("%s %d of the newest %d items; the catalog carries a source only when at least %d of them (and %d percent) can be read in full" % (
+                NO_TRANSCRIPTS, found, len(newest), floor, round(share * 100)), 200)}
+
+
+def phone_read(source, item, origin):
+    """The probe's converter for one item: None when the body converts with this repository's own readers, else one sentence on why not."""
+    rule = source.get("transcript_page") or {}
+    minimum = rule.get("min_chars") if origin.get("route") in ("page", "notes_link") else None
+
+    def read(body, content_type, truncated):
+        answer = types.SimpleNamespace(body=body, content_type=content_type, truncated=truncated)
+        _, why, detail, text, _ = read_answer(source, item, origin["link"], probe.DECLARED_TYPES.get(origin["format"], "text/plain"), answer, minimum)
+        return None if text is not None else textrules.clean(detail or why or "it could not be read", 200)
+    return read
+
+
+def run_probe(config, source, record, fetcher, now, before):
+    """The phone-style probe (probe.py) of the newest discussable item: one request, or the last ok result when it is still fresh and nothing
+    changed. Returns {"item", "result", "reason", "checked_at", "reused", "link", "key"} or None when there is nothing to probe or it is off.
+    A failed item is marked dropped."""
+    if not setting(config, source, "phone_probe"):
+        return None
+    item = next((i for i in record["items"] if i["discussable"] and i["origin"]), None)
+    if item is None:
+        return None
+    origin, memo = item["origin"], before.get("probe")
+    hours = setting(config, source, "phone_probe_reuse_hours")
+    if memo and memo["result"] == "ok" and (memo["item"], memo["link"], memo["key"]) == (item["id"], origin["link"], item["key"]) \
+            and now - parse_timestamp(memo["at"]) < datetime.timedelta(hours=hours):
+        result = {"result": "ok", "reason": None, "checked_at": memo["at"], "reused": True}
+    else:
+        result = dict(probe.probe(fetcher, origin, phone_read(source, item, origin)), checked_at=timestamp(now), reused=False)
+    if result["result"] == "failed":
+        item["discussable"], item["dropped"] = False, "phone_probe"
+    return dict(result, item=item["id"], link=origin["link"], key=item["key"])
+
+
 def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
     """Reads every source that is not manually switched off and writes the work folder."""
     wanted = "model" if model_digest.Settings(config.get("model")).enabled else "extractive"
     out = {"now": timestamp(now), "mode": mode, "sources": {}}
     for source in config["sources"]:
         sid = source["id"]
-        record = {"outcome": "ok", "reason": None, "notes": [], "items": [], "etag": "", "last_modified": "", "fingerprint": ""}
+        record = {"outcome": "ok", "reason": None, "notes": [], "items": [], "etag": "", "last_modified": "", "fingerprint": "", "rule": None, "phone_probe": None}
         out["sources"][sid] = record
         if source.get("state") in ("paused", "withdrawn"):
             record["outcome"] = "skipped"
@@ -380,6 +468,8 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
         entries = [e for e in listing.entries if oldest <= e.date <= future][:setting(config, source, "max_items")]
         if not entries:
             record["notes"].append(note("no entry is newer than %s" % oldest))
+        recent = (now - datetime.timedelta(days=RECENT_DAYS)).date().isoformat()
+        newer = False   # a newer item of this source is already discussable
         for e in entries:
             news = source["kind"] == "news"
             item = {"id": e.id, "title": e.title, "date": e.date, "link": e.link or source["site"], "link_kind": "episode" if e.link else "show",
@@ -388,12 +478,22 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                     "soundbites": [] if news else [list(b) for b in e.soundbites], "resources": [] if news else list(e.resources),
                     "summary": textrules.first_sentences(e.summary, NEWS_SUMMARY_CHARS, most=2) if news else e.summary,
                     "notes": "" if news else e.notes, "key": item_key(e, source, config), "reuse": False,
-                    "transcript": {"status": "no", "reason": "none_published", "detail": "", "file": None}}
+                    "transcript": {"status": "no", "reason": "none_published", "detail": "", "file": None},
+                    "dropped": None, "origin": None, "discussable": False}
             known = before.get("items", {}).get(e.id)
             old = before_items.get(e.id)
-            if known and old and known["key"] == item["key"] and not old["stale"] and old["transcript"]["reason"] != "fetch_failed" \
-                    and (known["method"] == wanted or old["digest"]["basis"] != "transcript"):
+            why_out = known["dropped"] if known and known["key"] == item["key"] and known.get("dropped") else None
+            if why_out and (why_out == "fetch_failed" or (why_out == "phone_probe" and not newer) or (why_out != "phone_probe" and e.date >= recent)):
+                why_out = None    # asked for again: it may have been mended
+            if why_out:   # judged before and nothing changed: not fetched again
+                item["reuse"], item["dropped"] = True, why_out
+            elif known and old and known["key"] == item["key"] and not old["stale"] and old["transcript"]["reason"] != "fetch_failed" \
+                    and (known["method"] == wanted or old["digest"]["basis"] != "transcript") and (discussable(old) or e.date < recent or not setting(config, source, "only_discussable_items")):
                 item["reuse"] = True
+                if discussable(old):
+                    item["origin"] = old["transcript_source"]
+                elif setting(config, source, "only_discussable_items"):
+                    item["dropped"] = drop_reason(old)
             elif not news:
                 status, why, detail, text, origin = normalize_transcript(fetcher, source, item, e.transcripts, e.link, e.links)
                 item["transcript"] = {"status": status, "reason": why, "detail": textrules.clean(detail, 200), "file": None, "source": origin}
@@ -405,8 +505,25 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                         item["chapters"] = [list(c) for c in adapters.chapters_file(fetcher.get(e.chapters_url, CHAPTERS_BYTES).body)]
                     except fetch.FetchError as error:
                         record["notes"].append(note("%s: the chapter file could not be read (%s)" % (e.id, error.detail)))
+            if not item["reuse"]:
+                t = item["transcript"]
+                if t["status"] in ("yes", "partial") and t.get("source"):
+                    item["origin"] = t["source"]
+                elif old and discussable(old) and old["digest"]["basis"] == "transcript" and t["reason"] in ("fetch_failed", "unreadable"):
+                    item["origin"] = old["transcript_source"]   # the earlier copy is kept, marked stale (build_stage)
+                elif setting(config, source, "only_discussable_items"):
+                    item["dropped"] = no_text_reason(t)
+            item["discussable"] = item["dropped"] is None
+            newer = newer or item["discussable"]
             record["items"].append(item)
         log("%s: %d items (%d reused)" % (sid, len(record["items"]), sum(1 for i in record["items"] if i["reuse"])))
+        record["rule"] = judge(config, source, record, before_items)
+        record["phone_probe"] = None
+        if record["rule"] is None:
+            record["phone_probe"] = run_probe(config, source, record, fetcher, now, before)
+            if record["phone_probe"] and record["phone_probe"]["result"] == "failed":
+                record["rule"] = {"code": "fetch_failed", "detail": textrules.clean("%s: %s" % (REFUSED, record["phone_probe"]["reason"]["detail"]), 200)}
+                log("%s: the phone-style probe failed (%s)" % (sid, record["phone_probe"]["reason"]["detail"]))
     out["requests"] = fetcher.requests
     write(os.path.join(work, "work.json"), jsonschema_lite.dumps(out))
     return out
@@ -425,7 +542,7 @@ def digest_stage(config, work, environment=None, log=print):
         source = by_id[sid]
         excerpt = None if source["publish"] == "full" else setting(config, source, "excerpt_budget_chars")
         for item in record["items"]:
-            if item["reuse"]:
+            if item["reuse"] or item.get("dropped"):
                 continue
             earlier = [(i["id"], i["title"]) for i in record["items"] if (i["date"], i["id"]) < (item["date"], item["id"])]
             transcript = None
@@ -552,26 +669,19 @@ def transcript_read(entry):
     return "full" if t["reason"] == "withheld_terms" and entry["digest"]["basis"] == "transcript" and entry["digest"]["grade"] != "partial" else "none"
 
 
-def too_few_transcripts(config, source, record, old_items):
-    """None when the source keeps the rule of the catalog, otherwise one sentence: of its newest items, too few have
-    a full transcript. An item reused from the last run counts as it was read then."""
-    share, count = setting(config, source, "min_full_transcript_share"), setting(config, source, "transcript_check_items")
-    newest = record["items"][:count]
-    if not share or not newest:
-        return None
-    # A transcript that this pipeline cut at its own size cap is still one the publisher offers in full.
-    full = sum(1 for i in newest if (transcript_read(old_items[i["id"]]) != "none" if i["reuse"] and i["id"] in old_items else i["transcript"]["status"] in ("yes", "partial")))
-    if full >= share * len(newest):
-        return None
-    return "%s %d of the newest %d items; the catalog carries a source only when at least %d percent have one" % (NO_TRANSCRIPTS, full, len(newest), round(share * 100))
-
-
 def _old_files(previous, entry):
     files = {entry["digest"]["path"]: read(os.path.join(previous.folder, *entry["digest"]["path"].split("/")))}
     if entry["transcript"]["file"]:
         p = entry["transcript"]["file"]["path"]
         files[p] = read(os.path.join(previous.folder, *p.split("/")))
     return files
+
+
+def blank_report(sid, outcome, state, reason_, notes=()):
+    """One source's entry in health.json before anything is counted."""
+    return {"id": sid, "outcome": outcome, "state": state, "reason": reason_, "items": 0, "new": 0, "reused": 0, "kept": 0, "stale": 0, "pruned": 0,
+            "transcripts": dict.fromkeys(("yes", "partial", "none_published", "fetch_failed", "unreadable", "withheld_terms"), 0),
+            "dropped": dict.fromkeys(DROPPED, 0), "phone_probe": None, "digests": {"extractive": 0, "model": 0}, "notes": list(notes)}
 
 
 def build_stage(config, work, previous, out, now, log=print):
@@ -598,10 +708,11 @@ def build_stage(config, work, previous, out, now, log=print):
         sid = source["id"]
         record = state["sources"].get(sid, {"outcome": "skipped", "reason": None, "notes": [], "items": []})
         old = previous.listings.get(sid)
-        old_items = {iid: _fit_topics(config, entry) for iid, entry in previous.items.get(sid, {}).items()}
-        report = {"id": sid, "outcome": record["outcome"], "state": "active", "reason": record["reason"], "items": 0, "new": 0, "reused": 0, "kept": 0,
-                  "stale": 0, "pruned": 0, "transcripts": dict.fromkeys(("yes", "partial", "none_published", "fetch_failed", "unreadable", "withheld_terms"), 0),
-                  "digests": {"extractive": 0, "model": 0}, "notes": list(record["notes"])}
+        # Only discussable entries are published, so an entry of an older output that is not one is left out here, whatever else happens.
+        old_items = {iid: _fit_topics(config, entry) for iid, entry in previous.items.get(sid, {}).items() if discussable(entry) or not setting(config, source, "only_discussable_items")}
+        report = blank_report(sid, record["outcome"], "active", record["reason"], record["notes"])
+        if record.get("phone_probe"):
+            report["phone_probe"] = {k: record["phone_probe"][k] for k in ("item", "result", "reason", "checked_at", "reused")}
         health_sources.append(report)
         if source.get("state") == "withdrawn":
             entry = tombstone(source, old, reason(source.get("state_reason", "manual")), source["message"], bool(source.get("purge")))
@@ -611,14 +722,30 @@ def build_stage(config, work, previous, out, now, log=print):
             else:
                 listings.append(entry)
             continue
-        short = too_few_transcripts(config, source, record, old_items) if record["outcome"] == "ok" else None
-        if short:   # read without trouble, but not what the catalog carries: counted like a failed read
-            record = dict(record, outcome="failed", reason=reason("format_changed", short))
+        read_feed = record["outcome"] == "ok"
+        earlier = previous.state.get(sid, {})
+        if record["outcome"] == "unchanged":   # nothing was read this run: what the last run found is still true
+            report["dropped"].update(earlier.get("skipped", {}))
+            if earlier.get("probe"):
+                report["phone_probe"] = {"item": earlier["probe"]["item"], "result": "ok", "reason": None, "checked_at": earlier["probe"]["at"], "reused": True}
+        rule = record.get("rule") if record["outcome"] == "ok" else None
+        short = rule["detail"] if rule else None
+        if rule:   # read without trouble, but not what the catalog carries: counted like a failed read
+            record = dict(record, outcome="failed", reason=reason(rule["code"], short))
             report.update(outcome="failed", reason=record["reason"])
-            report["notes"].append(note("the source does not publish full transcripts for most of its newest items"))
+            report["notes"].append(note("the publisher refuses requests like the app's, so the newest transcript cannot be fetched by the phone" if short.startswith(REFUSED)
+                                        else "too few of the newest items can be discussed in full"))
+        for item in (record["items"] if record["outcome"] in ("ok", "failed") else []):
+            if item.get("dropped"):   # not discussable: counted here, never listed; the first few are named so the owner sees which
+                report["dropped"][item["dropped"]] += 1
+                if sum(report["dropped"].values()) <= 4:
+                    report["notes"].append(note("%s: not listed, no full path to its text (%s)" % (item["id"], item["transcript"]["detail"] or item["dropped"].replace("_", " "))))
+        dropped_ids = {i["id"] for i in record["items"] if i.get("dropped")}
         entries, files = {}, {}
         if record["outcome"] == "ok":
             for item in record["items"]:
+                if item.get("dropped"):
+                    continue
                 before = old_items.get(item["id"])
                 if item["reuse"] and before:
                     entries[item["id"]] = before
@@ -638,7 +765,7 @@ def build_stage(config, work, previous, out, now, log=print):
                 if item["transcript"]["reason"] in ("fetch_failed", "unreadable"):
                     report["notes"].append(note("%s: no transcript (%s)" % (item["id"], item["transcript"]["detail"] or item["transcript"]["reason"])))
         for iid, before in old_items.items():   # what the feed no longer lists, or what this run did not read
-            if iid not in entries:
+            if iid not in entries and (iid not in dropped_ids or record["outcome"] != "ok"):
                 entries[iid] = before
                 files.update(_old_files(previous, before))
                 report["kept"] += 1
@@ -666,7 +793,8 @@ def build_stage(config, work, previous, out, now, log=print):
             lifecycle, why = "paused", record["reason"]
             message = "This source could not be read %d times in a row. What is shown is the last good copy." % failed
             if short:
-                message = "This source no longer publishes full transcripts for most new episodes, so it is paused. What is shown is the last good copy."
+                message = ("This source's publisher refuses requests like the app's, so it is paused. What is shown is the last good copy." if short.startswith(REFUSED) else
+                           "This source no longer publishes full transcripts for most new episodes, so it is paused. What is shown is the last good copy.")
         else:
             lifecycle, why, message = "active", record["reason"] if record["outcome"] == "failed" else None, None
         since = None if lifecycle == "active" else (old["state_since"] if old and old["state"] == lifecycle else stamp)
@@ -675,12 +803,14 @@ def build_stage(config, work, previous, out, now, log=print):
             if record["outcome"] != "failed" and old:
                 last_ok = old["freshness"]["last_ok"] if old["freshness"]["status"] == "stale" else last_run
         freshness = {"status": status, "last_ok": last_ok, "failed_runs": failed}
-        gone = old is not None and old["state"] == "withdrawn" and (old["state_reason"] or {}).get("detail", "").startswith(NO_TRANSCRIPTS)
+        gone = old is not None and old["state"] == "withdrawn" and (old["state_reason"] or {}).get("detail", "").startswith(RULE_DETAILS)
         if short and manual is None and (gone or (lifecycle == "paused" and (now - parse_timestamp(since)).days >= config["defaults"]["withdraw_without_transcripts_days"])):
             # Paused long enough for want of transcripts: withdrawn. It is still read every run and comes back by itself.
-            entry = tombstone(source, old, reason("quality", short), "This source stopped publishing full transcripts and was removed from the catalog.", False)
+            entry = tombstone(source, old, reason("quality", short), "This source's publisher refuses requests like the app's, so it was removed from the catalog." if short.startswith(REFUSED)
+                              else "This source stopped publishing full transcripts and was removed from the catalog.", False)
             report.update(state="withdrawn", kept=0, pruned=len(old_items))
-            report["notes"].append("withdrawn: no full transcripts for %d days" % config["defaults"]["withdraw_without_transcripts_days"] if entry else "withdrawn long enough ago: no longer listed; it can be removed from the config")
+            report["notes"].append("withdrawn: the source has failed the catalog's rule for %d days" % config["defaults"]["withdraw_without_transcripts_days"] if entry
+                                   else "withdrawn long enough ago: no longer listed; it can be removed from the config")
             if entry is not None:
                 entry["freshness"]["failed_runs"] = failed
                 listings.append(entry)
@@ -729,6 +859,15 @@ def build_stage(config, work, previous, out, now, log=print):
                            "fingerprint": record.get("fingerprint", "") or before.get("fingerprint", ""),
                            "items": {i["id"]: {"key": fresh[i["id"]]["key"] if i["id"] in fresh else before.get("items", {}).get(i["id"], {}).get("key", "0" * 64),
                                                "method": i["digest"]["method"]} for i in kept}}
+            for i in (record["items"] if sid in state["sources"] else []):   # what was judged not discussable is remembered, so it is not fetched again
+                if i.get("dropped") and i["id"] not in memory[sid]["items"] and record["outcome"] in ("ok", "failed"):
+                    memory[sid]["items"][i["id"]] = {"key": i["key"], "method": "extractive", "dropped": i["dropped"]}
+            memory[sid]["skipped"] = dict(report["dropped"]) if read_feed else earlier.get("skipped", dict.fromkeys(DROPPED, 0))
+            asked = record.get("phone_probe")
+            if asked and asked["result"] == "ok":   # a good result is reused while it is fresh (run_probe)
+                memory[sid]["probe"] = {"item": asked["item"], "link": asked["link"], "key": asked["key"], "at": asked["checked_at"], "result": "ok"}
+            elif record["outcome"] in ("unchanged", "skipped") and before.get("probe"):
+                memory[sid]["probe"] = before["probe"]
         report["state"], report["items"] = lifecycle, len(kept)
         report["stale"] = sum(1 for i in kept if i["stale"])
         for i in kept:
@@ -743,9 +882,8 @@ def build_stage(config, work, previous, out, now, log=print):
             continue
         was = old["state"] == "withdrawn"
         entry = tombstone(old, old, old["state_reason"] if was else reason("removed"), old["message"] if was else "The curator removed this source.", old["purge"] if was else False)
-        health_sources.append({"id": sid, "outcome": "removed", "state": "withdrawn", "reason": reason("removed"), "items": 0, "new": 0, "reused": 0, "kept": 0, "stale": 0,
-                               "pruned": old["item_count"], "transcripts": dict.fromkeys(("yes", "partial", "none_published", "fetch_failed", "unreadable", "withheld_terms"), 0),
-                               "digests": {"extractive": 0, "model": 0}, "notes": ["not in the config any more" + ("" if entry else ": the notice has run its time and is dropped")]})
+        gone_report = blank_report(sid, "removed", "withdrawn", reason("removed"), ["not in the config any more" + ("" if entry else ": the notice has run its time and is dropped")])
+        health_sources.append(dict(gone_report, pruned=old["item_count"]))
         if entry is not None:
             listings.append(entry)
 

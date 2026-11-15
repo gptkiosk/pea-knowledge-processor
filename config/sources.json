@@ -11,6 +11,7 @@
     "suggested_keep": 5,
     "max_total_bytes": 40000000,
     "min_full_transcript_share": 0.6,
+    "min_discussable_items": 2,
     "transcript_check_items": 5,
     "withdraw_without_transcripts_days": 30
   },

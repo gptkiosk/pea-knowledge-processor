@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:pea-knowledge:v1:items",
   "title": "PEA knowledge items file (sources/<id>/items.json)",
-  "description": "The items of one source, newest first, with the hash and size of every file. It has no time of its own, so it changes only when an item does.",
+  "description": "The items of one source, newest first, with the hash and size of every file. It lists only discussable items: those whose transcript the pipeline read in full or in part and whose `transcript_source` says where the whole text can be fetched. An item without such a path is not listed, so an app may offer every item it sees. It has no time of its own, so it changes only when an item does.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -256,7 +256,7 @@
             }
           },
           "transcript_source": {
-            "description": "Since 1.1 (added 2026-11-15). Where the publisher itself offers this item's transcript, for a reader that wants the whole text: it fetches the address itself, from the publisher, and normalizes it on the device. Present only when the pipeline read a transcript there without signing in. Absent when none is offered.",
+            "description": "Since 1.1 (added 2026-11-15). Where the publisher itself offers this item's transcript, for a reader that wants the whole text: it fetches the address itself, from the publisher, and normalizes it on the device. Present on every item the generator 0.5.0 or later lists, because an item is listed only when the pipeline read a transcript there without signing in and the address passed the phone-style probe check for the newest item. Earlier outputs may list items without it.",
             "type": "object",
             "additionalProperties": false,
             "required": [

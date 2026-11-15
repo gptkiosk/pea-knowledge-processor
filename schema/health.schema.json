@@ -152,6 +152,8 @@
           "stale",
           "pruned",
           "transcripts",
+          "dropped",
+          "phone_probe",
           "digests",
           "notes"
         ],
@@ -291,6 +293,124 @@
                 "maximum": 1000000
               }
             }
+          },
+          "dropped": {
+            "description": "Items of this run that are not in items.json because the assistant has no full path to their whole text, counted by why: no transcript published, it could not be fetched, it could not be read, it was read but gives no address to fetch the whole text from (`no_source`), or the phone-style probe failed for it. For the curator; an app never sees these items.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "none_published",
+              "fetch_failed",
+              "unreadable",
+              "no_source",
+              "phone_probe"
+            ],
+            "properties": {
+              "none_published": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "fetch_failed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "unreadable": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "no_source": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "phone_probe": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              }
+            }
+          },
+          "phone_probe": {
+            "description": "The phone-style probe of the newest discussable item: one request made with the headers the app sends and no robots.txt check, checked for status 200, the expected content type, at most 1.5 MB and a transcript that converts. Null when no probe ran this run (the feed was unchanged, nothing to probe, the source failed, or the probe is switched off).",
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "result",
+                  "reason",
+                  "checked_at",
+                  "reused"
+                ],
+                "properties": {
+                  "item": {
+                    "description": "The id of the item that was probed.",
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "failed"
+                    ]
+                  },
+                  "reason": {
+                    "description": "Null when ok.",
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "code",
+                          "detail"
+                        ],
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "refused",
+                              "not_found",
+                              "rate_limited",
+                              "http_status",
+                              "timeout",
+                              "network",
+                              "content_type",
+                              "too_large",
+                              "unreadable"
+                            ]
+                          },
+                          "detail": {
+                            "description": "One plain sentence.",
+                            "type": "string",
+                            "minLength": 0,
+                            "maxLength": 200
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "checked_at": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+                  },
+                  "reused": {
+                    "description": "True when an earlier ok result was reused because the item had not changed.",
+                    "type": "boolean"
+                  }
+                }
+              }
+            ]
           },
           "digests": {
             "type": "object",

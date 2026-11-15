@@ -276,7 +276,7 @@ class Fetcher:
                 self.sleep(remaining)
 
     # requests ---------------------------------------------------------------------------------------------------
-    def _once(self, url, maximum_bytes, extra):
+    def _once(self, url, maximum_bytes, extra, retry=True, limits=None):
         host = urlsplit(url).hostname
         address = public_address(host, self.resolver)
         headers = {"User-Agent": USER_AGENT, "Accept": "*/*", "Accept-Encoding": "gzip", "Connection": "close"}
@@ -286,21 +286,21 @@ class Fetcher:
             self._wait(host)
             self.requests += 1
             try:
-                raw = self.opener(url, address, headers, maximum_bytes)
+                raw = self.opener(url, address, headers, maximum_bytes, **(limits or {}))
                 failure = None
             except FetchError as e:
                 raw, failure = None, e
             finally:
                 self._last[host] = self.clock()
             temporary = (failure is not None and failure.code in ("timeout", "network")) or (raw is not None and raw.status >= 500)
-            if not temporary or tries >= len(self.retry_pauses):
+            if not temporary or not retry or tries >= len(self.retry_pauses):
                 if failure is not None:
                     raise failure
                 return raw
             self.sleep(self.retry_pauses[tries])
             tries += 1
 
-    def _follow(self, url, maximum_bytes, extra, robots=True):
+    def _follow(self, url, maximum_bytes, extra, robots=True, retry=True, limits=None):
         for _ in range(MAXIMUM_REDIRECTS + 1):
             checked = validate_url(url)
             if checked is None:
@@ -308,7 +308,7 @@ class Fetcher:
             url = checked
             if robots and not self.allowed(url):
                 raise FetchError("robots_disallowed", "robots.txt of %s does not allow it" % urlsplit(url).hostname)
-            raw = self._once(url, maximum_bytes, extra)
+            raw = self._once(url, maximum_bytes, extra, retry, limits)
             if raw.status in (301, 302, 303, 307, 308):
                 target = raw.headers.get("location", "")
                 if not target:
@@ -336,6 +336,12 @@ class Fetcher:
             extra["If-Modified-Since"] = last_modified
         return self._follow(url, maximum_bytes, extra)
 
+    def get_like_the_app(self, url, maximum_bytes, headers, seconds, total_seconds):
+        """One request made the way the phone makes it (probe.py): the given headers instead of this project's
+        User-Agent, no robots.txt check, no retry, the app's own time limits. Everything else (public addresses
+        only, checked redirects, size cap, the pause between requests to one host) still applies. Raises FetchError."""
+        return self._follow(url, maximum_bytes, headers, robots=False, retry=False, limits={"seconds": seconds, "total_seconds": total_seconds})
+
 
 # --- Saved fixtures --------------------------------------------------------------------------------------------------
 FIXTURE_ADDRESS = "93.184.216.34"
@@ -355,6 +361,8 @@ def fixture_fetcher(folder, log=None):
         entry = manifest.get(url)
         if entry is None:
             return Raw(404, {})
+        if "phone" in entry and headers.get("User-Agent", "").startswith("PEA/"):   # a host that treats the app's request differently
+            entry = dict(entry, **entry["phone"])
         if "error" in entry:
             raise FetchError(entry["error"], "saved failure")
         status = entry.get("status", 200)
@@ -369,6 +377,7 @@ def fixture_fetcher(folder, log=None):
         if "file" in entry:
             with open(os.path.join(folder, entry["file"]), "rb") as f:
                 body = f.read()
+        body += b"\n" * entry.get("pad_bytes", 0)
         return Raw(status, found, body[:maximum_bytes], len(body) > maximum_bytes)
 
     return Fetcher(opener=opener, resolver=lambda host: [FIXTURE_ADDRESS], sleep=lambda s: None, clock=lambda: 0.0, pause=0, log=log)

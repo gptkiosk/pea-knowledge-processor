@@ -72,13 +72,19 @@
           "maximum": 900000000
         },
         "min_full_transcript_share": {
-          "description": "The rule of the catalog: only sources with full transcripts are carried. A source is counted as failed (and so paused, then withdrawn) when fewer than this share of its newest items have a full transcript. 0 switches the check off.",
+          "description": "The rule of the catalog: an item is offered only when the assistant has a full path to its whole text (it is discussable), and a source only when enough of its newest items are. Of the newest `transcript_check_items`, at least this share must be discussable (and at least `min_discussable_items`); otherwise the source is counted as failed, so paused, then withdrawn. 0 together with `min_discussable_items` 0 switches the check off.",
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
+        "min_discussable_items": {
+          "description": "The fewest discussable items among the newest `transcript_check_items` that a source may have (default 2).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
         "transcript_check_items": {
-          "description": "How many of the newest items the transcript rule looks at.",
+          "description": "How many of the newest items the rule looks at.",
           "type": "integer",
           "minimum": 1,
           "maximum": 50
@@ -88,6 +94,20 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 3650
+        },
+        "phone_probe": {
+          "description": "Probe the newest discussable item of each source the way the phone fetches it (default true).",
+          "type": "boolean"
+        },
+        "phone_probe_reuse_hours": {
+          "description": "An ok probe result is reused for this many hours while the item is unchanged (default 24).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 720
+        },
+        "only_discussable_items": {
+          "description": "The item rule: only items the assistant has a full path to (transcript read in full or part, and a `transcript_source`) are listed. Default true; only the tests of thin items switch it off.",
+          "type": "boolean"
         }
       }
     },
@@ -332,10 +352,20 @@
             "maximum": 3650
           },
           "min_full_transcript_share": {
-            "description": "Overrides the default share of newest items that must have a full transcript.",
+            "description": "Overrides the default share of newest items that must be discussable.",
             "type": "number",
             "minimum": 0,
             "maximum": 1
+          },
+          "min_discussable_items": {
+            "description": "Overrides the default.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "phone_probe": {
+            "description": "Overrides the default.",
+            "type": "boolean"
           },
           "transcript_check_items": {
             "description": "Overrides the default.",
