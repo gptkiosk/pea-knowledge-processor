@@ -298,7 +298,7 @@ def item_key(entry, source):
 
 def source_key(config, source):
     """What a source's item list depends on in the config. When it changes, an unchanged feed is still read again."""
-    parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION, ",".join(source.get("hosts", []))] \
+    parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION, "generator %s" % __version__, ",".join(source.get("hosts", []))] \
         + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")] \
         + ([jsonschema_lite.dumps(source["transcript_page"])] if "transcript_page" in source else [])
     return sha256("\x1f".join(parts).encode("utf-8"))
