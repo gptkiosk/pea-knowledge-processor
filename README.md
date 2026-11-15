@@ -8,7 +8,7 @@ Why it exists: an assistant cannot talk well about a podcast episode if every pu
 - Python 3.11 or later, standard library only. Nothing to install.
 - Works with no API key. A model digest through OpenRouter is optional.
 
-**Status: 0.4.0, format 1.2.** Thirteen sources listed, eleven active. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
+**Status: 0.5.0, format 1.2.** Thirteen sources listed. **The rule: a podcast with only headlines or short show notes is not a useful knowledge source. A source, and each of its items, is in the catalog only if the assistant has a full path to the whole text (the full transcript or manuscript), so it can discuss an item in depth beyond the digest's cursory points. An item with no such path is not listed at all; a source with too few such items is paused and then withdrawn.**
 
 ## What comes out
 
@@ -23,7 +23,7 @@ health.json                                  what the last run did
 - **The store listing** (`store.json`) is small and is all the app needs to show the catalog: name, description, topics, how often items come, how long and how large they are, the three newest titles, the terms.
 - **A digest** is built for conversation: a framing, five to eight talking points in story order (each with why it matters, a pointer into the transcript and a question worth asking), exact quotes with speaker and time, a glossary of the names that come up, the figures, what is disputed, links to earlier items, conversation starters and follow-up questions, and a compact brief form of at most 900 characters. Since format 1.1 also: the guests, the books, tools and sites that are named (names only, never a link), chapters (the publisher's own where it marks them), up to five exact passages worth snipping with their times, and three recap cards.
 - **Every item is tagged with topics** from one vocabulary of thirty (`topics` in `store.json`: technology, AI, health, wellness, supplements, politics, religion, leadership and so on), so an app can answer "I want to talk tech" with items from every source its owner follows. The tags need no model. See "Topics" below.
-- **Every item says where the publisher offers its transcript** (`transcript_source`: the address, the format, how it was found). Transcripts are not republished here; an app that wants the whole text fetches it from the publisher itself.
+- **Every listed item says where the publisher offers its transcript** (`transcript_source`: the address, the format, how it was found), and is listed only because the pipeline read that transcript. Transcripts are not republished here; an app that wants the whole text fetches it from the publisher itself. `items.json` lists only such discussable items, so the app may offer every item it sees (absence means not discussable).
 - **Every item links to its own page** at the publisher. Where a feed gives no page per episode, the item links to the show and says so (`link_kind: show`).
 - **Every source has a lifecycle state** (`active`, `paused`, `withdrawn`), so a source can be switched off for every app with one commit.
 
@@ -44,7 +44,7 @@ python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dis
 Tests:
 
 ```
-python3 -I -m unittest                               # 161 tests, no network, about 30 seconds
+python3 -I -m unittest                               # 180 tests, no network, about 30 seconds
 python3 -I spec/transcript-v1/test_conformance.py    # the transcript format's own 40 tests
 PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use the real network
 ```
@@ -56,7 +56,8 @@ PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use t
 | 1. Fetch (`fetch.py`) | https only; the host name is resolved, every address must be public, and the connection goes to the address that was checked; redirects are checked again; robots.txt is obeyed and crawl delays honoured; conditional requests; size and time caps; no cookies; a User-Agent that names this project and its repository. |
 | 2. Normalize (`adapters.py`, `transcript/`) | Reads an agent index (`agent.json`), RSS or Atom with `podcast:transcript`, or JSON Feed; a feed larger than 8 MB is read up to its newest whole entries. Finds each item's own page, and what the publisher marks up itself: people, chapters (`psc:chapter`, `podcast:chapters`, timed lines in the notes), soundbites, the names the notes link to. Converts WebVTT, SubRip, Podcasting 2.0 JSON, markdown and plain text into PEA transcript v1. For a publisher whose transcript is a web page on its own site (`htmlpage.py`), finds the page of each episode and reads only the transcript from it: nothing is executed, hidden text and menus are dropped, and a page with too little text or a sign-in wall is a typed failure, never a partial read. A missing or unusable transcript gets a typed reason. |
 | 3. Digest (`digest.py`, `model_digest.py`) | An extractive digest, always: sentences picked from the transcript, the same result for the same input. Optionally a model digest; anything invalid in it falls back to the extractive one. |
-| 4. Build (`pipeline.py`, `validate.py`) | Writes the output with hashes, keeps the last good copy of what failed, sets each source's state (also: too few full transcripts), prunes old items, validates everything, and only then replaces the previous output. |
+| 3b. Probe (`probe.py`) | For the newest discussable item of each source, one request made exactly as the app makes it (the app's headers and time limits, no robots.txt), checked for a 200, the expected content type, at most 1.5 MB and a transcript that converts. A source whose newest item fails is paused: the app must not offer what its own phone cannot fetch. |
+| 4. Build (`pipeline.py`, `validate.py`) | Writes the output with hashes, lists only discussable items, keeps the last good copy of what failed, sets each source's state (also: too few discussable items, a refused probe), prunes old items, validates everything, and only then replaces the previous output. |
 
 In CI these run as three jobs: fetching has no secrets; the digest job is the only one given the model key; publishing validates before it deploys.
 
@@ -89,7 +90,7 @@ GitHub switches off a scheduled workflow after 60 days without activity in the r
 
 ## Add a source
 
-0. **Only sources with full transcripts are carried.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
+0. **Only sources with full transcripts are carried, and only their items that have one.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it, and where the app's own request (not just the pipeline's) can fetch it too. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
 1. Go through the terms checklist in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md): robots.txt, licence, terms of use.
 2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the hosts, where the transcript is (`transcript_route`; for a transcript that is a web page also `transcript_page`: how the page of an episode is found, its one host, and the elements to read), why it is there (`chosen_because`), the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
 3. `python3 -m pea_knowledge run --config config/sources.json --out dist`, read the summary, open a digest.
@@ -109,7 +110,8 @@ Edit the source in `config/sources.json`, commit to `main`, and run the workflow
 - The message is text only: no links, no markup, at most 240 characters. The run refuses a config that breaks this.
 - A withdrawn source's files leave the published output at once; its listing stays for 90 days (`tombstone_days`) as a notice so every app learns of it, then disappears. After that the entry can be deleted from the config.
 - Deleting the entry from the config outright also works: the next run lists it as withdrawn ("The curator removed this source.") for 90 days. An app that finds a source gone treats it as withdrawn anyway.
-- Automatic, no transcripts: a source with a full transcript for fewer than 60 percent of its newest five items is treated as one that cannot be read (next line), with a message that says why, and is withdrawn after 30 days in that pause. It comes back by itself when the transcripts do.
+- Automatic, too few discussable items: of its newest five items a source needs at least two **and** at least 60 percent (`min_discussable_items`, `min_full_transcript_share`, `transcript_check_items`; one count, not two) whose whole text the assistant can reach. Otherwise it is treated as one that cannot be read (next line), with reason `empty` (none, never any) or `format_changed` (it used to have some) and a sentence that says why, and is withdrawn after 30 days in that pause. It comes back by itself when the items do.
+- Automatic, a publisher that refuses the app: if the one phone-style request for the newest discussable item fails (403, wrong content type, over 1.5 MB, timeout, not a transcript), the source goes the same way with reason `fetch_failed` and "the publisher refuses requests like the app's"; an older item that fails is dropped. `health.json` records `phone_probe` and, per reason, what was `dropped`.
 - Automatic: a source that cannot be read three runs in a row (`auto_pause_after_failed_runs`) is paused with its last good items kept, and resumes by itself when it reads again. `"state": "active"` on a source stops the automatic pause.
 - Emergency stop for everything: disable the workflow in the Actions tab. The published files stay as they are.
 

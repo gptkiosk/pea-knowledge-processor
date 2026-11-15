@@ -114,7 +114,7 @@ Nothing here is required of a 1.0 reader. A reader that wants the new members se
 
 ## 8. Reading a transcript from the publisher (`transcript_source`)
 
-Optional for the app; nothing in a digest depends on it. FORMAT.md section 6 defines the member. An item that has one looks like this (from the live run of 2026-11-15):
+**Since generator 0.5.0 every listed item is discussable**: `items.json` lists an item only when the pipeline read its transcript in full or in part and the item carries `transcript_source`, so the app may offer every item it sees and can always try the whole text. There is no item to hide, and an item that is not discussable is simply not there; the app does not need to explain its absence. For the newest item of each source the catalog also checked, with the app's own headers and no robots.txt, that the address answers 200 with a transcript of the expected type within 1.5 MB, so the publisher is known to let the phone in; if a source stops letting it in, the source is paused with reason `fetch_failed` and the app shows the message as for any paused source. Output from before 0.5.0 may still list an item with `read: none` or without `transcript_source`: skip such an item. Fetching the whole text stays optional for a digest: nothing in a digest depends on it. FORMAT.md section 6 defines the member. An item that has one looks like this (from the live run of 2026-11-15):
 
 ```json
 "transcript": {"available": "no", "reason": "withheld_terms", "file": null, "read": "full"},

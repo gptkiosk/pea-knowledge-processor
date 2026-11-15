@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 (2026-11-15)
+
+Owner rule (2026-11-15): a podcast with only headlines or short show notes is not a useful knowledge source. A source, and each of its items, may be in the catalog only if the assistant has a full path to the whole text.
+
+- **Only discussable items are listed.** An item is in `items.json` only when the pipeline read its transcript in full or in part (`transcript.read` is `full` or `partial`) and the item carries `transcript_source`. Items with no transcript published, a failed fetch, an unreadable transcript, or no address to fetch the whole text from are not listed, have no digest file, and are not in `item_count` or `available`. No new member: absence means not discussable, the format stays 1.2 and the schemas still validate. An output from an older generator is cleaned on the next run.
+- **One source rule.** Of its newest `transcript_check_items` (5) a source needs at least `min_discussable_items` (new, 2) and at least `min_full_transcript_share` (0.6) discussable items. This replaces the old 60-percent transcript count, which is now the same count. A failing source is paused (reason `empty` when it never had any, `format_changed` when it used to) and withdrawn after the existing 30 days. `0` and `0` switch it off.
+- **A phone-style probe** (`src/pea_knowledge/probe.py`): for the newest discussable item of each source, one request with the headers, User-Agent and limits of the app's `PublicFetcher`, no robots.txt, checked for 200, the expected content type, at most 1.5 MB and conversion with this repository's own converters. A source whose newest item fails is paused with reason `fetch_failed` and "the publisher refuses requests like the app's"; an older item that fails is dropped. One request per source per run, an ok result reused for 24 hours (`phone_probe`, `phone_probe_reuse_hours`).
+- `health.json` gains, per source, `dropped` (what was left out of `items.json`, by typed reason: `none_published`, `fetch_failed`, `unreadable`, `no_source`, `phone_probe`) and `phone_probe` (`item`, `result`, `reason`, `checked_at`, `reused`). `state.json` remembers dropped items and the last ok probe so nothing is asked twice; an item younger than a week is asked for again each run, because transcripts often appear after the episode.
+- The generator is 0.5.0, so every source is read again and every old listing is judged by the new rule. Tests: made-up fixtures for each rule (an item without a path, a source below the minimum, a 403, a wrong content type, an oversize file and a timeout in the probe), golden samples regenerated.
+
 ## 0.4.0 (2026-11-15)
 
 - **Format 1.2: topics.** `store.json` carries a controlled vocabulary of thirty topics (`topics`: id, label, the words a person might say, a description). Every source lists its beat (`topics`, up to six ids) and every item what it is about (`topics`: up to four `{"id", "score"}`, best first, and `topics_by`: `keywords` or `model`). All optional and additive.
