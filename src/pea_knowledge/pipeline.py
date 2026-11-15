@@ -16,8 +16,9 @@ import hashlib
 import os
 import shutil
 import statistics
+from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, jsonschema_lite, model_digest, textrules, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, textrules, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
@@ -26,6 +27,7 @@ DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs"
             "min_full_transcript_share": 0.6, "transcript_check_items": 5, "withdraw_without_transcripts_days": 30}
 NO_TRANSCRIPTS = "full transcripts for"   # how the detail of that failure starts; the reason code is format_changed
 TRANSCRIPT_TRIES = 3
+SOURCE_REVISION = 1     # of what an item says about where its transcript is (`transcript_source`); a change makes every item anew
 CHAPTERS_BYTES = 300_000
 NEWS_SUMMARY_CHARS = 280
 
@@ -96,6 +98,19 @@ def load_config(path):
             raise ConfigError("%s: purge is only allowed with state withdrawn" % s["id"])
         if s["kind"] == "news" and s["publish"] != "digest_only":
             raise ConfigError("%s: a news source is always digest_only" % s["id"])
+        page = s.get("transcript_page")
+        if page is not None:
+            if not fetch.is_public_host(page["host"]):
+                raise ConfigError("%s: transcript_page.host is not a public host name" % s["id"])
+            if (page["from"] == "template") != ("template" in page):
+                raise ConfigError("%s: transcript_page.template goes with from: template, and only with it" % s["id"])
+            if "template" in page and (page["template"].count("{slug}") != 1 or fetch.validate_url(page["template"].replace("{slug}", "x")) is None
+                                       or not page["template"].startswith("https://%s/" % page["host"])):
+                raise ConfigError("%s: transcript_page.template must be an https address on the host with {slug} once" % s["id"])
+            try:
+                htmlpage.Rules(page.get("extract"))
+            except ValueError as e:
+                raise ConfigError("%s: transcript_page.extract: %s" % (s["id"], e)) from None
     config["defaults"] = dict(DEFAULTS, **config.get("defaults", {}))
     return config
 
@@ -132,14 +147,15 @@ _RANK = (("vtt", 0), ("srt", 1), ("subrip", 1), ("json", 2), ("markdown", 3), ("
 
 
 def transcript_order(listed):
-    """The transcripts an entry lists, best first: WebVTT, SubRip, JSON, text, then a type that is not known. HTML
-    pages are left out (the converter does not read them)."""
+    """The transcripts an entry lists, best first: WebVTT, SubRip, JSON, text, a type that is not known, and last an
+    HTML page (read by htmlpage, which has more to leave out)."""
     ranked = []
     for n, (address, kind) in enumerate(listed):
         path = address.split("?")[0].lower()
         if "html" in kind or path.endswith((".html", ".htm")):
-            continue
-        rank = next((r for mark, r in _RANK if mark in kind or path.endswith("." + mark)), 4)
+            rank = 5
+        else:
+            rank = next((r for mark, r in _RANK if mark in kind or path.endswith("." + mark)), 4)
         ranked.append((rank, n, address, kind))
     return [(address, kind) for _, _, address, kind in sorted(ranked)][:TRANSCRIPT_TRIES]
 
@@ -157,19 +173,81 @@ def decode(body):
         return None
 
 
-def normalize_transcript(fetcher, source, item, listed):
-    """Tries the listed transcripts in order. Returns (status, reason, detail, text of the v1 file or None)."""
-    if not listed:
-        return "no", "none_published", "", None
-    tries = transcript_order(listed)
-    if not tries:
-        return "no", "unreadable", "only an HTML transcript page is listed", None
-    outcome = ("no", "fetch_failed", "nothing was tried", None)
-    for address, kind in tries:
+def source_format(written, kind, mime, address):
+    """How a publisher's transcript is named in `transcript_source.format`: vtt, srt, json, html, markdown or text."""
+    if written in ("vtt", "srt", "json", "html"):
+        return written
+    return "markdown" if "markdown" in kind + " " + mime or address.split("?")[0].lower().endswith((".md", ".markdown")) else "text"
+
+
+def _checked(t):
+    """The v1 file of a transcript, or None when it does not pass its own checks."""
+    text = t.render()
+    return text if pt.conforms(pt.validate(text.encode("utf-8"))) and len(text.encode("utf-8")) <= validate.TRANSCRIPT_BYTES else None
+
+
+def _page(markup, rules, minimum, answer, source, item, address):
+    """One HTML transcript page read into (status, reason, detail, text of the v1 file or None)."""
+    try:
+        t = htmlpage.read(markup, rules, minimum, truncated=answer.truncated, show=source["name"], title=item["title"], date=item["date"], source=address,
+                          duration=item["duration_seconds"], language=source["language"])
+    except htmlpage.PageProblem as e:
+        return "no", e.code, e.detail, None
+    except (RecursionError, MemoryError, ValueError, OverflowError):
+        return "no", "unreadable", "the page could not be read", None
+    text = _checked(t)
+    if text is None:
+        return "no", "unreadable", "the normalized transcript did not pass its own checks", None
+    return ("partial", "cut", t.partial, text) if t.partial is not None else ("yes", None, "", text)
+
+
+def page_transcript(fetcher, source, item, link, links):
+    """The transcript of an item from the publisher's HTML transcript page, found by the source's `transcript_page`
+    rule. Returns (status, reason, detail, text or None, where it was read or None)."""
+    rule = source["transcript_page"]
+    how = rule["from"]
+    if how == "page_link":
+        if not link or urlsplit(link).hostname != rule["host"]:
+            return "no", "none_published", "the feed gives no page for this episode, so its transcript page cannot be found", None, None
+        try:
+            page = fetcher.get(link, fetch.TRANSCRIPT_BYTES)
+        except fetch.FetchError as e:
+            return "no", "fetch_failed", e.detail, None, None
+        address = htmlpage.page_from_page(rule, page.url, page.body.decode("utf-8", "replace"))
+        if address is None:
+            return "no", "none_published", "the episode page links to no transcript page", None, None
+    else:
+        address = htmlpage.page_from_feed(rule, link, links)
+        if address is None:
+            return "no", "none_published", {"notes_link": "the notes link to no transcript page", "link": "the feed gives no page for this episode"}.get(
+                how, "no transcript page follows from the episode's address"), None, None
+    try:
+        answer = fetcher.get(address, fetch.TRANSCRIPT_BYTES)
+    except fetch.FetchError as e:   # also a page that is not there yet: counted as a failed fetch, so the next run asks again
+        return "no", "fetch_failed", e.detail, None, None
+    final = answer.url if fetch.validate_url(answer.url) == answer.url else address
+    if urlsplit(final).hostname != rule["host"]:
+        return "no", "unreadable", "the transcript page leads to another host", None, None
+    rules = htmlpage.Rules(rule.get("extract"))
+    status, why, detail, text = _page(answer.body.decode("utf-8", "replace"), rules, rule.get("min_chars", htmlpage.MINIMUM_CHARS), answer, source, item, final)
+    origin = None if text is None else {"link": final, "format": "html", "route": "notes_link" if how == "notes_link" else "page", "bytes": len(answer.body),
+                                        "extract": rules.published()}
+    return status, why, detail, text, origin
+
+
+def normalize_transcript(fetcher, source, item, listed, link="", links=()):
+    """Tries the listed transcripts in order, then the source's transcript page when it has a rule for one. Returns
+    (status, reason, detail, text of the v1 file or None, where it was read or None). The last is what the item
+    publishes as `transcript_source`: the publisher's own address, the format, how it was found and its size."""
+    paged = source.get("transcript_page") is not None
+    if not listed and not paged:
+        return "no", "none_published", "", None, None
+    outcome = ("no", "fetch_failed", "nothing was tried", None, None)
+    for address, kind in transcript_order(listed):
         try:
             answer = fetcher.get(address, fetch.TRANSCRIPT_BYTES)
         except fetch.FetchError as e:
-            outcome = ("no", "fetch_failed", e.detail, None)
+            outcome = ("no", "fetch_failed", e.detail, None, None)
             continue
         body = answer.body
         if answer.truncated:  # the cut may fall inside a character: the last few bytes are dropped until it decodes
@@ -179,36 +257,50 @@ def normalize_transcript(fetcher, source, item, listed):
                     break
         raw = decode(body)
         if raw is None or "\x00" in raw[:4000]:
-            outcome = ("no", "unreadable", "not UTF-8 text", None)
+            outcome = ("no", "unreadable", "not UTF-8 text", None, None)
             continue
+        if convert.detect_format(raw.replace("\ufeff", ""), type=kind, mime=answer.content_type, url=address) == "html":
+            rules = htmlpage.Rules((source.get("transcript_page") or {}).get("extract"))
+            status, why, detail, text = _page(raw, rules, htmlpage.MINIMUM_CHARS, answer, source, item, address)
+            if text is None:
+                outcome = (status, why, detail, None, None)
+                continue
+            return status, why, detail, text, {"link": address, "format": "html", "route": "feed_tag", "bytes": len(answer.body), "extract": rules.published()}
         try:
             t = convert.normalize(raw, type=kind, mime=answer.content_type, truncated=answer.truncated, show=source["name"], title=item["title"],
                                   date=item["date"], source=address, duration=item["duration_seconds"], language=source["language"])
         except convert.Unreadable as e:
-            outcome = ("no", "unreadable", str(e), None)
+            outcome = ("no", "unreadable", str(e), None, None)
             continue
         except (RecursionError, MemoryError, ValueError, OverflowError):
-            outcome = ("no", "unreadable", "the converter could not read it", None)
+            outcome = ("no", "unreadable", "the converter could not read it", None, None)
             continue
-        text = t.render()
-        if not pt.conforms(pt.validate(text.encode("utf-8"))) or len(text.encode("utf-8")) > validate.TRANSCRIPT_BYTES:
-            outcome = ("no", "unreadable", "the normalized transcript did not pass its own checks", None)
+        text = _checked(t)
+        if text is None:
+            outcome = ("no", "unreadable", "the normalized transcript did not pass its own checks", None, None)
             continue
-        return ("partial", "cut", t.partial, text) if t.partial is not None else ("yes", None, "", text)
+        origin = {"link": address, "format": source_format(t.format, kind, answer.content_type, address), "route": "feed_tag", "bytes": len(answer.body)}
+        return ("partial", "cut", t.partial, text, origin) if t.partial is not None else ("yes", None, "", text, origin)
+    if paged:
+        return page_transcript(fetcher, source, item, link, links)
     return outcome
 
 
 def item_key(entry, source):
     """What an item's digest depends on at the publisher. The same key next run means there is nothing to redo."""
     parts = [entry.title, entry.date, entry.link, entry.summary[:200], source["publish"], source["kind"]] + [a for a, _ in entry.transcripts]
-    marks = jsonschema_lite.dumps([dg.DIGEST_REVISION, entry.people, entry.chapters, entry.chapters_url, entry.soundbites, entry.resources])
+    rule = source.get("transcript_page")
+    if rule and rule["from"] != "page_link":   # a transcript page that appears in the notes later makes the item anew
+        parts.append(htmlpage.page_from_feed(rule, entry.link, entry.links) or "")
+    marks = jsonschema_lite.dumps([dg.DIGEST_REVISION, entry.people, entry.chapters, entry.chapters_url, entry.soundbites, entry.resources, "source %d" % SOURCE_REVISION])
     return sha256("\x1f".join(parts + [marks]).encode("utf-8", "replace"))
 
 
 def source_key(config, source):
     """What a source's item list depends on in the config. When it changes, an unchanged feed is still read again."""
     parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION, ",".join(source.get("hosts", []))] \
-        + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")]
+        + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")] \
+        + ([jsonschema_lite.dumps(source["transcript_page"])] if "transcript_page" in source else [])
     return sha256("\x1f".join(parts).encode("utf-8"))
 
 
@@ -269,11 +361,12 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                     "transcript": {"status": "no", "reason": "none_published", "detail": "", "file": None}}
             known = before.get("items", {}).get(e.id)
             old = before_items.get(e.id)
-            if known and old and known["key"] == item["key"] and not old["stale"] and (known["method"] == wanted or old["digest"]["basis"] != "transcript"):
+            if known and old and known["key"] == item["key"] and not old["stale"] and old["transcript"]["reason"] != "fetch_failed" \
+                    and (known["method"] == wanted or old["digest"]["basis"] != "transcript"):
                 item["reuse"] = True
             elif not news:
-                status, why, detail, text = normalize_transcript(fetcher, source, item, e.transcripts)
-                item["transcript"] = {"status": status, "reason": why, "detail": textrules.clean(detail, 200), "file": None}
+                status, why, detail, text, origin = normalize_transcript(fetcher, source, item, e.transcripts, e.link, e.links)
+                item["transcript"] = {"status": status, "reason": why, "detail": textrules.clean(detail, 200), "file": None, "source": origin}
                 if text is not None:
                     item["transcript"]["file"] = "transcripts/%s/%s.pea.txt" % (sid, e.id)
                     write(os.path.join(work, *item["transcript"]["file"].split("/")), text)
@@ -387,6 +480,8 @@ def _new_item(config, source, work, item):
              "digest": {"path": path, "sha256": sha256(digest_bytes), "bytes": len(digest_bytes), "basis": d["basis"], "grade": d["quality"]["grade"],
                         "method": d["provenance"]["method"]},
              "transcript": transcript}
+    if t.get("source") and t["file"]:   # where the publisher itself offers the transcript, for a reader that fetches it there
+        entry["transcript_source"] = t["source"]
     return entry, files
 
 
@@ -408,7 +503,8 @@ def too_few_transcripts(config, source, record, old_items):
     newest = record["items"][:count]
     if not share or not newest:
         return None
-    full = sum(1 for i in newest if (transcript_read(old_items[i["id"]]) == "full" if i["reuse"] and i["id"] in old_items else i["transcript"]["status"] == "yes"))
+    # A transcript that this pipeline cut at its own size cap is still one the publisher offers in full.
+    full = sum(1 for i in newest if (transcript_read(old_items[i["id"]]) != "none" if i["reuse"] and i["id"] in old_items else i["transcript"]["status"] in ("yes", "partial")))
     if full >= share * len(newest):
         return None
     return "%s %d of the newest %d items; the catalog carries a source only when at least %d percent have one" % (NO_TRANSCRIPTS, full, len(newest), round(share * 100))
@@ -481,7 +577,7 @@ def build_stage(config, work, previous, out, now, log=print):
                 entry, made = _new_item(config, source, work, item)
                 entries[item["id"]] = entry
                 files.update(made)
-                report["new"] += 1
+                report["reused" if entry == before else "new"] += 1   # asked again (a transcript that failed last time) and nothing came of it: not new
                 if item["transcript"]["reason"] in ("fetch_failed", "unreadable"):
                     report["notes"].append(note("%s: no transcript (%s)" % (item["id"], item["transcript"]["detail"] or item["transcript"]["reason"])))
         for iid, before in old_items.items():   # what the feed no longer lists, or what this run did not read

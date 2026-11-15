@@ -21,11 +21,12 @@ import hashlib
 import re
 import xml.etree.ElementTree as ET
 
-from . import jsonschema_lite, textrules
+from . import htmlpage, jsonschema_lite, textrules
 from .fetch import validate_url
 
 MAXIMUM_ENTRIES = 2_000     # entries read from one feed; the rest are not looked at
 NOTES_CHARS = 6_000         # show notes kept per entry, as plain text
+NOTE_LINKS = 80             # links of an entry's notes that are looked at for a transcript page
 _DATE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})")
 _ID_UNSAFE = re.compile(r"[^a-z0-9]+")
 
@@ -40,7 +41,7 @@ class AdapterError(Exception):
 
 class Entry:
     __slots__ = ("key", "title", "date", "link", "duration", "tags", "summary", "notes", "transcripts", "people", "chapters",
-                 "chapters_url", "soundbites", "resources")
+                 "chapters_url", "soundbites", "resources", "links")
 
     def __init__(self):
         self.key = ""            # what identifies the entry at the publisher: a guid, else its link
@@ -57,6 +58,7 @@ class Entry:
         self.chapters_url = ""   # a podcast:chapters JSON file, when the feed has no inline marks; a checked address, or ""
         self.soundbites = []     # (start, length, title or ""): the passages the publisher itself points out
         self.resources = []      # names the notes link to (books, tools, sites); the addresses are not kept
+        self.links = []          # (address, label, words before it) of the notes' links: only read to find a transcript page, never published
 
     @property
     def id(self):
@@ -437,6 +439,7 @@ def parse_feed(data):
         e.chapters = _marks(inline) or chapter_lines(lines)
         e.notes = _notes(lines, bool(chapter_lines(lines)))
         e.resources = linked_names(long)
+        e.links = htmlpage.links(long[:_MARKUP_CHARS])[:NOTE_LINKS]
         listing.entries.append(e)
     if not listing.entries:
         worst = max(skipped.items(), key=lambda kv: kv[1])
@@ -495,6 +498,7 @@ def parse_json_feed(data):
         e.notes = _notes(lines, bool(e.chapters))
         e.summary = _text(r.get("summary"), 400) or textrules.first_sentences(e.notes, 400, most=3)
         e.resources = linked_names(body)
+        e.links = htmlpage.links(body[:_MARKUP_CHARS])[:NOTE_LINKS]
         e.tags = _tags(r.get("tags") if isinstance(r.get("tags"), list) else [])
         for a in r.get("attachments") if isinstance(r.get("attachments"), list) else []:
             if isinstance(a, dict):

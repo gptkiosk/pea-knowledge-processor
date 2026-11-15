@@ -123,12 +123,37 @@
         "withheld_terms": 0,
         "yes": 0
       }
+    },
+    {
+      "digests": {
+        "extractive": 4,
+        "model": 0
+      },
+      "id": "lamp-room",
+      "items": 4,
+      "kept": 4,
+      "new": 0,
+      "notes": [],
+      "outcome": "unchanged",
+      "pruned": 0,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 1,
+        "partial": 0,
+        "unreadable": 1,
+        "withheld_terms": 2,
+        "yes": 0
+      }
     }
   ],
   "totals": {
-    "bytes": 132042,
-    "items": 16,
-    "requests": 10,
-    "sources": 4
+    "bytes": 161441,
+    "items": 20,
+    "requests": 12,
+    "sources": 5
   }
 }

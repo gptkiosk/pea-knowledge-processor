@@ -8,19 +8,43 @@
       "fingerprint": "date,editions,page,show.title,title,transcript",
       "items": {
         "2026-11-09-95827ccd6b": {
-          "key": "3afba8720a15b982581b4c38cf294baeb5ff7b8edcb46f6698adc3fda99f308e",
+          "key": "4e1ca90e7e535f7cf010788c0ca3ac46f56a652b4348abf7b6fb4afe70a19d46",
           "method": "extractive"
         },
         "2026-11-10-1aeaa6c4e4": {
-          "key": "0d8006327a78e605284548536420ff71c9ff7202b93f11dcba515551cfcaf93a",
+          "key": "beec11eb872fb81beb24ee0294e303679970cfa3c868c9b8249925027d1ea857",
           "method": "extractive"
         },
         "2026-11-11-667e185af5": {
-          "key": "aae15dce66d4ea20a6969b280413f40acfef30daec43eb10db2af5ede985f5f8",
+          "key": "42da9a72781338bd3f123cc21d0a3442b2568499f79b982085d828eedf5d2bb9",
           "method": "extractive"
         },
         "2026-11-12-8a5b8d3d14": {
-          "key": "b8d452ae116dccc0fb5bcf97a093ae531e7418be8c645453d958161f58ae736b",
+          "key": "daac6012ba0b6953ea71084756e525a95b341ddfe3a0d27af846cdaac5e2c0c6",
+          "method": "extractive"
+        }
+      },
+      "last_modified": ""
+    },
+    "lamp-room": {
+      "config": "2be2ae3fdb44e1372c799ba4d8cf95ebd0490a75202693d3b9e188f8601caf1a",
+      "etag": "\"lamp-1\"",
+      "fingerprint": "link,title",
+      "items": {
+        "2026-11-10-05a3c75e16": {
+          "key": "02f824efa630d604c33ff99de6ffa02b37eb9e711691159c8120e0201b1581eb",
+          "method": "extractive"
+        },
+        "2026-11-11-23c6c8ee22": {
+          "key": "163d8cc2f8cecc70ffac0aebe640d9c27380a96d46bc10820ea053e90a8faef0",
+          "method": "extractive"
+        },
+        "2026-11-12-b9234208e9": {
+          "key": "30af43d5dafcebe637521b74012f16202f38bc77d91cc9be27b4865e4799129c",
+          "method": "extractive"
+        },
+        "2026-11-13-ff7b73e406": {
+          "key": "08b87ccaaa5fa1b3793da35da2aed5c2ff6a5cc73ac7cbe76e116f31950388fd",
           "method": "extractive"
         }
       },
@@ -32,19 +56,19 @@
       "fingerprint": "link,title",
       "items": {
         "2026-11-09-59d0eea8e0": {
-          "key": "8b8f2c93b7556e3feb08f381c73f407cab39e78e67758206f50d1c883b0a991b",
+          "key": "0dce21b4c62a899ae824e1f61383f14afa296c01b235ff419ee46dcab42080e6",
           "method": "extractive"
         },
         "2026-11-10-9a32c90fc7": {
-          "key": "da1036b8312c24c2aedcedc5d78bd6f1c54e20fad8d2f11c0fa355d2e6358eee",
+          "key": "e802c699cd5536ee0ae040257e08f572743cb2e588e470a18e6c2d97ee2506fb",
           "method": "extractive"
         },
         "2026-11-11-f88d7568e0": {
-          "key": "d3ee0ff1a932e54ad3e360f2181f9517d0cc6a9e15e76a2b57a12312f24b1d1c",
+          "key": "e18572a57efdaa426121ad9b4051900ec4edebc162a7a1d16de548d7a79d76fe",
           "method": "extractive"
         },
         "2026-11-12-9540419a16": {
-          "key": "0b0075a71591cf6511d78a16fa99acbbd518794720de16138b58b0f8f684b60b",
+          "key": "57218da8d6f19999895b990ddea0a3f27621d22020ab50617be91b6daf92bcf5",
           "method": "extractive"
         }
       },
@@ -56,11 +80,11 @@
       "fingerprint": "items,title,url,version",
       "items": {
         "2026-11-04-cd98c5b165": {
-          "key": "144a703bf8a82c20b2e3056b4dd772788c306b0e8fda708967bc83a12960b849",
+          "key": "d9cadf37e16cb59dba134883d9b22e89dd7686297d29fe19eed41ca22d783ef4",
           "method": "extractive"
         },
         "2026-11-11-82c571434b": {
-          "key": "e1e4a1581e5bc007442be3b19302fa015368d2e3c45b0c7f9f5ef77498a3b30c",
+          "key": "d4b625074caf8e5106bc2337ae039481e589224dd55028adb006a6dd696f20a2",
           "method": "extractive"
         }
       },
@@ -72,27 +96,27 @@
       "fingerprint": "link,podcast:transcript,title",
       "items": {
         "2026-11-07-420826b378": {
-          "key": "ac2b0ba97cb0f066e0bb11886e901bd3971cc8146b57e48eb3ce3562f53ab324",
+          "key": "2ce27a1acbb247b4034b50b92b5143d1c0358b051a2f93213366e7fd073c0f81",
           "method": "extractive"
         },
         "2026-11-08-97bd63e880": {
-          "key": "48b617d7be354884fc39e37b7e6d2400bf17c62d0f68f45da95a836f39c47b5b",
+          "key": "17500b014d3d4a6b2506379d6a4119bd52a6e54176c2bdc35da443106096273d",
           "method": "extractive"
         },
         "2026-11-09-8e6fef9855": {
-          "key": "3e2f8f625e90f58ebf7aebc50ad59cf804fd5773a185e08c737f09611fe2932f",
+          "key": "43283f2a3c158fb5100f0e65107ef843ea977ca66a59971d2f7c9c568a799b1a",
           "method": "extractive"
         },
         "2026-11-10-bbf6b9d195": {
-          "key": "cd565ed72d901957ffff648b26ebdf966d8e909147c4af2de93deeb053e91cf2",
+          "key": "acf0802445320b81cb25d24ed3241a1120e593bc909f09f9c6da97c36a97b6e8",
           "method": "extractive"
         },
         "2026-11-11-90db1628c6": {
-          "key": "87cd11fc09d2e5c269da88c995c050398bc028237b7ec65bbb3dcafe6cc0f8fb",
+          "key": "e6db4f8f0a872c18ffb82cb6b9efcec6f2773171bf96c78da52e82461deb21e9",
           "method": "extractive"
         },
         "2026-11-12-49be7f43a2": {
-          "key": "1f092e2e2132151c13b078dd723bddd5bb368426726f26f858e425c0d17f834c",
+          "key": "849c7a3f3bfe329e647521ee5fd19c4998ef6eb10d80d7a774bcf0fe8445a4a6",
           "method": "extractive"
         }
       },

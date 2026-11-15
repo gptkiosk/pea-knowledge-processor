@@ -254,6 +254,118 @@
                 ]
               }
             }
+          },
+          "transcript_source": {
+            "description": "Since 1.1 (added 2026-11-15). Where the publisher itself offers this item's transcript, for a reader that wants the whole text: it fetches the address itself, from the publisher, and normalizes it on the device. Present only when the pipeline read a transcript there without signing in. Absent when none is offered.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "link",
+              "format",
+              "route",
+              "bytes"
+            ],
+            "properties": {
+              "link": {
+                "description": "The publisher's own public address of the transcript. Named `link` because `site` and `link` are the only members that may hold an address.",
+                "type": "string",
+                "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+                "maxLength": 2000
+              },
+              "format": {
+                "description": "What is at the address: WebVTT, SubRip, Podcasting 2.0 JSON, plain text, markdown, or an HTML page (read with `extract`).",
+                "type": "string",
+                "enum": [
+                  "vtt",
+                  "srt",
+                  "json",
+                  "text",
+                  "markdown",
+                  "html"
+                ]
+              },
+              "route": {
+                "description": "How the address was found: \"feed_tag\" (the publisher's feed or index lists it for this item), \"notes_link\" (the item's notes link to it), \"page\" (it follows from the item's page).",
+                "type": "string",
+                "enum": [
+                  "feed_tag",
+                  "notes_link",
+                  "page"
+                ]
+              },
+              "bytes": {
+                "description": "The size of what the pipeline read there, after decompression, or null when not known. A hint, not a promise.",
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 1500000
+              },
+              "extract": {
+                "description": "Only with format html: Which elements of the page hold the transcript, as lists of simple selectors: \"tag\", \".class\", \"#id\", \"tag.class\" or \"tag#id\". Data, never code.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "within": {
+                    "description": "The elements that hold the transcript. Without it: the element whose id or class says \"transcript\".",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "drop": {
+                    "description": "Elements left out, beyond what is always left out (scripts, menus, headings, hidden text).",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "row": {
+                    "description": "The element of one turn: one speaker, one time, their text.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "speaker": {
+                    "description": "The elements whose text is the speaker's name. Without it and without row: cite and dt.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "time": {
+                    "description": "The elements whose text holds the time of what follows. Without it and without row: time.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -34,9 +34,9 @@
       "id": "harbor-voices",
       "item_count": 4,
       "items_file": {
-        "bytes": 3843,
+        "bytes": 4419,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "e25edf61f8311f32fb1f86e725c091535d159d1ade52726143b826c05b16bb8c"
+        "sha256": "f11d9507aa0699a2e5944b1053e956520bdd317c82bf1b50fbe1f388f1afe229"
       },
       "kind": "podcast",
       "language": "en",
@@ -90,9 +90,9 @@
       "id": "tide-tables",
       "item_count": 6,
       "items_file": {
-        "bytes": 6710,
+        "bytes": 7408,
         "path": "sources/tide-tables/items.json",
-        "sha256": "727fe9d7b16c42629431168aca1751102876d3156075ff5d180a339089ffea7e"
+        "sha256": "70c003cd7c84d440d711a29adad68fc1ebba55e2ec43d4657a6f194a21280129"
       },
       "kind": "podcast",
       "language": "en",
@@ -221,6 +221,59 @@
       "terms_summary": "A made-up source for tests. Nothing real is described.",
       "typical_duration_seconds": null,
       "whats_new": "Newest: Harbour Board to publish radar logs after ledger dispute (2026-11-12). Before that: County moves visitor centre plan to North Quay (2026-11-11)."
+    },
+    {
+      "attribution": "The Lamp Room, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 5276,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "yellow",
+        "symbol": "book"
+      },
+      "id": "lamp-room",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 4415,
+        "path": "sources/lamp-room/items.json",
+        "sha256": "26bf468778ae93f5282c24496e0aabc4ee44506e9023f7d4f9b8761bf9af1014"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-13",
+      "latest_titles": [
+        "The night the lamp went out",
+        "A page that hides its orders",
+        "The keeper's winter"
+      ],
+      "message": null,
+      "name": "The Lamp Room",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "The Lamp Room (made up)",
+      "purge": false,
+      "site": "https://lamp.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": 518,
+      "whats_new": "Newest: The night the lamp went out (2026-11-13). Before that: A page that hides its orders (2026-11-12)."
     }
   ],
   "surprise": true

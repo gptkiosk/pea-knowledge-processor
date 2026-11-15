@@ -187,6 +187,12 @@ def check_items(data, listing):
             problems.append(Problem("inconsistent", at, "a transcript file in a source that publishes digests only"))
         if "read" in t and t["read"] != {"yes": "full", "partial": "partial"}.get(t["available"], t["read"]):
             problems.append(Problem("inconsistent", at, "transcript.read and transcript.available disagree"))
+        origin = item.get("transcript_source")
+        if origin is not None:
+            if t.get("read", "none") == "none":
+                problems.append(Problem("inconsistent", at, "a transcript_source on an item whose transcript was not read"))
+            if ("extract" in origin) != (origin["format"] == "html"):
+                problems.append(Problem("inconsistent", at, "transcript_source.extract goes with format html, and only with it"))
         if item["stale"] != (item["stale_reason"] is not None):
             problems.append(Problem("inconsistent", at, "stale and stale_reason disagree"))
     dates = [(i["date"], i["id"]) for i in items["items"]]

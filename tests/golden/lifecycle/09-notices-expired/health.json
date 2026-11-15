@@ -56,6 +56,31 @@
         "extractive": 0,
         "model": 0
       },
+      "id": "lamp-room",
+      "items": 0,
+      "kept": 4,
+      "new": 0,
+      "notes": [],
+      "outcome": "unchanged",
+      "pruned": 4,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
       "id": "quay-notes",
       "items": 0,
       "kept": 0,
@@ -143,9 +168,9 @@
     }
   ],
   "totals": {
-    "bytes": 1887,
+    "bytes": 3441,
     "items": 0,
-    "requests": 2,
-    "sources": 1
+    "requests": 4,
+    "sources": 2
   }
 }

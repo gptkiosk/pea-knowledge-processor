@@ -30,6 +30,12 @@
         "file": null,
         "read": "full",
         "reason": "withheld_terms"
+      },
+      "transcript_source": {
+        "bytes": 4113,
+        "format": "markdown",
+        "link": "https://harbor.example.org/e/2026-11-12/transcript.md",
+        "route": "feed_tag"
       }
     },
     {
@@ -60,6 +66,12 @@
         "file": null,
         "read": "full",
         "reason": "withheld_terms"
+      },
+      "transcript_source": {
+        "bytes": 4130,
+        "format": "markdown",
+        "link": "https://harbor.example.org/e/2026-11-11/transcript.md",
+        "route": "feed_tag"
       }
     },
     {
@@ -90,6 +102,12 @@
         "file": null,
         "read": "full",
         "reason": "withheld_terms"
+      },
+      "transcript_source": {
+        "bytes": 4097,
+        "format": "markdown",
+        "link": "https://harbor.example.org/e/2026-11-10/transcript.md",
+        "route": "feed_tag"
       }
     },
     {

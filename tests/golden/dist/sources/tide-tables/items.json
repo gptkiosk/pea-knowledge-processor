@@ -33,6 +33,12 @@
         },
         "read": "full",
         "reason": null
+      },
+      "transcript_source": {
+        "bytes": 5058,
+        "format": "vtt",
+        "link": "https://media.tide.example.org/ep6.vtt",
+        "route": "feed_tag"
       }
     },
     {
@@ -66,6 +72,12 @@
         },
         "read": "full",
         "reason": null
+      },
+      "transcript_source": {
+        "bytes": 5078,
+        "format": "srt",
+        "link": "https://media.tide.example.org/ep5.srt",
+        "route": "feed_tag"
       }
     },
     {
@@ -99,6 +111,12 @@
         },
         "read": "full",
         "reason": null
+      },
+      "transcript_source": {
+        "bytes": 6756,
+        "format": "json",
+        "link": "https://media.tide.example.org/ep4.json",
+        "route": "feed_tag"
       }
     },
     {
@@ -190,6 +208,12 @@
         },
         "read": "full",
         "reason": null
+      },
+      "transcript_source": {
+        "bytes": 5723,
+        "format": "vtt",
+        "link": "https://media.tide.example.org/ep1-hostile.vtt",
+        "route": "feed_tag"
       }
     }
   ],

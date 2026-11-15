@@ -490,7 +490,7 @@ class Model(unittest.TestCase):
         health = support.run(os.path.join(base, "with"), config=config, environment={model_digest.KEY_VARIABLE: FAKE_KEY})
         self.assertTrue(validate.check_folder(os.path.join(base, "with")).ok)
         self.assertTrue(health["model"]["used"])
-        self.assertEqual(health["model"]["calls"], 7, "one call for each item that has a transcript")
+        self.assertEqual(health["model"]["calls"], 9, "one call for each item that has a transcript")
         self.assertEqual(sum(s["digests"]["model"] for s in health["sources"]), health["model"]["accepted"])
         self.assertGreater(health["model"]["cost_usd"], 0)
         self.assertLess(health["model"]["cost_usd"], 0.05)

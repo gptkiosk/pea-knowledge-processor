@@ -40,8 +40,8 @@ class OneRun(Base):
         health = support.run(self.out)
         report = validate.check_folder(self.out)
         self.assertEqual(report.problems, [])
-        self.assertEqual((report.sources, report.items), (4, 16))
-        self.assertEqual((health["mode"], health["totals"]["items"], health["model"]["used"]), ("offline", 16, False))
+        self.assertEqual((report.sources, report.items), (5, 20))
+        self.assertEqual((health["mode"], health["totals"]["items"], health["model"]["used"]), ("offline", 20, False))
         self.assertEqual(js.validate(health, validate.schema("health")), [])
         tide = {i["date"]: i for i in support.items(self.out, "tide-tables")}
         self.assertEqual({d: (i["transcript"]["available"], i["transcript"]["reason"], i["digest"]["basis"]) for d, i in tide.items()}, {
@@ -97,6 +97,7 @@ class OneRun(Base):
                 value["format_version"] = "1.0"
                 for item in value.get("items", []) if isinstance(value.get("items"), list) else []:
                     item.pop("link_kind", None)
+                    item.pop("transcript_source", None)
                 for key in ("link_kind", "guests", "mentioned_resources", "chapters", "snippable_moments", "recap_cards"):
                     value.pop(key, None)
                 if path == "state.json":   # 0.1.0 made its item keys another way, so none of them is the key of today
@@ -106,7 +107,7 @@ class OneRun(Base):
                         memory["config"] = "0" * 64
                 with open(os.path.join(self.out, *path.split("/")), "w", encoding="utf-8") as f:
                     f.write(js.dumps(value))
-        for sid in ("harbor-voices", "tide-tables", "quay-notes", "port-gazette"):   # the hashes follow the rewritten files
+        for sid in ("harbor-voices", "tide-tables", "quay-notes", "port-gazette", "lamp-room"):   # the hashes follow the rewritten files
             folder = os.path.join(self.out, "sources", sid)
             with open(os.path.join(folder, "items.json"), encoding="utf-8") as f:
                 index = json.load(f)
@@ -130,7 +131,7 @@ class OneRun(Base):
         health = support.run(self.out, LATER)
         self.assertEqual(self.codes(), [])
         self.assertTrue(all("link_kind" in i for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)))
-        self.assertEqual(health["totals"]["items"], 16)
+        self.assertEqual(health["totals"]["items"], 20)
 
     def test_the_store_listing_has_what_a_store_card_and_the_storage_choice_need(self):
         support.run(self.out)
@@ -249,9 +250,9 @@ class OneRun(Base):
             if path == "store.json":
                 a, b = a.replace(b"2026-11-14T12:00:00Z", b"T"), b.replace(b"2026-11-14T18:00:00Z", b"T")
             self.assertEqual(a, b, path + " differs only by generated_at")
-        self.assertEqual([(s["new"], s["outcome"]) for s in health["sources"]], [(0, "unchanged"), (0, "ok"), (0, "ok"), (0, "unchanged")],
+        self.assertEqual([(s["new"], s["outcome"]) for s in health["sources"]], [(0, "unchanged"), (0, "ok"), (0, "ok"), (0, "unchanged"), (0, "unchanged")],
                          "a feed that answers 'not modified' is not read again; the feed with a failed transcript is")
-        self.assertLess(health["totals"]["requests"], 12)
+        self.assertLess(health["totals"]["requests"], 14)
 
     def test_the_run_can_be_split_into_three_jobs(self):
         work = os.path.join(self.base, "work")
@@ -268,7 +269,7 @@ class OneRun(Base):
         self.assertIn("| tide-tables | ok | active | 6 |", text)
         with contextlib.redirect_stdout(io.StringIO()) as said:
             self.assertEqual(cli.main(["validate", self.out]), 0)
-        self.assertTrue(said.getvalue().startswith("valid: 4 sources, 16 items"))
+        self.assertTrue(said.getvalue().startswith("valid: 5 sources, 20 items"))
 
 
 class KeepingWhatIsGood(Base):
@@ -290,7 +291,7 @@ class KeepingWhatIsGood(Base):
             self.assertEqual({p: d for p, d in before.items() if p.startswith("sources/")}, {p: d for p, d in after.items() if p.startswith("sources/")},
                              "no good file is deleted or changed by a failed run")
             self.assertEqual(self.health_of(health, "tide-tables")["outcome"], "failed")
-            self.assertEqual([s["outcome"] for s in health["sources"] if s["id"] != "tide-tables"], ["unchanged", "ok", "unchanged"])
+            self.assertEqual([s["outcome"] for s in health["sources"] if s["id"] != "tide-tables"], ["unchanged", "ok", "unchanged", "unchanged"])
 
     def test_an_item_whose_refresh_fails_keeps_its_earlier_copy_and_is_marked_stale(self):
         support.run(self.out)
@@ -361,13 +362,13 @@ class KeepingWhatIsGood(Base):
     def test_old_items_are_pruned_and_the_newest_are_kept(self):
         few = support.load_config(lambda c: c["defaults"].update(max_items=2))
         health = support.run(self.out, config=few)
-        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [2, 2, 2, 2])
+        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [2, 2, 2, 2, 2])
         self.assertEqual([i["date"] for i in support.items(self.out, "tide-tables")], ["2026-11-12", "2026-11-11"])
         support.run(self.out, config=support.load_config())
-        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [4, 6, 2, 4])
+        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [4, 6, 2, 4, 4])
         gone = support.run(self.out, support.T0 + datetime.timedelta(days=60), config=support.load_config(lambda c: c["defaults"].update(retention_days=40)))
         self.assertEqual(self.codes(), [])
-        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [0, 0, 0, 0])
+        self.assertEqual([s["item_count"] for s in support.store(self.out)["sources"]], [0, 0, 0, 0, 0])
         self.assertEqual(self.health_of(gone, "tide-tables")["pruned"], 6)
         self.assertEqual(sorted(p for p in support.tree(self.out) if p.startswith("sources/")), [])
 
@@ -419,8 +420,8 @@ class Lifecycle(Base):
         self.assertEqual((removed["state"], removed["state_reason"]["code"], removed["message"], removed["purge"], removed["item_count"]),
                          ("withdrawn", "removed", "The curator removed this source.", False, 0))
         self.assertEqual((removed["name"], removed["site"]), ("Harbor Voices", "https://harbor.example.org/"), "the notice still says which source it was")
-        self.assertEqual(seen["08-removed-from-the-config"][2], ["tide-tables"])
-        self.assertEqual([s["id"] for s in seen["09-notices-expired"][0]["sources"]], ["tide-tables"], "after the notice period the withdrawn sources are dropped")
+        self.assertEqual(seen["08-removed-from-the-config"][2], ["lamp-room", "tide-tables"])
+        self.assertEqual([s["id"] for s in seen["09-notices-expired"][0]["sources"]], ["tide-tables", "lamp-room"], "after the notice period the withdrawn sources are dropped")
 
     def test_a_manual_state_always_wins(self):
         broken = self.web(support.broken_tide)
@@ -462,7 +463,8 @@ class OnlyFullTranscripts(Base):
         health = support.run(self.out, config=self.strict())
         self.assertEqual(self.codes(), [])
         states = {s["id"]: (s["state"], s["freshness"]["status"], s["item_count"]) for s in support.store(self.out)["sources"]}
-        self.assertEqual(states, {"harbor-voices": ("active", "fresh", 4), "tide-tables": ("active", "fresh", 6), "quay-notes": ("active", "stale", 0), "port-gazette": ("active", "stale", 0)},
+        self.assertEqual(states, {"harbor-voices": ("active", "fresh", 4), "tide-tables": ("active", "fresh", 6), "quay-notes": ("active", "stale", 0), "port-gazette": ("active", "stale", 0),
+                                  "lamp-room": ("active", "stale", 0)},
                          "three of four and three of five are enough; show notes alone and headlines alone are not")
         quay = self.health_of(health, "quay-notes")
         self.assertEqual((quay["outcome"], quay["reason"]["code"]), ("failed", "format_changed"))
@@ -527,13 +529,16 @@ class OnlyFullTranscripts(Base):
         def item(status, reuse=False, iid="a"):
             return {"id": iid, "reuse": reuse, "transcript": {"status": status}}
         self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("yes")] * 3 + [item("no")] * 2}, {}))
-        self.assertIn("2 of the newest 5", pipeline.too_few_transcripts(config, source, {"items": [item("yes")] * 2 + [item("no"), item("partial"), item("no")] + [item("yes")] * 9}, {}))
+        self.assertIn("2 of the newest 5", pipeline.too_few_transcripts(config, source, {"items": [item("yes"), item("partial")] + [item("no")] * 3 + [item("yes")] * 9}, {}))
         self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": []}, {}), "nothing new to judge")
         old = {"a": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None}, "digest": {"basis": "transcript", "grade": "full"}},
                "b": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None, "read": "partial"}, "digest": {"basis": "transcript", "grade": "partial"}}}
         self.assertEqual((pipeline.transcript_read(old["a"]), pipeline.transcript_read(old["b"])), ("full", "partial"))
         self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "a")]}, old))
-        self.assertIsNotNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "b")]}, old), "a cut transcript is not a full one")
+        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "b")]}, old),
+                          "a transcript this pipeline cut at its size cap is still one the publisher offers in full")
+        old["c"] = {"transcript": {"available": "no", "reason": "unreadable", "file": None, "read": "none"}, "digest": {"basis": "notes", "grade": "partial"}}
+        self.assertIsNotNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "c")]}, old))
         off = support.load_config(lambda c: c["defaults"].update(min_full_transcript_share=0))
         self.assertIsNone(pipeline.too_few_transcripts(off, off["sources"][0], {"items": [item("no")] * 5}, {}))
 
@@ -589,7 +594,7 @@ class CommandLine(Base):
                                   env={"PATH": os.environ.get("PATH", ""), "SOURCE_DATE_EPOCH": "1794657600"})
         done = go("run", "--config", "tests/fixtures/sources.json", "--out", self.out, "--offline-fixtures", "tests/fixtures/web")
         self.assertEqual(done.returncode, 0, done.stderr)
-        self.assertIn("4 sources, 16 items", done.stdout)
+        self.assertIn("5 sources, 20 items", done.stdout)
         self.assertEqual(support.store(self.out)["generated_at"], "2026-11-14T12:00:00Z")
         done = go("validate", self.out)
         self.assertEqual((done.returncode, done.stdout.strip().split(":")[0]), (0, "valid"))

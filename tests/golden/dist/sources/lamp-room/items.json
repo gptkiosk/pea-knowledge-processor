@@ -1,0 +1,155 @@
+{
+  "format": "pea-knowledge-items",
+  "format_version": "1.1",
+  "items": [
+    {
+      "bytes": 8955,
+      "date": "2026-11-13",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 8955,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/lamp-room/2026-11-13-ff7b73e406.digest.json",
+        "sha256": "93cd6f01959de522f2c91407a39978d16a3c72faefe690562c37506a6e209834"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-13-ff7b73e406",
+      "link": "https://lamp.example.org/ep4/?utm_source=rss",
+      "link_kind": "episode",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
+      "title": "The night the lamp went out",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "read": "full",
+        "reason": "withheld_terms"
+      },
+      "transcript_source": {
+        "bytes": 11059,
+        "extract": {
+          "drop": [
+            ".aside"
+          ],
+          "row": [
+            ".turn"
+          ],
+          "speaker": [
+            ".who"
+          ],
+          "time": [
+            ".at"
+          ]
+        },
+        "format": "html",
+        "link": "https://lamp.example.org/ep4-transcript/",
+        "route": "notes_link"
+      }
+    },
+    {
+      "bytes": 9168,
+      "date": "2026-11-12",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 9168,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/lamp-room/2026-11-12-b9234208e9.digest.json",
+        "sha256": "18036f406d4798b306e892238915b16491b3a23a0810687024977ff751b3e465"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-12-b9234208e9",
+      "link": "https://lamp.example.org/ep3/?utm_source=rss",
+      "link_kind": "episode",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
+      "title": "A page that hides its orders",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "read": "full",
+        "reason": "withheld_terms"
+      },
+      "transcript_source": {
+        "bytes": 45827,
+        "extract": {
+          "drop": [
+            ".aside"
+          ],
+          "row": [
+            ".turn"
+          ],
+          "speaker": [
+            ".who"
+          ],
+          "time": [
+            ".at"
+          ]
+        },
+        "format": "html",
+        "link": "https://lamp.example.org/ep3-transcript",
+        "route": "notes_link"
+      }
+    },
+    {
+      "bytes": 1498,
+      "date": "2026-11-11",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1498,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/lamp-room/2026-11-11-23c6c8ee22.digest.json",
+        "sha256": "8b6a195736367cbd1e5abca4c3705eb8ec852180ae352314b44dd45fa68e9147"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-11-23c6c8ee22",
+      "link": "https://lamp.example.org/ep2/?utm_source=rss",
+      "link_kind": "episode",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
+      "title": "The keeper's winter",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "read": "none",
+        "reason": "unreadable"
+      }
+    },
+    {
+      "bytes": 1485,
+      "date": "2026-11-10",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1485,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/lamp-room/2026-11-10-05a3c75e16.digest.json",
+        "sha256": "456e910aa902c069a544d71bf8b65b6710c5127d9f6e319fb72cbbe443418c66"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-10-05a3c75e16",
+      "link": "https://lamp.example.org/ep1/?utm_source=rss",
+      "link_kind": "episode",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Mara and Tobias in the lamp room at Grey Point. Sponsors: a sponsor",
+      "title": "An episode whose transcript is not out yet",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "read": "none",
+        "reason": "none_published"
+      }
+    }
+  ],
+  "source_id": "lamp-room"
+}

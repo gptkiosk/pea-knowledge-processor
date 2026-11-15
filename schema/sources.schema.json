@@ -495,6 +495,112 @@
               "minLength": 1,
               "maxLength": 80
             }
+          },
+          "transcript_page": {
+            "description": "For a publisher whose full transcript is an open HTML page on its own site: how the page of an episode is found, and how it is read.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "host"
+            ],
+            "properties": {
+              "from": {
+                "description": "\"link\": the item's own page holds the transcript. \"notes_link\": the item's notes link to it. \"page_link\": the item's page links to it. \"template\": the address follows from the last part of the item's page address.",
+                "type": "string",
+                "enum": [
+                  "link",
+                  "notes_link",
+                  "page_link",
+                  "template"
+                ]
+              },
+              "host": {
+                "description": "The one host a transcript page may be on.",
+                "type": "string",
+                "pattern": "^[a-z0-9.-]{4,253}$"
+              },
+              "path_ends": {
+                "description": "For notes_link and page_link: how the path of the transcript page ends (a final slash aside). Without it, the link must be labelled Transcript.",
+                "type": "string",
+                "pattern": "^[A-Za-z0-9/._-]{1,60}$"
+              },
+              "template": {
+                "description": "For template: the address, with {slug} where the last part of the item's page address goes.",
+                "type": "string",
+                "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+                "maxLength": 400
+              },
+              "min_chars": {
+                "description": "A page with less transcript text than this is not a transcript. Default 1500.",
+                "type": "integer",
+                "minimum": 200,
+                "maximum": 100000
+              },
+              "extract": {
+                "description": "Which elements of the page hold the transcript, as lists of simple selectors: \"tag\", \".class\", \"#id\", \"tag.class\" or \"tag#id\". Data, never code.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "within": {
+                    "description": "The elements that hold the transcript. Without it: the element whose id or class says \"transcript\".",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "drop": {
+                    "description": "Elements left out, beyond what is always left out (scripts, menus, headings, hidden text).",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "row": {
+                    "description": "The element of one turn: one speaker, one time, their text.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "speaker": {
+                    "description": "The elements whose text is the speaker's name. Without it and without row: cite and dt.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  },
+                  "time": {
+                    "description": "The elements whose text holds the time of what follows. Without it and without row: time.",
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80,
+                      "pattern": "^(?:[a-z][a-z0-9]{0,15})?(?:[.#][A-Za-z0-9_-]{1,60})?$"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

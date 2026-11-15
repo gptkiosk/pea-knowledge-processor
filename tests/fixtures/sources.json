@@ -173,6 +173,64 @@
         "summary": "A made-up source for tests. Nothing real is described.",
         "uncertain": []
       }
+    },
+    {
+      "id": "lamp-room",
+      "name": "The Lamp Room",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://lamp.example.org/feed.xml",
+      "site": "https://lamp.example.org/",
+      "publisher": "The Lamp Room (made up)",
+      "language": "en",
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "icon": {
+        "symbol": "book",
+        "colour": "yellow"
+      },
+      "publish": "digest_only",
+      "attribution": "The Lamp Room, a made-up source",
+      "terms": {
+        "checked": "2026-11-14",
+        "robots": {
+          "url": null,
+          "finding": "A made-up source."
+        },
+        "licence": {
+          "url": null,
+          "finding": "A made-up source."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "A made-up source."
+        },
+        "summary": "A made-up source for tests. Nothing real is described.",
+        "uncertain": []
+      },
+      "transcript_page": {
+        "from": "notes_link",
+        "host": "lamp.example.org",
+        "path_ends": "-transcript",
+        "extract": {
+          "row": [
+            ".turn"
+          ],
+          "speaker": [
+            ".who"
+          ],
+          "time": [
+            ".at"
+          ],
+          "drop": [
+            ".aside"
+          ]
+        }
+      }
     }
   ]
 }

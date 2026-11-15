@@ -27,6 +27,31 @@
    "content_type": "text/markdown",
    "file": "harbor/2026-11-12-transcript.md"
   },
+  "https://lamp.example.org/ep2-transcript": {
+   "content_type": "text/html; charset=UTF-8",
+   "file": "lamp/ep2-transcript.html"
+  },
+  "https://lamp.example.org/ep3-transcript": {
+   "content_type": "text/html; charset=UTF-8",
+   "file": "lamp/ep3-transcript.html"
+  },
+  "https://lamp.example.org/ep4-transcript": {
+   "location": "https://lamp.example.org/ep4-transcript/",
+   "status": 301
+  },
+  "https://lamp.example.org/ep4-transcript/": {
+   "content_type": "text/html; charset=UTF-8",
+   "file": "lamp/ep4-transcript.html"
+  },
+  "https://lamp.example.org/feed.xml": {
+   "content_type": "application/rss+xml",
+   "etag": "\"lamp-1\"",
+   "file": "lamp/feed.xml"
+  },
+  "https://lamp.example.org/robots.txt": {
+   "content_type": "text/plain",
+   "file": "lamp/robots.txt"
+  },
   "https://media.tide.example.org/ep0.vtt": {
    "content_type": "text/vtt",
    "file": "tide/ep0.vtt"

@@ -39,7 +39,7 @@ class Golden(unittest.TestCase):
     def test_the_golden_output_validates(self):
         report = validate.check_folder(DIST)
         self.assertEqual(report.problems, [])
-        self.assertEqual((report.sources, report.items), (4, 16))
+        self.assertEqual((report.sources, report.items), (5, 20))
 
     def test_the_golden_lifecycle_states_are_what_the_pipeline_writes(self):
         folder = os.path.join(support.GOLDEN, "lifecycle")
