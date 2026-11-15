@@ -6,7 +6,7 @@ Checked on 2026-11-14 by fetching each file named below. This is a record of wha
 
 - A source's `publish` level is `digest_only` unless the publisher clearly permits redistributing transcripts. Every source below is `digest_only`.
 - With `digest_only`, the pipeline may read the transcript at run time to build the digest. The transcript is never written to the public output; the item says `withheld_terms`.
-- A digest of a `digest_only` source takes at most `excerpt_budget_chars` characters (3,000 by default) from the transcript, as short separate sentences with the time and a link back.
+- A digest of a `digest_only` source takes at most `excerpt_budget_chars` characters (1,500 by default) from the transcript, as short separate sentences with the time and a link back.
 - A news source is always headline, a description of at most 280 characters and the link. The article text is never republished. The configuration refuses any other setting for `kind: news`.
 - `robots.txt` is obeyed on every host, also on the host a transcript is served from, and a `Crawl-delay` is honoured (up to 30 seconds).
 - Every item links back to the publisher, and every listing carries an attribution line.
@@ -56,7 +56,7 @@ Checked on 2026-11-14 by fetching each file named below. This is a record of wha
 
 ## What is uncertain overall
 
-1. **Short excerpts from `digest_only` transcripts.** Extractive digests are made of sentences from the transcript (up to 3,000 characters per episode, typically under a tenth of it), with a link back. Whether that is acceptable to each publisher is a judgment this project cannot make for them. Options: lower `excerpt_budget_chars`, switch on the model digest (it paraphrases; only the quotes are verbatim), or ask the publishers.
+1. **Short excerpts from `digest_only` transcripts.** Extractive digests are made of sentences from the transcript (up to 1,500 characters per episode, typically under a tenth of it), with a link back. Whether that is acceptable to each publisher is a judgment this project cannot make for them. Options: lower `excerpt_budget_chars`, switch on the model digest (it paraphrases; only the quotes are verbatim), or ask the publishers.
 2. **The work folder in CI.** Between the jobs of a run, normalized transcripts travel as a workflow artifact kept for one day. In a public repository, signed-in GitHub users can download artifacts of a run. That is a short-lived copy of transcripts that are not meant to be republished. If this matters, make the repository private (GitHub Pages for a private repository needs a paid plan) or run the three stages in one job, giving up the separation of the model key.
 3. **Terms change.** Each source records the day its terms were read (`terms.checked`). Read them again when a source changes host or adds a licence line, and at least once a year.
 
@@ -70,3 +70,18 @@ Checked on 2026-11-14 by fetching each file named below. This is a record of wha
 6. Write the credit line (`attribution`).
 7. Run it offline first if you can, then once live, and read `health.json`.
 8. If the publisher ever asks for removal: set `state` to `withdrawn` with `state_reason: takedown` (and `purge: true` if copies must go) in one commit. See the README.
+
+
+## Decisions taken before first publication (2026-11-14)
+
+The project owner (Bamcio Ventures LLC) delegated these decisions. They are conservative defaults, not legal advice, and any publisher can ask for a change.
+
+1. **Every source stays `digest_only`.** No publisher clearly permits republishing transcripts, so full transcripts are never published. The transcript is used only at run time to build the digest and its pointers.
+2. **Excerpts are short.** The extractive digest takes at most 1,500 characters per episode (down from 3,000), as separate short sentences with their time and a link back to the original. The quotes list is exact and short (a few lines). Everything links to the publisher's original.
+3. **EFF Deeplinks** (CC BY 4.0) is carried as headline, a short summary and a link, with attribution to the Electronic Frontier Foundation on its store card.
+4. **Takedown is one commit.** A publisher or anyone else can open a GitHub issue; setting the source to `withdrawn` (with `purge: true` when a deletion is requested) removes it from the next published catalog and tells apps to delete their copy. Requests are honoured promptly.
+5. **Politeness.** One identifiable User-Agent that names this repository, robots.txt respected, the 30-second crawl delay for EFF honoured, conditional requests, and a few requests per source per run.
+6. **No model digest by default.** The model digest is off until the owner adds an API key and turns it on; its output is validated and quotes must be exact substrings of the source text.
+
+### Still open (owner)
+Whether a given publisher is content with short excerpts in a public digest. If in doubt, ask the publisher, or switch that source to headline-only.

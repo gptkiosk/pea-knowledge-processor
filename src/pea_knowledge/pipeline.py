@@ -21,7 +21,7 @@ from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as d
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
-            "excerpt_budget_chars": 3_000, "suggested_keep": 5, "max_total_bytes": 40_000_000}
+            "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000}
 TRANSCRIPT_TRIES = 3
 NEWS_SUMMARY_CHARS = 280
 

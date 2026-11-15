@@ -7,7 +7,7 @@
     "retention_days": 45,
     "auto_pause_after_failed_runs": 3,
     "tombstone_days": 90,
-    "excerpt_budget_chars": 3000,
+    "excerpt_budget_chars": 1500,
     "suggested_keep": 5,
     "max_total_bytes": 40000000
   },
