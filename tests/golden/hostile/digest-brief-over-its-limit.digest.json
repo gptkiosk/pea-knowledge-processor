@@ -1,5 +1,5 @@
 {
-  "about": "The Grey Point Trust voted on it in March, and the old lamp won by 36 votes to nine. An electric lamp would have cost the Trust 120 thousand dollars before a single night of light.",
+  "about": "Mara and Tobias at the Grey Point lighthouse. Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.",
   "background": null,
   "basis": "transcript",
   "brief": {
@@ -16,6 +16,36 @@
       "time_seconds": null
     }
   },
+  "chapters": [
+    {
+      "end_seconds": 84,
+      "origin": "publisher",
+      "segment": 0,
+      "start_seconds": 0,
+      "title": "Welcome to Grey Point"
+    },
+    {
+      "end_seconds": 252,
+      "origin": "publisher",
+      "segment": 4,
+      "start_seconds": 84,
+      "title": "The keeper's ledger"
+    },
+    {
+      "end_seconds": 390,
+      "origin": "publisher",
+      "segment": 14,
+      "start_seconds": 252,
+      "title": "A keeper's day"
+    },
+    {
+      "end_seconds": 518,
+      "origin": "publisher",
+      "segment": 22,
+      "start_seconds": 390,
+      "title": "The visitor centre on the meadow"
+    }
+  ],
   "connections": [
     {
       "item_id": "2026-11-09-8e6fef9855",
@@ -32,7 +62,7 @@
     "How did the Grey Point Trust decide to keep the old lamp instead of fitting an electric one?"
   ],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "a speaker in this episode",
@@ -75,9 +105,27 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [
+    {
+      "name": "Tobias Renn",
+      "role": "keeper of the Grey Point lighthouse"
+    }
+  ],
   "item_id": "2026-11-12-49be7f43a2",
   "language": "en",
   "link": "https://tide.example.org/episodes/6",
+  "link_kind": "episode",
+  "mentioned_resources": [
+    {
+      "at": {
+        "segment": 5,
+        "time_seconds": 98
+      },
+      "context": "Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.",
+      "kind": "other",
+      "name": "the Wren"
+    }
+  ],
   "numbers": [
     {
       "at": {
@@ -136,6 +184,72 @@
       "exact": true,
       "speaker": "Tobias",
       "text": "I would ask them to publish the radar logs, so that the town can compare them with the ledger."
+    }
+  ],
+  "recap_cards": [
+    {
+      "answer": "Mara and Tobias at the Grey Point lighthouse. Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "Tobias Renn, keeper of the Grey Point lighthouse",
+      "question": "Who is the guest?"
+    },
+    {
+      "answer": "The Northwind Cooperative lands about 66 percent of the fish sold at the Saturday market.",
+      "question": "What does the figure 66 percent refer to?"
+    }
+  ],
+  "snippable_moments": [
+    {
+      "at": {
+        "segment": 7,
+        "time_seconds": 126
+      },
+      "end_seconds": 154,
+      "label": "What the ledger records",
+      "quote": "The port records count tonnage, but the ledger records weather, crews and who was late and why.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 7,
+        "time_seconds": 126
+      },
+      "end_seconds": 154,
+      "label": null,
+      "quote": "Last winter the ledger showed 52 ships turning back at the bar, twice the number of the year before.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "end_seconds": 28,
+      "label": null,
+      "quote": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 26 years.",
+      "speaker": "Mara"
+    },
+    {
+      "at": {
+        "segment": 4,
+        "time_seconds": 84
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came.",
+      "speaker": "Mara"
+    },
+    {
+      "at": {
+        "segment": 27,
+        "time_seconds": 448
+      },
+      "end_seconds": 462,
+      "label": null,
+      "quote": "I would ask them to publish the radar logs, so that the town can compare them with the ledger.",
+      "speaker": "Tobias"
     }
   ],
   "source_id": "tide-tables",

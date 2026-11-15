@@ -225,6 +225,14 @@ def check_digest(data, listing, item, transcript=None, transcript_sha256=None):
     for key, expected in same:
         if d[key] != expected:
             problems.append(Problem("identity_mismatch", "%s.%s" % (where, key), "differs from the index"))
+    if "link_kind" in d and "link_kind" in item and d["link_kind"] != item["link_kind"]:
+        problems.append(Problem("identity_mismatch", where + ".link_kind", "differs from the index"))
+    chapters = d.get("chapters", [])
+    if any(b["start_seconds"] <= a["start_seconds"] or (a["end_seconds"] is not None and a["end_seconds"] > b["start_seconds"]) for a, b in zip(chapters, chapters[1:])) \
+            or any(c["end_seconds"] is not None and c["end_seconds"] <= c["start_seconds"] for c in chapters):
+        problems.append(Problem("inconsistent", where + ".chapters", "the chapters are not in order of time"))
+    if d["basis"] != "transcript" and d.get("snippable_moments"):
+        problems.append(Problem("inconsistent", where + ".snippable_moments", "moments without a transcript"))
     if d["quality"]["grade"] != item["digest"]["grade"] or d["provenance"]["method"] != item["digest"]["method"]:
         problems.append(Problem("identity_mismatch", where, "grade or method differs from the index"))
     if dg.brief_chars(d["brief"]) > dg.BRIEF_CHARS:
@@ -242,12 +250,18 @@ def check_digest(data, listing, item, transcript=None, transcript_sha256=None):
         pointers = [p["at"] for p in d["talking_points"]] + [q["at"] for q in d["quotes"]] + [n["at"] for n in d["numbers"]]
         if d["strongest_claim"]:
             pointers.append(d["strongest_claim"]["at"])
+        pointers += [r["at"] for r in d.get("mentioned_resources", [])] + [m["at"] for m in d.get("snippable_moments", [])]
+        pointers += [{"segment": c["segment"]} for c in d.get("chapters", [])]
         if any(at["segment"] is not None and at["segment"] >= count for at in pointers):
             problems.append(Problem("inconsistent", where, "a pointer names a segment the transcript does not have"))
         for n, q in enumerate(d["quotes"]):
             number = q["at"]["segment"]
             if q["exact"] and (number is None or number >= count or q["text"] not in transcript.segments[number].text):
                 problems.append(Problem("inconsistent", "%s.quotes[%d]" % (where, n), "marked exact but not in the segment it points to"))
+        for n, m in enumerate(d.get("snippable_moments", [])):
+            number = m["at"]["segment"]
+            if number is None or number >= count or m["quote"] not in transcript.segments[number].text:
+                problems.append(Problem("inconsistent", "%s.snippable_moments[%d]" % (where, n), "not in the segment it points to"))
     return (None if problems else d), problems
 
 

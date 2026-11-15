@@ -102,6 +102,12 @@
           "minimum": 200,
           "maximum": 8000
         },
+        "max_notes_chars": {
+          "description": "How much of an item's show notes the model is shown beside the transcript.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
         "max_items_per_run": {
           "type": "integer",
           "minimum": 0,

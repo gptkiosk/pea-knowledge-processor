@@ -8,17 +8,21 @@
     "points": [],
     "quote": null
   },
+  "chapters": [],
   "connections": [],
   "contested": [],
   "date": "2026-11-09",
   "duration_seconds": 300,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [],
+  "guests": [],
   "item_id": "2026-11-09-95827ccd6b",
   "language": "en",
   "link": "https://harbor.example.org/e/2026-11-09",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -32,6 +36,13 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "A short edition.",
+      "question": "What is this one about?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "harbor-voices",
   "source_name": "Harbor Voices",
   "starters": [

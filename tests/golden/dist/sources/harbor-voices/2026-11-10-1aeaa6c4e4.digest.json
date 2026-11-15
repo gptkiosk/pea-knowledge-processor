@@ -16,13 +16,57 @@
       "time_seconds": 0
     }
   },
+  "chapters": [
+    {
+      "end_seconds": 98,
+      "origin": "transcript",
+      "segment": 0,
+      "start_seconds": 0,
+      "title": "The Grey Point Trust voted on it in March, and the old…"
+    },
+    {
+      "end_seconds": 154,
+      "origin": "transcript",
+      "segment": 2,
+      "start_seconds": 98,
+      "title": "Last winter the ledger showed 60 ships turning back at the…"
+    },
+    {
+      "end_seconds": 294,
+      "origin": "transcript",
+      "segment": 3,
+      "start_seconds": 154,
+      "title": "I trim the wick at dusk, wind the clockwork every four…"
+    },
+    {
+      "end_seconds": 336,
+      "origin": "transcript",
+      "segment": 6,
+      "start_seconds": 294,
+      "title": "The Grey Point Trust pays for the apprentices out of…"
+    },
+    {
+      "end_seconds": 420,
+      "origin": "transcript",
+      "segment": 7,
+      "start_seconds": 336,
+      "title": "There is a plan from the county to build a visitor centre…"
+    },
+    {
+      "end_seconds": 540,
+      "origin": "transcript",
+      "segment": 9,
+      "start_seconds": 420,
+      "title": "Tobias Renn, keeper of the Grey Point lighthouse, thank…"
+    }
+  ],
   "connections": [],
   "contested": [],
   "date": "2026-11-10",
   "duration_seconds": 540,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
@@ -55,9 +99,12 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [],
   "item_id": "2026-11-10-1aeaa6c4e4",
   "language": "en",
   "link": "https://harbor.example.org/e/2026-11-10",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -89,6 +136,72 @@
       "exact": true,
       "speaker": null,
       "text": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came."
+    }
+  ],
+  "recap_cards": [
+    {
+      "answer": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "question": "Who or what is Harbour Board?"
+    },
+    {
+      "answer": "The port records count tonnage, but the ledger records weather, crews and who was late and why.",
+      "question": "What is the strongest claim made?"
+    }
+  ],
+  "snippable_moments": [
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "end_seconds": 42,
+      "label": null,
+      "quote": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 30 years.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 42
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 2,
+        "time_seconds": 98
+      },
+      "end_seconds": 154,
+      "label": null,
+      "quote": "The port records count tonnage, but the ledger records weather, crews and who was late and why.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 42
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "The Grey Point Trust voted on it in March, and the old lamp won by 40 votes to nine.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 42
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "An electric lamp would have cost the Trust 140 thousand dollars before a single night of light.",
+      "speaker": null
     }
   ],
   "source_id": "harbor-voices",

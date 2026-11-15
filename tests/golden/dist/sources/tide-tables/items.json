@@ -1,27 +1,28 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "items": [
     {
-      "bytes": 11760,
+      "bytes": 14768,
       "date": "2026-11-12",
       "digest": {
         "basis": "transcript",
-        "bytes": 7364,
+        "bytes": 10372,
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-12-49be7f43a2.digest.json",
-        "sha256": "aca4a93c1b1555bcdf1d1ede2d095a61eed67106667659089dc22c08bd19e995"
+        "sha256": "98080f640151e1ae0e0271b5a6b2a0e75b3c57ea8ebfd9f857968332203f0719"
       },
       "duration_seconds": 518,
       "id": "2026-11-12-49be7f43a2",
       "link": "https://tide.example.org/episodes/6",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
         "harbour"
       ],
-      "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 36 votes to nine. An electric lamp would have cost the Trust 120 thousand dollars before a single night of light.",
+      "teaser": "Mara and Tobias at the Grey Point lighthouse. Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.",
       "title": "The keeper's ledger, read aloud",
       "transcript": {
         "available": "yes",
@@ -34,19 +35,20 @@
       }
     },
     {
-      "bytes": 11653,
+      "bytes": 14875,
       "date": "2026-11-11",
       "digest": {
         "basis": "transcript",
-        "bytes": 7259,
+        "bytes": 10481,
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-11-90db1628c6.digest.json",
-        "sha256": "eeb838d0d14b1eb078b7d5fd9a515554b480cf970ffd0960c38cc79757f31a68"
+        "sha256": "0154fe51d1655fd7d44056d23ad1126b97f50cd34c1ab9d8fd043696ea3420fe"
       },
       "duration_seconds": 518,
       "id": "2026-11-11-90db1628c6",
-      "link": "https://tide.example.org/episodes/5",
+      "link": "https://tide.example.org/",
+      "link_kind": "show",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -65,19 +67,20 @@
       }
     },
     {
-      "bytes": 11692,
+      "bytes": 14412,
       "date": "2026-11-10",
       "digest": {
         "basis": "transcript",
-        "bytes": 7270,
+        "bytes": 9990,
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-10-bbf6b9d195.digest.json",
-        "sha256": "7d373a000bf4249ab989d65aa8cecd73ba8ca39e63ac9b35ad36314778461b5e"
+        "sha256": "523cb327c417a715cab594b7d050531083fc4cc777dfcd1e5beb1981ed9d82e9"
       },
       "duration_seconds": null,
       "id": "2026-11-10-bbf6b9d195",
       "link": "https://tide.example.org/episodes/4",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -96,25 +99,26 @@
       }
     },
     {
-      "bytes": 3724,
+      "bytes": 5198,
       "date": "2026-11-09",
       "digest": {
         "basis": "notes",
-        "bytes": 3724,
+        "bytes": 5198,
         "grade": "partial",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-09-8e6fef9855.digest.json",
-        "sha256": "bb097e02e02b7d291761004b6f40e95166183d453e4c35bf229bded1863e3e05"
+        "sha256": "af01766e79f83076f6ab342735ecfbde32b94ca1dad32a2c02b7b77d854e8afd"
       },
       "duration_seconds": 1740,
       "id": "2026-11-09-8e6fef9855",
       "link": "https://tide.example.org/episodes/3",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
         "harbour"
       ],
-      "teaser": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why…",
+      "teaser": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history. The gate…",
       "title": "The tide gate at North Quay",
       "transcript": {
         "available": "no",
@@ -123,19 +127,20 @@
       }
     },
     {
-      "bytes": 1143,
+      "bytes": 1404,
       "date": "2026-11-08",
       "digest": {
         "basis": "headline",
-        "bytes": 1143,
+        "bytes": 1404,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-08-97bd63e880.digest.json",
-        "sha256": "60dc15622219e32d10bff328ed7cf90c8382d0f106ce5b67f2b0c6ec21980082"
+        "sha256": "5e985e774ebe673d8176e2cebc774e2154de8d31ca0fca0baf31f277c7ff49ff"
       },
       "duration_seconds": 518,
       "id": "2026-11-08-97bd63e880",
       "link": "https://tide.example.org/episodes/2",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -150,19 +155,20 @@
       }
     },
     {
-      "bytes": 12125,
+      "bytes": 14806,
       "date": "2026-11-07",
       "digest": {
         "basis": "transcript",
-        "bytes": 7199,
+        "bytes": 9880,
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-07-420826b378.digest.json",
-        "sha256": "e3e58f3626b7e2f11f764a717f76964ad2a60434f0d0148830cf2b1ae1a9ed5b"
+        "sha256": "3f6d01238414b5dcd73cf313843cca7b66b3e7fa4c49a85e10d1d5dac6b164af"
       },
       "duration_seconds": 518,
       "id": "2026-11-07-420826b378",
       "link": "https://tide.example.org/episodes/1",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [

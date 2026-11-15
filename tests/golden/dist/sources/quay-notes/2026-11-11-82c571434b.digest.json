@@ -12,13 +12,14 @@
     ],
     "quote": null
   },
+  "chapters": [],
   "connections": [],
   "contested": [],
   "date": "2026-11-11",
   "duration_seconds": 1502,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019.",
@@ -26,9 +27,12 @@
       "term": "Lise Sorensen"
     }
   ],
+  "guests": [],
   "item_id": "2026-11-11-82c571434b",
   "language": "en",
   "link": "https://quay.example.org/notes/2",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [
     {
       "at": {
@@ -51,6 +55,21 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "The ice house at North Quay has sold block ice to the fishing boats since 1888. The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019. The ice…",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "The Sorensen family kept it after the town raised 80 thousand dollars for a new compressor.",
+      "question": "What does the figure 80 thousand refer to?"
+    },
+    {
+      "answer": "The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019.",
+      "question": "Who or what is Lise Sorensen?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "quay-notes",
   "source_name": "Quay Notes",
   "starters": [

@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-health",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "generated_at": "2026-11-15T06:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "mode": "offline",
   "model": {
@@ -126,7 +126,7 @@
     }
   ],
   "totals": {
-    "bytes": 106194,
+    "bytes": 131658,
     "items": 16,
     "requests": 10,
     "sources": 4

@@ -1,98 +1,98 @@
 {
   "format": "pea-knowledge-state",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "sources": {
     "harbor-voices": {
-      "config": "c6492e3fe30760e5f8094413623c7a79025e735155fc4b9e03cff8c06dfae047",
+      "config": "b34ca005b5b70835ee7e44453ced12486bfc776406199d026fa23e10e7373cf7",
       "etag": "\"harbor-1\"",
       "fingerprint": "date,editions,page,show.title,title,transcript",
       "items": {
         "2026-11-09-95827ccd6b": {
-          "key": "f8a0f56216cb0f1d83a087b1c496558ff0c54466680a38ff48b881109912404b",
+          "key": "3afba8720a15b982581b4c38cf294baeb5ff7b8edcb46f6698adc3fda99f308e",
           "method": "extractive"
         },
         "2026-11-10-1aeaa6c4e4": {
-          "key": "33c3162281b4533de21cc456c96306f1a239feefb5bd3925f1097fbd48d2dde3",
+          "key": "0d8006327a78e605284548536420ff71c9ff7202b93f11dcba515551cfcaf93a",
           "method": "extractive"
         },
         "2026-11-11-667e185af5": {
-          "key": "3ee5de53208a1e042f0d4213f635873bf3b017de4446e6610bffbffec14acf81",
+          "key": "aae15dce66d4ea20a6969b280413f40acfef30daec43eb10db2af5ede985f5f8",
           "method": "extractive"
         },
         "2026-11-12-8a5b8d3d14": {
-          "key": "89d5ae0715097439f3a47a599c2c94e06e998b7e4e12d4a038929c2fbcb894bd",
+          "key": "b8d452ae116dccc0fb5bcf97a093ae531e7418be8c645453d958161f58ae736b",
           "method": "extractive"
         }
       },
       "last_modified": ""
     },
     "port-gazette": {
-      "config": "636e0979fb057fc78bca6d01b149403c1ec5b31c5930fa966fb4de857385f877",
+      "config": "89959023841b6d202ccf41d15c15ea992b15d943d057ee81b9134f63df4d85ea",
       "etag": "\"gazette-1\"",
       "fingerprint": "link,title",
       "items": {
         "2026-11-09-59d0eea8e0": {
-          "key": "cefec0274bc0fdd57ff45ff39ca89234e4e2bac38f3353788710febd4f5ab594",
+          "key": "8b8f2c93b7556e3feb08f381c73f407cab39e78e67758206f50d1c883b0a991b",
           "method": "extractive"
         },
         "2026-11-10-9a32c90fc7": {
-          "key": "98d77d80face32f5b583117328001e92e5d8e5df6c7a970786e9d73050ae0254",
+          "key": "da1036b8312c24c2aedcedc5d78bd6f1c54e20fad8d2f11c0fa355d2e6358eee",
           "method": "extractive"
         },
         "2026-11-11-f88d7568e0": {
-          "key": "4d7b684f4612ed7c15620e99ef3dba358b656babd7ab106ecce56779cd105ad9",
+          "key": "d3ee0ff1a932e54ad3e360f2181f9517d0cc6a9e15e76a2b57a12312f24b1d1c",
           "method": "extractive"
         },
         "2026-11-12-9540419a16": {
-          "key": "fc4fe5e78e916f0192f7cbf89d22ac012f4b220768bf969b4eeacb8d9e85d329",
+          "key": "0b0075a71591cf6511d78a16fa99acbbd518794720de16138b58b0f8f684b60b",
           "method": "extractive"
         }
       },
       "last_modified": ""
     },
     "quay-notes": {
-      "config": "90aea4b369fa78787196ac6e9773ee4b6d493a8a592ad48701d3616cd0a0a8bc",
+      "config": "aadec4619e7691315f11be979afa3385c8b7cb6ad09ef2657f1a87007f184c26",
       "etag": "",
       "fingerprint": "items,title,url,version",
       "items": {
         "2026-11-04-cd98c5b165": {
-          "key": "d693386aa242190e40218c0e8e756e55e9adc3bcded2057b51cb0d8871d0d371",
+          "key": "144a703bf8a82c20b2e3056b4dd772788c306b0e8fda708967bc83a12960b849",
           "method": "extractive"
         },
         "2026-11-11-82c571434b": {
-          "key": "739341f7f8ad13758b9cc6813064b41e0ac580b1450306e7a288e2f370ffb343",
+          "key": "e1e4a1581e5bc007442be3b19302fa015368d2e3c45b0c7f9f5ef77498a3b30c",
           "method": "extractive"
         }
       },
       "last_modified": ""
     },
     "tide-tables": {
-      "config": "dac448c70d17695bf5c9c7b63b23ae7504a1a0dbf39576545d00c675ed900e0a",
+      "config": "d68133699d7e18755707f6a72c006b27194249a3f7c9aa8d36a71945f8436d8d",
       "etag": "\"tide-1\"",
       "fingerprint": "link,podcast:transcript,title",
       "items": {
         "2026-11-07-420826b378": {
-          "key": "de0650913c5c2be576a03bc3af991ad4f7624af95ee782d073ae170c39ba2d7f",
+          "key": "ac2b0ba97cb0f066e0bb11886e901bd3971cc8146b57e48eb3ce3562f53ab324",
           "method": "extractive"
         },
         "2026-11-08-97bd63e880": {
-          "key": "10fe048db8e3a947e1f4bc3547d4d652f117421321d0eb7d0c5b832bab418b11",
+          "key": "48b617d7be354884fc39e37b7e6d2400bf17c62d0f68f45da95a836f39c47b5b",
           "method": "extractive"
         },
         "2026-11-09-8e6fef9855": {
-          "key": "4f558d4e088fa96141aa6a5ac433f9b31d86b2297dfdf4042e5cdc54dbad644c",
+          "key": "3e2f8f625e90f58ebf7aebc50ad59cf804fd5773a185e08c737f09611fe2932f",
           "method": "extractive"
         },
         "2026-11-10-bbf6b9d195": {
-          "key": "0f6bd742f963f0558501ef140c5a5e92cceaabdb4a1186a33fbadf30b027af10",
+          "key": "cd565ed72d901957ffff648b26ebdf966d8e909147c4af2de93deeb053e91cf2",
           "method": "extractive"
         },
         "2026-11-11-90db1628c6": {
-          "key": "ea4a339608c62b92a94ae979359a2d4cdde8bc9f5e26cecd2d907c66694ef841",
+          "key": "87cd11fc09d2e5c269da88c995c050398bc028237b7ec65bbb3dcafe6cc0f8fb",
           "method": "extractive"
         },
         "2026-11-12-49be7f43a2": {
-          "key": "b5e79ed847d3a4995131ae7d4d394819699c6cf8e780e96a71b0cd94b2ff2a10",
+          "key": "1f092e2e2132151c13b078dd723bddd5bb368426726f26f858e425c0d17f834c",
           "method": "extractive"
         }
       },

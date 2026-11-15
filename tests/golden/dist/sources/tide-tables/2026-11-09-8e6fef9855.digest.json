@@ -1,32 +1,55 @@
 {
-  "about": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why it closes only on spring tides, and why the Northwind Cooperative asked for it.",
+  "about": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history. The gate cost 4 million dollars and took three years to build.",
   "background": null,
   "basis": "notes",
   "brief": {
-    "about": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why…",
+    "about": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history. The gate…",
     "hook": "What was said about Ines Okafor",
     "points": [
-      "The Harbour Board expects 30 closures a year.",
-      "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run…",
+      "Ines Okafor explains why it closes only on spring tides, and why the Northwind Cooperative asked for it.",
+      "Ines Okafor has run North Quay since 2015 and grew up above the customs shed.",
       "The Northwind Cooperative lands most of its catch at the quay."
     ],
     "quote": null
   },
+  "chapters": [
+    {
+      "end_seconds": 705,
+      "origin": "publisher",
+      "segment": null,
+      "start_seconds": 130,
+      "title": "Why the old gate failed in the storm of 2019"
+    },
+    {
+      "end_seconds": 1170,
+      "origin": "publisher",
+      "segment": null,
+      "start_seconds": 705,
+      "title": "Who pays for the 4 million dollars"
+    },
+    {
+      "end_seconds": 1740,
+      "origin": "publisher",
+      "segment": null,
+      "start_seconds": 1170,
+      "title": "What the fishing families think of the plan"
+    }
+  ],
   "connections": [],
   "contested": [],
   "date": "2026-11-09",
   "duration_seconds": 1740,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
-      "gloss": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that…",
+      "gloss": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there.",
       "kind": "person",
       "term": "Ines Okafor"
     },
     {
-      "gloss": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that…",
+      "gloss": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there.",
       "kind": "other",
       "term": "North Quay"
     },
@@ -36,16 +59,34 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [
+    {
+      "name": "Ines Okafor",
+      "role": "the harbour master of North Quay"
+    }
+  ],
   "item_id": "2026-11-09-8e6fef9855",
   "language": "en",
   "link": "https://tide.example.org/episodes/3",
+  "link_kind": "episode",
+  "mentioned_resources": [
+    {
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "context": "Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history.",
+      "kind": "book",
+      "name": "The Tide Almanac"
+    }
+  ],
   "numbers": [
     {
       "at": {
         "segment": null,
         "time_seconds": null
       },
-      "context": "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run North Quay since 2015 and grew…",
+      "context": "The gate cost 4 million dollars and took three years to build.",
       "value": "4 million"
     }
   ],
@@ -61,6 +102,21 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone…",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "Ines Okafor, the harbour master of North Quay",
+      "question": "Who is the guest?"
+    },
+    {
+      "answer": "The gate cost 4 million dollars and took three years to build.",
+      "question": "What does the figure 4 million refer to?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "tide-tables",
   "source_name": "Tide Tables",
   "starters": [
@@ -76,6 +132,15 @@
         "segment": null,
         "time_seconds": null
       },
+      "point": "Ines Okafor explains why it closes only on spring tides, and why the Northwind Cooperative asked for it.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
       "point": "The Harbour Board expects 30 closures a year.",
       "why": null
     },
@@ -85,7 +150,7 @@
         "segment": null,
         "time_seconds": null
       },
-      "point": "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run North Quay since 2015 and grew up above the customs shed.",
+      "point": "Ines Okafor has run North Quay since 2015 and grew up above the customs shed.",
       "why": null
     },
     {

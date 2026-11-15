@@ -101,6 +101,14 @@
       "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
       "maxLength": 2000
     },
+    "link_kind": {
+      "description": "Since 1.1. What `link` leads to: \"episode\" is the publisher's page for this one item; \"show\" means the publisher gives no page per item, so the link is the show's site. Absent in a 1.0 file: treat as \"episode\".",
+      "type": "string",
+      "enum": [
+        "episode",
+        "show"
+      ]
+    },
     "language": {
       "type": "string",
       "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$"
@@ -454,6 +462,227 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 160
+      }
+    },
+    "guests": {
+      "description": "Since 1.1. The guests of the item: people the publisher marks as guests or introduces as one in the title or the notes. Never invented.",
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "description": "One guest.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "role"
+        ],
+        "properties": {
+          "name": {
+            "description": "The name as the publisher writes it.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "role": {
+            "description": "Who they are, as a piece of the publisher's notes or the transcript, word for word; null when neither says.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 140
+          }
+        }
+      }
+    },
+    "mentioned_resources": {
+      "description": "Since 1.1. Books, papers, tools, products and sites that are named. Names only: the format carries no address here.",
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "description": "One named thing.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "kind",
+          "context",
+          "at"
+        ],
+        "properties": {
+          "name": {
+            "description": "The name as written in the notes or the transcript.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "description": "What it is.",
+            "type": "string",
+            "enum": [
+              "book",
+              "paper",
+              "tool",
+              "product",
+              "site",
+              "media",
+              "other"
+            ]
+          },
+          "context": {
+            "description": "One line on why it comes up, or null.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "at": {
+            "$ref": "#/$defs/at"
+          }
+        }
+      }
+    },
+    "chapters": {
+      "description": "Since 1.1. The parts of the item, in order of time.",
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "description": "One chapter.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "start_seconds",
+          "end_seconds",
+          "segment",
+          "origin"
+        ],
+        "properties": {
+          "title": {
+            "description": "The chapter's title.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "start_seconds": {
+            "description": "Where it starts.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 359999
+          },
+          "end_seconds": {
+            "description": "Where it ends (the start of the next chapter, or the item's length), or null when that is not known.",
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 359999
+          },
+          "segment": {
+            "description": "The transcript segment running at the start, or null.",
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100000
+          },
+          "origin": {
+            "description": "Whose chapters these are: the publisher's own marks; cut from the timed transcript, titled with the opening words of a talking point; or titled by the model at a transcript line.",
+            "type": "string",
+            "enum": [
+              "publisher",
+              "transcript",
+              "model"
+            ]
+          }
+        }
+      }
+    },
+    "snippable_moments": {
+      "description": "Since 1.1. Passages worth keeping, best first. Every quote is, character for character, in the transcript segment `at` points to.",
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "description": "One passage.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "quote",
+          "speaker",
+          "at",
+          "end_seconds",
+          "label"
+        ],
+        "properties": {
+          "quote": {
+            "description": "The words, exactly as in the transcript.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "speaker": {
+            "description": "Who said them, when known.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "at": {
+            "$ref": "#/$defs/at"
+          },
+          "end_seconds": {
+            "description": "Where the passage's segment ends, or null.",
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 359999
+          },
+          "label": {
+            "description": "The publisher's own title for the passage (a soundbite), or null.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 100
+          }
+        }
+      }
+    },
+    "recap_cards": {
+      "description": "Since 1.1. Question and answer pairs for a daily recap. Built only from text this digest already holds.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "description": "One card.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question",
+          "answer"
+        ],
+        "properties": {
+          "question": {
+            "description": "The question.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "answer": {
+            "description": "The answer.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
       }
     },
     "tone": {

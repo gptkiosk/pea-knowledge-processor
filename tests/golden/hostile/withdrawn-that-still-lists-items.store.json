@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-store",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "generated_at": "2026-11-15T18:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "min_app_version": null,
   "sources": [
@@ -15,7 +15,7 @@
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 4596,
+      "avg_bytes": 6945,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -34,9 +34,9 @@
       "id": "harbor-voices",
       "item_count": 4,
       "items_file": {
-        "bytes": 3627,
+        "bytes": 3747,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "df4c2631b51f93c05223bb9d8688ca068e630cedcd0a5ba02021b687f84bb409"
+        "sha256": "04041be95a2e7054a40baf70fdd56c84416610ce022f495f4c62cbd265c74b87"
       },
       "kind": "podcast",
       "language": "en",
@@ -71,7 +71,7 @@
         "link_back": true,
         "transcript": 4
       },
-      "avg_bytes": 8682,
+      "avg_bytes": 10910,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -90,9 +90,9 @@
       "id": "tide-tables",
       "item_count": 6,
       "items_file": {
-        "bytes": 6417,
+        "bytes": 6566,
         "path": "sources/tide-tables/items.json",
-        "sha256": "b392616e29af227e340fa463853de7cd875e045e3d6debccba8bf8ca958025b7"
+        "sha256": "9c1e64208b74ba1204a91e292324701d0cbb877f96b8e48303cc3feedc8665a9"
       },
       "kind": "podcast",
       "language": "en",
@@ -127,7 +127,7 @@
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 2179,
+      "avg_bytes": 2700,
       "cadence": "unknown",
       "categories": [
         "harbour",
@@ -146,9 +146,9 @@
       "id": "quay-notes",
       "item_count": 2,
       "items_file": {
-        "bytes": 1904,
+        "bytes": 1964,
         "path": "sources/quay-notes/items.json",
-        "sha256": "b618083089038015e4acc792a7f9f8a79e35e775a0fccbfd8421cecde280bd58"
+        "sha256": "763d0293e03c67a2520446de20fdfaab134d357abc97f5a8ae24af8d679c6a09"
       },
       "kind": "podcast",
       "language": "en",
@@ -179,7 +179,7 @@
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 1223,
+      "avg_bytes": 1525,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -198,9 +198,9 @@
       "id": "port-gazette",
       "item_count": 4,
       "items_file": {
-        "bytes": 3398,
+        "bytes": 3518,
         "path": "sources/port-gazette/items.json",
-        "sha256": "04d86d3b51789dca8609eb6eaaf7db5ae9baaab6568f1bd16caa14300d1d7068"
+        "sha256": "20d9766562296e6ec9c349dc367615399efd6fd2ad7af69388bf80529a577a69"
       },
       "kind": "news",
       "language": "en",

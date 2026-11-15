@@ -13,8 +13,20 @@
    "expect": "brief_too_long",
    "kind": "digest"
   },
+  "digest-chapter-title-with-markup.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
+  "digest-guest-role-with-a-line-break.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
   "digest-link-to-somewhere-private.digest.json": {
    "expect": "address",
+   "kind": "digest"
+  },
+  "digest-moment-with-hidden-direction-marks.digest.json": {
+   "expect": "text_rule",
    "kind": "digest"
   },
   "digest-point-with-a-link.digest.json": {
@@ -22,6 +34,14 @@
    "kind": "digest"
   },
   "digest-quote-with-markup.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
+  "digest-recap-answer-with-a-www-link.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
+  "digest-resource-with-a-link.digest.json": {
    "expect": "text_rule",
    "kind": "digest"
   },

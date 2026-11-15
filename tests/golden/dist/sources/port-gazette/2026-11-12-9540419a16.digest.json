@@ -8,17 +8,21 @@
     "points": [],
     "quote": null
   },
+  "chapters": [],
   "connections": [],
   "contested": [],
   "date": "2026-11-12",
   "duration_seconds": null,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [],
+  "guests": [],
   "item_id": "2026-11-12-9540419a16",
   "language": "en",
   "link": "https://gazette.example.org/a/4",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -32,6 +36,13 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "The Harbour Board said on Thursday it will publish a year of radar logs. The move follows a dispute over how many ships turned back at the bar last winter.",
+      "question": "What is this one about?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "port-gazette",
   "source_name": "The Port Gazette",
   "starters": [

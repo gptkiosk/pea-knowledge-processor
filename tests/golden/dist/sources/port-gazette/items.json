@@ -1,21 +1,22 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "items": [
     {
-      "bytes": 1383,
+      "bytes": 1754,
       "date": "2026-11-12",
       "digest": {
         "basis": "headline",
-        "bytes": 1383,
+        "bytes": 1754,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/port-gazette/2026-11-12-9540419a16.digest.json",
-        "sha256": "af40dbf3c62d13efd77c5a39e7492cb82f8dda417a41b795eca8bd1ab9dc61e1"
+        "sha256": "e51daa7e7a5c840ec5781eb49401584f2e65aba6935537df25131aa07faca38a"
       },
       "duration_seconds": null,
       "id": "2026-11-12-9540419a16",
       "link": "https://gazette.example.org/a/4",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [],
@@ -28,19 +29,20 @@
       }
     },
     {
-      "bytes": 1259,
+      "bytes": 1573,
       "date": "2026-11-11",
       "digest": {
         "basis": "headline",
-        "bytes": 1259,
+        "bytes": 1573,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/port-gazette/2026-11-11-f88d7568e0.digest.json",
-        "sha256": "efac9f2dde6e0236805df58942b5dc7ead5c69eb2b7342aeb73a60dd30823bbe"
+        "sha256": "3c82f689229a1d27106c92990d1d866028a8acbb8c5f7728c8b7294abc2da56f"
       },
       "duration_seconds": null,
       "id": "2026-11-11-f88d7568e0",
       "link": "https://gazette.example.org/a/3",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [],
@@ -53,19 +55,20 @@
       }
     },
     {
-      "bytes": 1209,
+      "bytes": 1505,
       "date": "2026-11-10",
       "digest": {
         "basis": "headline",
-        "bytes": 1209,
+        "bytes": 1505,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/port-gazette/2026-11-10-9a32c90fc7.digest.json",
-        "sha256": "77b932be98934ed524288b8486c6c31222b59531e15b6db875499e68435bf850"
+        "sha256": "6e3c0f1abc8c4c7be997c23516c3b7b68f58a58d07b60d8066d0999bb87cc137"
       },
       "duration_seconds": null,
       "id": "2026-11-10-9a32c90fc7",
       "link": "https://gazette.example.org/a/2",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [],
@@ -78,19 +81,20 @@
       }
     },
     {
-      "bytes": 1044,
+      "bytes": 1269,
       "date": "2026-11-09",
       "digest": {
         "basis": "headline",
-        "bytes": 1044,
+        "bytes": 1269,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/port-gazette/2026-11-09-59d0eea8e0.digest.json",
-        "sha256": "a8891e6522a515c8d68408fdd0c4cffa44c1d7f15602042dde2b24067d44666b"
+        "sha256": "01a22886912e0c603e33232d73be7c38ff6a21cabfe27efc14cb9a5056b6ab6b"
       },
       "duration_seconds": null,
       "id": "2026-11-09-59d0eea8e0",
       "link": "https://gazette.example.org/a/1",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [],

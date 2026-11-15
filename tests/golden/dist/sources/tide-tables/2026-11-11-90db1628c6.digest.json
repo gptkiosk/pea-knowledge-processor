@@ -16,6 +16,50 @@
       "time_seconds": 0
     }
   },
+  "chapters": [
+    {
+      "end_seconds": 84,
+      "origin": "transcript",
+      "segment": 0,
+      "start_seconds": 0,
+      "title": "The Grey Point Trust voted on it in March, and the old…"
+    },
+    {
+      "end_seconds": 224,
+      "origin": "transcript",
+      "segment": 4,
+      "start_seconds": 84,
+      "title": "Because the dredging budget follows the count, and the…"
+    },
+    {
+      "end_seconds": 294,
+      "origin": "transcript",
+      "segment": 12,
+      "start_seconds": 224,
+      "title": "I trim the wick at dusk, wind the clockwork every four…"
+    },
+    {
+      "end_seconds": 336,
+      "origin": "transcript",
+      "segment": 16,
+      "start_seconds": 294,
+      "title": "The Grey Point Trust pays for the apprentices out of…"
+    },
+    {
+      "end_seconds": 392,
+      "origin": "transcript",
+      "segment": 19,
+      "start_seconds": 336,
+      "title": "There is a plan from the county to build a visitor centre…"
+    },
+    {
+      "end_seconds": 518,
+      "origin": "transcript",
+      "segment": 23,
+      "start_seconds": 392,
+      "title": "Tobias Renn, keeper of the Grey Point lighthouse, thank…"
+    }
+  ],
   "connections": [
     {
       "item_id": "2026-11-09-8e6fef9855",
@@ -32,7 +76,7 @@
     "Why does it matter to a fishing family in the town whether the count is forty or eighty?"
   ],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "a speaker in this episode",
@@ -75,9 +119,12 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [],
   "item_id": "2026-11-11-90db1628c6",
   "language": "en",
-  "link": "https://tide.example.org/episodes/5",
+  "link": "https://tide.example.org/",
+  "link_kind": "show",
+  "mentioned_resources": [],
   "numbers": [
     {
       "at": {
@@ -136,6 +183,72 @@
       "exact": true,
       "speaker": "Tobias",
       "text": "Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902."
+    }
+  ],
+  "recap_cards": [
+    {
+      "answer": "The Grey Point Trust voted on it in March, and the old lamp won by 35 votes to nine. An electric lamp would have cost the Trust 115 thousand dollars before a single night of light.",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "The Northwind Cooperative lands about 65 percent of the fish sold at the Saturday market.",
+      "question": "What does the figure 65 percent refer to?"
+    },
+    {
+      "answer": "Mara",
+      "question": "Who said: “Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 25 years.”"
+    }
+  ],
+  "snippable_moments": [
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "end_seconds": 28,
+      "label": null,
+      "quote": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 25 years.",
+      "speaker": "Mara"
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 28
+      },
+      "end_seconds": 42,
+      "label": null,
+      "quote": "The lamp still burns colza oil, about 17 litres a night in the winter months.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 27,
+        "time_seconds": 448
+      },
+      "end_seconds": 462,
+      "label": null,
+      "quote": "I would ask them to publish the radar logs, so that the town can compare them with the ledger.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 29,
+        "time_seconds": 476
+      },
+      "end_seconds": 490,
+      "label": null,
+      "quote": "Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 8,
+        "time_seconds": 154
+      },
+      "end_seconds": 168,
+      "label": null,
+      "quote": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "speaker": "Mara"
     }
   ],
   "source_id": "tide-tables",

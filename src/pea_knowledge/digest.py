@@ -5,12 +5,17 @@
 The extractive digest uses no model: it picks sentences that are already in the transcript (or, without one, in the
 publisher's notes), so the same input always gives the same digest and the pipeline works with no key at all.
 `model_digest.py` adds the optional model path; whatever it returns is forced through `enforce` here.
+
+Format 1.1 adds five members (docs/FORMAT.md, "What 1.1 adds"): `guests`, `mentioned_resources`, `chapters`,
+`snippable_moments` and `recap_cards`. They follow the same rule as everything else: a name, a time or a quote is in
+the digest only when it is in the publisher's notes, marks or transcript; nothing is made up to fill a member.
 """
+import bisect
 import hashlib
 import re
 from collections import Counter
 
-from . import FORMAT_VERSION, textrules
+from . import FORMAT_VERSION, jsonschema_lite, textrules
 from .transcript import pea_transcript as pt
 
 # The limits of docs/FORMAT.md, "The digest". The schema states the same numbers; a test keeps the two in step.
@@ -28,6 +33,16 @@ QUALITY_NOTES, QUALITY_NOTE_CHARS = 6, 160
 BRIEF_CHARS = 900                      # all the text of the brief form together
 BRIEF_ABOUT_CHARS, BRIEF_POINTS, BRIEF_POINT_CHARS, BRIEF_QUOTE_CHARS, BRIEF_HOOK_CHARS = 240, 3, 170, 170, 140
 DIGEST_BYTES = 24_000
+# Format 1.1. A reader of 1.0 ignores these members; the size limit of the file is the same.
+GUESTS, GUEST_NAME_CHARS, GUEST_ROLE_CHARS = 6, 80, 140
+RESOURCES, RESOURCE_NAME_CHARS, RESOURCE_CONTEXT_CHARS = 8, 80, 140
+RESOURCE_KINDS = ("book", "paper", "tool", "product", "site", "media", "other")
+CHAPTERS, CHAPTER_TITLE_CHARS, CHAPTER_OWN_TITLE_CHARS = 20, 100, 60
+CHAPTER_ORIGINS = ("publisher", "transcript", "model")
+MOMENTS, MOMENT_LABEL_CHARS = 5, 100
+RECAP_CARDS, RECAP_QUESTION_CHARS, RECAP_ANSWER_CHARS = 3, 140, 200
+LINK_KINDS = ("episode", "show")
+DIGEST_REVISION = 2                    # raised when the digest code changes in a way that should rebuild kept digests
 KINDS = ("person", "organisation", "product", "other")
 TONES = ("news", "analysis", "technical", "interview", "conversational", "light", "unknown")
 BASES = ("transcript", "notes", "headline")
@@ -97,6 +112,7 @@ def empty(source, item):
         "title": item["title"],
         "date": item["date"],
         "link": item["link"],
+        "link_kind": item.get("link_kind", "episode"),
         "language": source["language"],
         "duration_seconds": item.get("duration_seconds"),
         "basis": "headline",
@@ -112,6 +128,11 @@ def empty(source, item):
         "connections": [],
         "starters": [],
         "follow_ups": [],
+        "guests": [],
+        "mentioned_resources": [],
+        "chapters": [],
+        "snippable_moments": [],
+        "recap_cards": [],
         "tone": "unknown",
         "provenance": {"method": "extractive", "model": None, "transcript_sha256": None},
         "quality": {"grade": "headline", "notes": []},
@@ -156,6 +177,20 @@ def _score(units, title):
 def _candidates(units, shortest=40, longest=600, words=8):
     return [u for u in units if shortest <= len(u.text) <= longest and len(u.text.split()) >= words
             and not u.text.endswith("?") and usable(u.text)]
+
+
+def _stretch_starts(points, units):
+    """For each picked point, where its part of the transcript starts: the first line for the first point, and for
+    every other point the first line after the one the point before it is in. A point in the same line as the one
+    before it has no part of its own (the same start again, which `transcript_chapters` leaves out)."""
+    out = []
+    for n, u in enumerate(points):
+        if n == 0:
+            out.append(units[0].at)
+            continue
+        first = next((c for c in units if c.segment > points[n - 1].segment), None)
+        out.append(first.at if first is not None and first.segment <= u.segment else out[-1])
+    return out
 
 
 def _spread(candidates, wanted):
@@ -290,8 +325,14 @@ def _offers(d, questions):
     return [textrules.shorten(o, OFFER_CHARS) for o in out if usable(o)][:STARTERS]
 
 
+def _own_moments(d):
+    """The snippable moments whose words are not already elsewhere in the digest: only these cost excerpt characters."""
+    held = {q["text"] for q in d["quotes"]} | {k["point"] for k in d["talking_points"]} | {(d["strongest_claim"] or {}).get("text")}
+    return [m for m in d.get("snippable_moments", []) if m["quote"] not in held]
+
+
 def _taken_chars(d):
-    return (sum(len(k["point"]) + len(k["ask"] or "") for k in d["talking_points"]) + sum(len(q["text"]) for q in d["quotes"])
+    return (sum(len(m["quote"]) for m in _own_moments(d)) + sum(len(k["point"]) + len(k["ask"] or "") for k in d["talking_points"]) + sum(len(q["text"]) for q in d["quotes"])
             + sum(len(n["context"]) for n in d["numbers"]) + sum(len(q) for q in d["follow_ups"]) + sum(len(c) for c in d["contested"])
             + sum(len(g["gloss"] or "") for g in d["glossary"] if g["gloss"] != "a speaker in this episode")
             + len((d["strongest_claim"] or {}).get("text", "")))
@@ -300,6 +341,8 @@ def _taken_chars(d):
 def within(d, budget):
     """Keeps the words taken from a transcript inside `budget` characters. What goes first: numbers, contested lines,
     follow-up questions, glosses, quotes, then talking points down to the five a digest should have."""
+    while _taken_chars(d) > budget and _own_moments(d):
+        d["snippable_moments"].remove(_own_moments(d)[-1])
     for field, least in (("numbers", 2), ("contested", 1), ("follow_ups", 1), ("quotes", 2), ("numbers", 0), ("contested", 0), ("follow_ups", 0)):
         while _taken_chars(d) > budget and len(d[field]) > least:
             d[field].pop()
@@ -311,7 +354,216 @@ def within(d, budget):
     for field, least in (("quotes", 0), ("talking_points", POINTS_WANTED)):
         while _taken_chars(d) > budget and len(d[field]) > least:
             d[field].pop()
+    while _taken_chars(d) > budget and _own_moments(d):   # a moment whose quote was just dropped stands alone now
+        d["snippable_moments"].remove(_own_moments(d)[-1])
     return d
+
+
+# --- Format 1.1: guests, mentioned resources, chapters, snippable moments, recap cards ---------------------------------
+_NAME = r"[A-Z][a-zA-Z'’\-]+(?:\s+(?:[A-Z]\.\s+|(?:de|van|von|del|bin|al|la|le)\s+)?[A-Z][a-zA-Z'’\-]+){1,3}"
+_TITLE_WORD = r"(?:(?:Dr|Prof|Professor|Sen|Senator|Rep|Gov|Sir|Dame|Mr|Mrs|Ms)\.?\s+)?"
+_GUEST_CUE = re.compile(r"\b(?:[Jj]oined by|[Gg]uests?(?: today| this week)?(?: is| are|:)?|[Ii]nterview(?:s|ed|ing)?(?: with)?|[Cc]onversation with|[Tt]alks? (?:to|with)"
+                        r"|[Ss]peaks? (?:to|with)|[Ss]its? down with|[Ss]at down with|[Ff]eaturing|[Ww]elcomes?|[Cc]hat(?:s|ted)? with)\s+" + _TITLE_WORD + "(" + _NAME + ")"
+                        r"(?:\s+and\s+" + _TITLE_WORD + "(" + _NAME + "))?")
+_TITLE_GUEST = (re.compile(r"\((?:with|feat\.?|featuring)\s+" + _TITLE_WORD + "(" + _NAME + r")\)"),
+                re.compile(r"\s[|—–]\s+" + _TITLE_WORD + "(" + _NAME + r")(?=$|,|\s\()"),
+                re.compile("^" + _TITLE_WORD + "(" + _NAME + r")\s+on\s"))
+_ROLE_AFTER = r"(?:\s*,\s+|\s+\(|\s+is\s+(?=the\s|an?\s))((?:the\s+|an?\s+)?(?:[a-z][a-z\-]+|CEO|CTO|CFO|COO|VP)\b[^,.;:!?()]{3,%d})(?=[,.;:!?()]|$)" % (GUEST_ROLE_CHARS - 10)
+_RESOURCE_CUE = re.compile(r"\b(book|paper|essay|novel|memoir|article|report|study|documentary|film|movie|podcast|newsletter|blog|app|tool|library"
+                           r"|framework|plugin|product|game|website|site)s?,?\s+(?:is\s+)?(?:called|titled|named|entitled)\s+[\"“'‘]?(?=[A-Z0-9])")
+_RESOURCE_KIND = {"book": "book", "novel": "book", "memoir": "book", "paper": "paper", "essay": "paper", "article": "paper", "report": "paper", "study": "paper",
+                  "documentary": "media", "film": "media", "movie": "media", "podcast": "media", "newsletter": "media", "blog": "media", "app": "tool",
+                  "tool": "tool", "library": "tool", "framework": "tool", "plugin": "tool", "product": "product", "game": "product", "website": "site", "site": "site"}
+_DOMAIN_LIKE = re.compile(r"(?i)[a-z0-9]\.[a-z]{2,}(?:[/?#]|\b)")
+
+
+def _mentions(name, text):
+    return re.search(r"(?<![A-Za-z0-9])%s(?![A-Za-z0-9])" % re.escape(name), text, re.I) is not None
+
+
+def _person_like(name):
+    tokens = name.split()
+    return 2 <= len(tokens) <= 4 and not any(t.rstrip(".") in _NOT_NAMES for t in tokens) and usable(name) and len(name) <= GUEST_NAME_CHARS
+
+
+def role_in(name, text):
+    """What `text` itself says the person is, right after the name ("Ada Reed, founder of Quay Labs, ..."), or None.
+    The role is always a piece of `text`: nothing is written for it."""
+    m = re.search(re.escape(name) + _ROLE_AFTER, text)
+    role = " ".join(m.group(1).split()).rstrip(" ,") if m else ""
+    return role if 4 <= len(role) <= GUEST_ROLE_CHARS and usable(role) else None
+
+
+def guests(item, speakers=()):
+    """The guests of an item: the people the publisher marks as guests, then names the title or the notes introduce as
+    one ("joined by ...", "(with ...)"). A name is never made up: each comes from the publisher's own words."""
+    words = " ".join(t for t in (item.get("summary", ""), item.get("notes", "")) if t)
+    hosts = {n.lower() for n, role in item.get("people", []) if role != "guest"}
+    out, seen = [], set()
+
+    def add(name):
+        name = " ".join(name.split())
+        if name.lower() in seen or name.lower() in hosts or not _person_like(name):
+            return
+        seen.add(name.lower())
+        out.append({"name": name, "role": role_in(name, words)})
+
+    for name, role in item.get("people", []):
+        if role == "guest" and usable(name) and len(name) <= GUEST_NAME_CHARS and name.lower() not in seen:
+            seen.add(name.lower())
+            out.append({"name": name, "role": role_in(name, words)})
+    for m in _GUEST_CUE.finditer(item["title"] + ". " + words):
+        for name in m.groups():
+            if name:
+                add(name)
+    known = words + " " + " ".join(speakers)
+    for n, pattern in enumerate(_TITLE_GUEST):
+        m = pattern.search(item["title"])
+        if m and (n == 0 or _mentions(m.group(1), known)):
+            add(m.group(1))
+    return out[:GUESTS]
+
+
+def _resource_name(text):
+    """The capitalised name that `text` starts with ("Thinking, Fast and Slow by ..." gives the title), or ""."""
+    small = r"of|the|and|for|in|to|a|an|on|with|at|from|or|as|is"
+    m = re.match(r"[\"“'‘]?((?:[A-Z0-9][\w'’&\-]*)(?:,?\s+[A-Z0-9][\w'’&\-]*|\s+(?:%s)(?![\w'’\-])){0,9})" % small, text)
+    if not m:
+        return ""
+    tokens = m.group(1).split()
+    while tokens and tokens[-1].strip(",") in small.split("|") + ["by"]:
+        tokens = tokens[:-1]
+    return " ".join(tokens).strip(" ,.'’\"”")
+
+
+def resources(item, units=None, exclude=()):
+    """Books, papers, tools and sites that are named: the names the publisher's notes link to (the addresses are never
+    kept), and what a speaker introduces as "a book called ...". With a transcript, a linked name is kept only when it
+    is also said, and points to where; a context line comes from the notes only."""
+    note_sentences = textrules.sentences(item.get("notes", ""))
+    skip = {e.lower() for e in exclude} | {item["title"].lower()}
+    out, seen = [], set()
+
+    def add(name, kind, at):
+        low = name.lower()
+        if low in seen or low in skip or not 3 <= len(name) <= RESOURCE_NAME_CHARS or _DOMAIN_LIKE.search(name) or not usable(name):
+            return
+        seen.add(low)
+        said = next((s for s in note_sentences if _mentions(name, s) and usable(s) and s.strip() != name), None)
+        if kind is None:
+            cue = re.search(r"(?i)\b(book|novel|memoir|paper|essay|article|report|study|documentary|film|podcast|newsletter|app|tool|library|framework|website)\b", said or "")
+            kind = _RESOURCE_KIND[cue.group(1).lower()] if cue else "other"
+        out.append({"name": name, "kind": kind, "context": textrules.shorten(said, RESOURCE_CONTEXT_CHARS) if said else None, "at": at})
+
+    for u in units or []:
+        for m in _RESOURCE_CUE.finditer(u.text):
+            name = _resource_name(u.text[m.end():])
+            if name and usable(u.text):
+                add(name, _RESOURCE_KIND[m.group(1).lower()], u.at)
+    for name in item.get("resources", []):
+        if units is None:
+            add(name, None, dict(NOWHERE))
+        else:
+            first = next((u for u in units if _mentions(name, u.text)), None)
+            if first is not None:
+                add(name, None, first.at)
+    return out[:RESOURCES]
+
+
+def _segment_at(transcript, second):
+    """The number of the segment that is running at `second`, or None when the transcript has no times."""
+    starts = [s.start for s in transcript.segments]
+    if not starts or any(t is None for t in starts) or starts != sorted(starts):
+        return None
+    return max(0, bisect.bisect_right(starts, second) - 1)
+
+
+def publisher_chapters(item, transcript=None):
+    """The publisher's own chapter marks as chapters. A mark must lie inside the item: before its end when the length
+    is known, and not after the last line of a timed transcript."""
+    marks = [(start, title) for start, title in item.get("chapters", []) if usable(title)]
+    length = item.get("duration_seconds")
+    last = None
+    if transcript is not None and transcript.timed and transcript.partial is None and transcript.segments:
+        last = max((s.start for s in transcript.segments if s.start is not None), default=None)
+    marks = [(s, t) for s, t in marks if (length is None or s < max(length, 1)) and (last is None or s <= last + 60) and s <= pt.LATEST_SECOND]
+    if len(marks) > CHAPTERS:   # a long list is thinned evenly, so the chapters still cover the whole item
+        marks = [marks[i * len(marks) // CHAPTERS] for i in range(CHAPTERS)]
+    out = []
+    for n, (start, title) in enumerate(marks):
+        end = marks[n + 1][0] if n + 1 < len(marks) else (length if length is not None and length > start else None)
+        segment = _segment_at(transcript, start) if transcript is not None and transcript.timed else None
+        out.append({"title": textrules.shorten(title, CHAPTER_TITLE_CHARS), "start_seconds": start, "end_seconds": end, "segment": segment, "origin": "publisher"})
+    return out if len(out) >= 2 else []
+
+
+def transcript_chapters(d, starts, length=None):
+    """Chapters cut from a timed transcript when the publisher marks none: one per talking point, starting where that
+    point's stretch of the transcript starts, titled with the opening words of the point (text the digest already holds)."""
+    rows = []
+    for at, p in zip(starts, d["talking_points"]):
+        if at["time_seconds"] is not None and (not rows or at["time_seconds"] > rows[-1][0]["time_seconds"]):
+            rows.append((at, p))
+    if len(rows) < 3:
+        return []
+    out = []
+    for n, (at, p) in enumerate(rows):
+        end = rows[n + 1][0]["time_seconds"] if n + 1 < len(rows) else (length if length is not None and length > at["time_seconds"] else None)
+        out.append({"title": textrules.shorten(p["point"], CHAPTER_OWN_TITLE_CHARS), "start_seconds": at["time_seconds"], "end_seconds": end,
+                    "segment": at["segment"], "origin": "transcript"})
+    return out
+
+
+def moments(d, transcript, soundbites=(), speakers=None, extra=()):
+    """Up to five passages worth keeping, best first, each an exact piece of one transcript segment with its time.
+    First what the publisher itself points out (a soundbite), then the digest's quotes, its strongest claim and the
+    talking points that are whole sentences. `extra` are passages already checked against the transcript."""
+    segments = transcript.segments
+    pool = list(extra) + [{"quote": q["text"], "speaker": q["speaker"], "at": q["at"]} for q in d["quotes"] if q["exact"]]
+    if d["provenance"]["method"] == "extractive":
+        claim = d["strongest_claim"]
+        rest = ([claim] if claim else []) + [{"text": p["point"], "at": p["at"]} for p in d["talking_points"]]
+        pool += [{"quote": r["text"], "speaker": (speakers or {}).get(r["text"]), "at": r["at"]} for r in rest if len(r["text"]) <= QUOTE_CHARS]
+    kept, seen, labelled = [], set(), set()
+    for m in pool:
+        number = m["at"]["segment"]
+        if number is None or number >= len(segments) or m["quote"] in seen or m["quote"] not in segments[number].text or pt.is_ad(segments[number].text):
+            continue
+        seen.add(m["quote"])
+        time = m["at"]["time_seconds"]
+        bite = next((b for b in soundbites if time is not None and b[0] - 5 <= time <= b[0] + b[1]), None)
+        pointed = bite is not None
+        label = bite[2] if bite and bite[2] and bite[2] not in labelled else None   # a soundbite's title names one moment
+        labelled.add(label)
+        later = next((s.start for s in segments[number + 1:] if s.start is not None and time is not None and s.start > time), None)
+        kept.append((0 if pointed else 1, len(kept), {"quote": m["quote"], "speaker": m["speaker"], "at": m["at"], "end_seconds": later,
+                                                         "label": label if label and usable(label) else None}))
+    return [m for _, _, m in sorted(kept, key=lambda k: k[:2])][:MOMENTS]
+
+
+def recap_cards(d):
+    """Three short question and answer pairs for a daily recap, made only from text the digest already holds."""
+    cards = [("What is this one about?", d["about"])]
+    if d["guests"]:
+        cards.append(("Who is the guest?", d["guests"][0]["name"] + (", " + d["guests"][0]["role"] if d["guests"][0]["role"] else "")))
+    if d["numbers"]:
+        cards.append(("What does the figure %s refer to?" % d["numbers"][0]["value"], d["numbers"][0]["context"]))
+    said = next((q for q in d["quotes"] if q["exact"] and q["speaker"] and len(q["text"]) <= RECAP_QUESTION_CHARS - 12), None)
+    if said:
+        cards.append(("Who said: “%s”" % said["text"], said["speaker"]))
+    gloss = next((g for g in d["glossary"] if g["gloss"] and g["gloss"] != "a speaker in this episode"), None)
+    if gloss:
+        cards.append(("Who or what is %s?" % gloss["term"], gloss["gloss"]))
+    if d["strongest_claim"]:
+        cards.append(("What is the strongest claim made?", d["strongest_claim"]["text"]))
+    if d["contested"]:
+        cards.append(("What is still disputed or unclear?", d["contested"][0]))
+    out = []
+    for question, answer in cards:
+        question, answer = textrules.shorten(question, RECAP_QUESTION_CHARS), textrules.shorten(answer, RECAP_ANSWER_CHARS)
+        if textrules.check(question) is None and textrules.check(answer) is None and answer not in (a for _, a in out):
+            out.append((question, answer))
+    return [{"question": q, "answer": a} for q, a in out[:RECAP_CARDS]]
 
 
 def extractive(source, item, transcript=None, budget=None, earlier=()):
@@ -330,6 +582,7 @@ def extractive(source, item, transcript=None, budget=None, earlier=()):
         points = _spread(candidates, 7)
         questions = _questions(units)
         asked = set()
+        stretch_starts = _stretch_starts(points, units)
         for i, u in enumerate(points):
             until = points[i + 1].index if i + 1 < len(points) else len(units)
             hook = next((q for q in questions if u.index < q.index < until and q.index not in asked), None)
@@ -354,8 +607,12 @@ def extractive(source, item, transcript=None, budget=None, earlier=()):
         if from_publisher and len(item.get("notes", "")) >= 200 and not item["notes"].startswith(d["about"][:60]):
             background = textrules.first_sentences(item["notes"], BACKGROUND_CHARS, most=3)
             d["background"] = background if usable(background) else None
+        d["guests"] = guests(item, transcript.speakers)
+        d["mentioned_resources"] = resources(item, [u for u in units if usable(u.text)], [g["name"] for g in d["guests"]] + list(transcript.speakers) + [source["name"]])
         if budget is not None:
             within(d, budget)
+        d["chapters"] = publisher_chapters(item, transcript) or (transcript_chapters(d, stretch_starts, item.get("duration_seconds")) if transcript.timed else [])
+        d["snippable_moments"] = moments(d, transcript, item.get("soundbites", ()), {u.text: u.speaker if u.speaker and usable(u.speaker) else None for u in points + claims[:1]})
         d["starters"] = _offers(d, left)
         d["tone"] = "news" if news else "interview" if len(transcript.speakers) >= 2 and len(questions) >= 8 else "conversational" if len(transcript.speakers) >= 2 else "unknown"
         partial = transcript.partial is not None
@@ -378,6 +635,9 @@ def extractive(source, item, transcript=None, budget=None, earlier=()):
         d["talking_points"] = [{"point": textrules.shorten(u.text, POINT_CHARS), "why": None, "at": dict(NOWHERE), "ask": None} for u in points]
         d["glossary"] = _glossary(units, [])
         d["numbers"] = _numbers(units, set())
+        d["guests"] = guests(item)
+        d["mentioned_resources"] = resources(item, None, [g["name"] for g in d["guests"]] + [source["name"]])
+        d["chapters"] = publisher_chapters(item)
         d["starters"] = _offers(d, [])
         d["quality"]["grade"] = "partial"
         notes.append("made from the publisher's show notes: no transcript, so no quotes and no times")
@@ -457,7 +717,48 @@ def enforce(d):
                         and text_ok(c.get("why"), CONNECTION_CHARS)][:CONNECTIONS]
     d["starters"] = [s for s in d["starters"] if text_ok(s, OFFER_CHARS)][:STARTERS]
     d["follow_ups"] = [s for s in d["follow_ups"] if text_ok(s, OFFER_CHARS)][:FOLLOW_UPS]
+    d["link_kind"] = d.get("link_kind") if d.get("link_kind") in LINK_KINDS else "episode"
+    seen, people = set(), []
+    for g in d.get("guests") or []:
+        if isinstance(g, dict) and text_ok(g.get("name"), GUEST_NAME_CHARS) and g["name"].lower() not in seen:
+            seen.add(g["name"].lower())
+            people.append({"name": g["name"], "role": optional(g.get("role"), GUEST_ROLE_CHARS)})
+    d["guests"] = people[:GUESTS]
+    seen, named = set(), []
+    for r in d.get("mentioned_resources") or []:
+        if isinstance(r, dict) and text_ok(r.get("name"), RESOURCE_NAME_CHARS) and r.get("kind") in RESOURCE_KINDS and at_ok(r.get("at")) \
+                and r["name"].lower() not in seen and not _DOMAIN_LIKE.search(r["name"]):
+            seen.add(r["name"].lower())
+            named.append({"name": r["name"], "kind": r["kind"], "context": optional(r.get("context"), RESOURCE_CONTEXT_CHARS), "at": r["at"]})
+    d["mentioned_resources"] = named[:RESOURCES]
+
+    def second(v, nullable=False):
+        return (nullable and v is None) or (isinstance(v, int) and not isinstance(v, bool) and 0 <= v <= pt.LATEST_SECOND)
+
+    chapters, last = [], -1
+    for c in d.get("chapters") or []:
+        if isinstance(c, dict) and text_ok(c.get("title"), CHAPTER_TITLE_CHARS) and second(c.get("start_seconds")) and c["start_seconds"] > last \
+                and second(c.get("end_seconds"), True) and (c["end_seconds"] is None or c["end_seconds"] > c["start_seconds"]) \
+                and at_ok({"time_seconds": None, "segment": c.get("segment")}) and c.get("origin") in CHAPTER_ORIGINS:
+            if chapters and chapters[-1]["end_seconds"] is not None and chapters[-1]["end_seconds"] > c["start_seconds"]:
+                chapters[-1]["end_seconds"] = c["start_seconds"]
+            chapters.append({"title": c["title"], "start_seconds": c["start_seconds"], "end_seconds": c["end_seconds"], "segment": c["segment"], "origin": c["origin"]})
+            last = c["start_seconds"]
+    d["chapters"] = chapters[:CHAPTERS]
+    seen, kept = set(), []
+    for m in d.get("snippable_moments") or []:
+        if isinstance(m, dict) and text_ok(m.get("quote"), QUOTE_CHARS) and at_ok(m.get("at")) and m["at"]["segment"] is not None and m["quote"] not in seen \
+                and second(m.get("end_seconds"), True) and d.get("basis") == "transcript":
+            seen.add(m["quote"])
+            kept.append({"quote": m["quote"], "speaker": optional(m.get("speaker"), SPEAKER_CHARS), "at": m["at"], "end_seconds": m["end_seconds"],
+                         "label": optional(m.get("label"), MOMENT_LABEL_CHARS)})
+    d["snippable_moments"] = kept[:MOMENTS]
     d["tone"] = d.get("tone") if d.get("tone") in TONES else "unknown"
     d["quality"]["notes"] = [textrules.shorten(n, QUALITY_NOTE_CHARS) for n in d["quality"]["notes"] if isinstance(n, str) and textrules.check(n) is None][:QUALITY_NOTES]
     d["brief"] = _brief(d)
+    d["recap_cards"] = recap_cards(d)
+    # The file has one size limit. What 1.1 added gives way first, longest list first; then the lists of 1.0.
+    for field in ("chapters", "mentioned_resources", "guests", "snippable_moments", "glossary", "numbers", "quotes", "talking_points"):
+        while d[field] and len(jsonschema_lite.dumps(d).encode("utf-8")) > DIGEST_BYTES:
+            d[field].pop()
     return d

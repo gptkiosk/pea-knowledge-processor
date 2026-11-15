@@ -1,21 +1,22 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "items": [
     {
-      "bytes": 5841,
+      "bytes": 8854,
       "date": "2026-11-12",
       "digest": {
         "basis": "transcript",
-        "bytes": 5841,
+        "bytes": 8854,
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-12-8a5b8d3d14.digest.json",
-        "sha256": "83cd86e7bdb52e22f7d0eb6f96d311679918e50ff6e6b7a6502e3655c8f9ab11"
+        "sha256": "a9f49b779c5d450ca303a5af6cb9a3e5b977a7fee3241f2b2200c1bd1b6b459b"
       },
       "duration_seconds": 540,
       "id": "2026-11-12-8a5b8d3d14",
       "link": "https://harbor.example.org/e/2026-11-12",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -31,19 +32,20 @@
       }
     },
     {
-      "bytes": 5741,
+      "bytes": 8717,
       "date": "2026-11-11",
       "digest": {
         "basis": "transcript",
-        "bytes": 5741,
+        "bytes": 8717,
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-11-667e185af5.digest.json",
-        "sha256": "828bd4f3b98744f278d419899980b70b04758bfd7f134879853ac007f2c821fb"
+        "sha256": "2915a72eace3938dc6efe269d4803e5f24868a4ed606b64f8b8aa85418a378c5"
       },
       "duration_seconds": 540,
       "id": "2026-11-11-667e185af5",
       "link": "https://harbor.example.org/e/2026-11-11",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -59,19 +61,20 @@
       }
     },
     {
-      "bytes": 5714,
+      "bytes": 8892,
       "date": "2026-11-10",
       "digest": {
         "basis": "transcript",
-        "bytes": 5714,
+        "bytes": 8892,
         "grade": "full",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-10-1aeaa6c4e4.digest.json",
-        "sha256": "bd470454a16fc18ed5c119459bdb9181d77bd0a7076db4a7c763e90b4960535d"
+        "sha256": "36f30a21c29c22d6c1e7731e63b05c68e0424088bf2c3fdde0e3adea6d10df44"
       },
       "duration_seconds": 540,
       "id": "2026-11-10-1aeaa6c4e4",
       "link": "https://harbor.example.org/e/2026-11-10",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [
@@ -87,19 +90,20 @@
       }
     },
     {
-      "bytes": 1088,
+      "bytes": 1320,
       "date": "2026-11-09",
       "digest": {
         "basis": "headline",
-        "bytes": 1088,
+        "bytes": 1320,
         "grade": "headline",
         "method": "extractive",
         "path": "sources/harbor-voices/2026-11-09-95827ccd6b.digest.json",
-        "sha256": "6b837ac9e2286c761b9ef37d257818ed0bf20a80bf140b4013c8276624b5f6b8"
+        "sha256": "01bb5a047021364f000bfed5eba6b57b22af7d82e7b48406a3b1cd9637c8895c"
       },
       "duration_seconds": 300,
       "id": "2026-11-09-95827ccd6b",
       "link": "https://harbor.example.org/e/2026-11-09",
+      "link_kind": "episode",
       "stale": false,
       "stale_reason": null,
       "tags": [],

@@ -68,6 +68,14 @@
             "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
             "maxLength": 2000
           },
+          "link_kind": {
+            "description": "Since 1.1. What `link` leads to: \"episode\" is the publisher's page for this one item; \"show\" means the publisher gives no page per item, so the link is the show's site. Absent in a 1.0 file: treat as \"episode\".",
+            "type": "string",
+            "enum": [
+              "episode",
+              "show"
+            ]
+          },
           "duration_seconds": {
             "type": [
               "integer",

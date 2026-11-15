@@ -23,6 +23,7 @@ from .transcript import convert, pea_transcript as pt
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
             "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000}
 TRANSCRIPT_TRIES = 3
+CHAPTERS_BYTES = 300_000
 NEWS_SUMMARY_CHARS = 280
 
 
@@ -197,12 +198,14 @@ def normalize_transcript(fetcher, source, item, listed):
 def item_key(entry, source):
     """What an item's digest depends on at the publisher. The same key next run means there is nothing to redo."""
     parts = [entry.title, entry.date, entry.link, entry.summary[:200], source["publish"], source["kind"]] + [a for a, _ in entry.transcripts]
-    return sha256("\x1f".join(parts).encode("utf-8", "replace"))
+    marks = jsonschema_lite.dumps([dg.DIGEST_REVISION, entry.people, entry.chapters, entry.chapters_url, entry.soundbites, entry.resources])
+    return sha256("\x1f".join(parts + [marks]).encode("utf-8", "replace"))
 
 
 def source_key(config, source):
     """What a source's item list depends on in the config. When it changes, an unchanged feed is still read again."""
-    parts = [source["url"], source["adapter"], source["publish"], source["kind"]] + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")]
+    parts = [source["url"], source["adapter"], source["publish"], source["kind"], "digest revision %d" % dg.DIGEST_REVISION] \
+        + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")]
     return sha256("\x1f".join(parts).encode("utf-8"))
 
 
@@ -249,7 +252,10 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
             record["notes"].append(note("no entry is newer than %s" % oldest))
         for e in entries:
             news = source["kind"] == "news"
-            item = {"id": e.id, "title": e.title, "date": e.date, "link": e.link or source["site"], "duration_seconds": e.duration, "tags": e.tags,
+            item = {"id": e.id, "title": e.title, "date": e.date, "link": e.link or source["site"], "link_kind": "episode" if e.link else "show",
+                    "duration_seconds": e.duration, "tags": e.tags,
+                    "people": [] if news else [list(p) for p in e.people], "chapters": [] if news else [list(c) for c in e.chapters],
+                    "soundbites": [] if news else [list(b) for b in e.soundbites], "resources": [] if news else list(e.resources),
                     "summary": textrules.first_sentences(e.summary, NEWS_SUMMARY_CHARS, most=2) if news else e.summary,
                     "notes": "" if news else e.notes, "key": item_key(e, source), "reuse": False,
                     "transcript": {"status": "no", "reason": "none_published", "detail": "", "file": None}}
@@ -263,6 +269,11 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                 if text is not None:
                     item["transcript"]["file"] = "transcripts/%s/%s.pea.txt" % (sid, e.id)
                     write(os.path.join(work, *item["transcript"]["file"].split("/")), text)
+                if not item["chapters"] and e.chapters_url:   # the publisher's chapter file, when the feed has no inline marks
+                    try:
+                        item["chapters"] = [list(c) for c in adapters.chapters_file(fetcher.get(e.chapters_url, CHAPTERS_BYTES).body)]
+                    except fetch.FetchError as error:
+                        record["notes"].append(note("%s: the chapter file could not be read (%s)" % (e.id, error.detail)))
             record["items"].append(item)
         log("%s: %d items (%d reused)" % (sid, len(record["items"]), sum(1 for i in record["items"] if i["reuse"])))
     out["requests"] = fetcher.requests
@@ -360,7 +371,8 @@ def _new_item(config, source, work, item):
             transcript = {"available": t["status"], "reason": t["reason"], "file": {"path": tpath, "sha256": sha256(data), "bytes": len(data)}}
         else:
             transcript["reason"] = "withheld_terms"
-    entry = {"id": iid, "title": item["title"], "date": item["date"], "link": item["link"], "duration_seconds": item["duration_seconds"],
+    entry = {"id": iid, "title": item["title"], "date": item["date"], "link": item["link"], "link_kind": item.get("link_kind", "episode"),
+             "duration_seconds": item["duration_seconds"],
              "tags": item["tags"], "teaser": textrules.shorten(d["about"], 240), "stale": False, "stale_reason": None,
              "bytes": sum(len(b) for b in files.values()),
              "digest": {"path": path, "sha256": sha256(digest_bytes), "bytes": len(digest_bytes), "basis": d["basis"], "grade": d["quality"]["grade"],

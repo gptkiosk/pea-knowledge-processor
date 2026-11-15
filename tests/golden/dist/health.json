@@ -1,10 +1,10 @@
 {
   "format": "pea-knowledge-health",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "generated_at": "2026-11-14T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "mode": "offline",
   "model": {
@@ -58,6 +58,7 @@
       "kept": 0,
       "new": 6,
       "notes": [
+        "1 of 8 entries have no page of their own in the feed: they link to the show",
         "1 entries skipped: the same id as an earlier one",
         "1 entries skipped: no date",
         "2026-11-08-97bd63e880: no transcript (not found (404))"
@@ -129,9 +130,9 @@
     }
   ],
   "totals": {
-    "bytes": 106015,
+    "bytes": 131479,
     "items": 16,
-    "requests": 17,
+    "requests": 18,
     "sources": 4
   }
 }

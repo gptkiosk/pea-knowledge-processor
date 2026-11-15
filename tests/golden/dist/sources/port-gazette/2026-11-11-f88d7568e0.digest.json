@@ -8,17 +8,21 @@
     "points": [],
     "quote": null
   },
+  "chapters": [],
   "connections": [],
   "contested": [],
   "date": "2026-11-11",
   "duration_seconds": null,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [],
+  "guests": [],
   "item_id": "2026-11-11-f88d7568e0",
   "language": "en",
   "link": "https://gazette.example.org/a/3",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -32,6 +36,13 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "Councillors voted 7 to 2 to move the planned visitor centre away from the meadow where terns nest.",
+      "question": "What is this one about?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "port-gazette",
   "source_name": "The Port Gazette",
   "starters": [

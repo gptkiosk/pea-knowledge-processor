@@ -17,6 +17,7 @@ _TAG = re.compile(r"<[A-Za-z/!?][^<>]{0,400}>")
 _URL = re.compile(r"(?i)[a-z][a-z0-9+.\-]{1,20}://|(?<![a-z0-9])www\.[a-z0-9]|(?<![a-z0-9])(?:mailto|javascript|data|tel|sms):\S")
 # Rule T4: one line, trimmed, single spaces.
 _SPACES = re.compile(r"\s+")
+_SPACE_BEFORE_MARK = re.compile(r"(?<=\w) ([,.;:!?])(?= |$)")
 _ADDRESS = re.compile(r"(?i)(?:[a-z][a-z0-9+.\-]{1,20}://|(?<![a-z0-9])www\.)[^\s<>\"')\]]*|(?<![a-z0-9])(?:mailto|javascript|data|tel|sms):\S+")
 
 # Text addressed to the program that reads the file instead of to a listener. The extractive digest never picks a
@@ -118,6 +119,7 @@ def plain(s, limit=200_000):
     s = _ADDRESS.sub(" ", s)
     s = _FORBIDDEN.sub(" ", s)
     s = _SPACES.sub(" ", s).strip()
+    s = _SPACE_BEFORE_MARK.sub(r"\1", s)   # "the Wren ." where a tag stood between the word and the full stop
     if _TAG.search(s):  # what is left that still reads as a tag loses its brackets
         s = _SPACES.sub(" ", s.replace("<", " ").replace(">", " ")).strip()
     return s

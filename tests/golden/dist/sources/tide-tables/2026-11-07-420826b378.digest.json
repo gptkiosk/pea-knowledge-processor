@@ -16,6 +16,29 @@
       "time_seconds": 56
     }
   },
+  "chapters": [
+    {
+      "end_seconds": 60,
+      "origin": "publisher",
+      "segment": 0,
+      "start_seconds": 0,
+      "title": "Start"
+    },
+    {
+      "end_seconds": 90,
+      "origin": "publisher",
+      "segment": 3,
+      "start_seconds": 60,
+      "title": "Visit today"
+    },
+    {
+      "end_seconds": 518,
+      "origin": "publisher",
+      "segment": 4,
+      "start_seconds": 90,
+      "title": "The gate"
+    }
+  ],
   "connections": [],
   "contested": [
     "It is unclear whose count is right, because the radar at North Quay was down for most of January."
@@ -27,7 +50,7 @@
     "What would you ask the Harbour Board if you had five minutes in front of all its members?"
   ],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "a speaker in this episode",
@@ -70,9 +93,22 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [],
   "item_id": "2026-11-07-420826b378",
   "language": "en",
   "link": "https://tide.example.org/episodes/1",
+  "link_kind": "episode",
+  "mentioned_resources": [
+    {
+      "at": {
+        "segment": 8,
+        "time_seconds": 154
+      },
+      "context": null,
+      "kind": "other",
+      "name": "The Harbour Board"
+    }
+  ],
   "numbers": [
     {
       "at": {
@@ -131,6 +167,72 @@
       "exact": true,
       "speaker": "Tobias",
       "text": "Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902."
+    }
+  ],
+  "recap_cards": [
+    {
+      "answer": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 21 years. An electric lamp would have cost the Trust 95 thousand dollars before a single night of light.",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "The Northwind Cooperative lands about 61 percent of the fish sold at the Saturday market.",
+      "question": "What does the figure 61 percent refer to?"
+    },
+    {
+      "answer": "Tobias",
+      "question": "Who said: “The Grey Point Trust voted on it in March, and the old lamp won by 31 votes to nine.”"
+    }
+  ],
+  "snippable_moments": [
+    {
+      "at": {
+        "segment": 3,
+        "time_seconds": 56
+      },
+      "end_seconds": 84,
+      "label": null,
+      "quote": "The Grey Point Trust voted on it in March, and the old lamp won by 31 votes to nine.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 4,
+        "time_seconds": 84
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came.",
+      "speaker": "Mara"
+    },
+    {
+      "at": {
+        "segment": 8,
+        "time_seconds": 154
+      },
+      "end_seconds": 168,
+      "label": null,
+      "quote": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "speaker": "Mara"
+    },
+    {
+      "at": {
+        "segment": 29,
+        "time_seconds": 476
+      },
+      "end_seconds": 490,
+      "label": null,
+      "quote": "Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902.",
+      "speaker": "Tobias"
+    },
+    {
+      "at": {
+        "segment": 15,
+        "time_seconds": 266
+      },
+      "end_seconds": 294,
+      "label": null,
+      "quote": "I trim the wick at dusk, wind the clockwork every four hours, and write the ledger before I sleep.",
+      "speaker": "Tobias"
     }
   ],
   "source_id": "tide-tables",

@@ -35,6 +35,10 @@
    "content_type": "text/vtt",
    "file": "tide/ep1-hostile.vtt"
   },
+  "https://media.tide.example.org/ep4-chapters.json": {
+   "content_type": "application/json",
+   "file": "tide/ep4-chapters.json"
+  },
   "https://media.tide.example.org/ep4.json": {
    "content_type": "application/json",
    "file": "tide/ep4.json"

@@ -8,17 +8,21 @@
     "points": [],
     "quote": null
   },
+  "chapters": [],
   "connections": [],
   "contested": [],
   "date": "2026-11-08",
   "duration_seconds": 518,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [],
+  "guests": [],
   "item_id": "2026-11-08-97bd63e880",
   "language": "en",
   "link": "https://tide.example.org/episodes/2",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -32,6 +36,13 @@
     ]
   },
   "quotes": [],
+  "recap_cards": [
+    {
+      "answer": "Mara and Tobias at the Grey Point lighthouse.",
+      "question": "What is this one about?"
+    }
+  ],
+  "snippable_moments": [],
   "source_id": "tide-tables",
   "source_name": "Tide Tables",
   "starters": [

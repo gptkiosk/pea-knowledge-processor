@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pea-knowledge-processor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Processes a curated list of podcast and news sources into one fixed, validated format for the PEA assistant."
 readme = "README.md"
 requires-python = ">=3.11"

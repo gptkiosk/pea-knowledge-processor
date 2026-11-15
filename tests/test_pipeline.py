@@ -55,6 +55,83 @@ class OneRun(Base):
         self.assertFalse([p for p in support.tree(self.out) if p.startswith("sources/harbor-voices/") and p.endswith(".pea.txt")])
         self.assertEqual(self.health_of(health, "tide-tables")["transcripts"], {"yes": 4, "partial": 0, "none_published": 1, "fetch_failed": 1, "unreadable": 0, "withheld_terms": 0})
 
+    def test_every_item_links_to_its_own_page_or_says_that_it_links_to_the_show(self):
+        health = support.run(self.out)
+        for sid in ("harbor-voices", "tide-tables", "quay-notes", "port-gazette"):
+            items = support.items(self.out, sid)
+            self.assertEqual(len({i["id"] for i in items}), len(items))
+            pages = [i["link"] for i in items if i["link_kind"] == "episode"]
+            self.assertEqual(len(set(pages)), len(pages), "%s: every item with a page of its own has a different one" % sid)
+            for i in items:
+                d = support.digest_of(self.out, sid, i["id"])
+                self.assertEqual((d["link"], d["link_kind"]), (i["link"], i["link_kind"]))
+                if i["link_kind"] == "show":
+                    self.assertEqual(i["link"], support.listing(self.out, sid)["site"])
+        tide = {i["date"]: i for i in support.items(self.out, "tide-tables")}
+        self.assertEqual({d: i["link_kind"] for d, i in tide.items() if i["link_kind"] != "episode"}, {"2026-11-11": "show"})
+        self.assertTrue(any("no page of their own" in n for n in self.health_of(health, "tide-tables")["notes"]))
+        again = support.run(self.out, LATER)
+        self.assertEqual([i["id"] for i in support.items(self.out, "tide-tables")], [i["id"] for i in tide.values()], "ids are the same on the next run")
+        self.assertEqual(self.health_of(again, "tide-tables")["new"], 0)
+
+    def test_the_publishers_chapter_file_is_read_and_a_missing_one_costs_nothing(self):
+        support.run(self.out)
+        item = next(i for i in support.items(self.out, "tide-tables") if i["date"] == "2026-11-10")
+        d = support.digest_of(self.out, "tide-tables", item["id"])
+        self.assertEqual([(c["title"], c["start_seconds"], c["origin"]) for c in d["chapters"]],
+                         [("Opening", 0, "publisher"), ("The ledger", 140, "publisher"), ("Out of order, after sorting it is in order", 300, "publisher"), ("The visitor centre", 400, "publisher")])
+        gone = os.path.join(self.base, "gone")
+        health = support.run(gone, web=self.web(lambda r: r.update({"https://media.tide.example.org/ep4-chapters.json": {"status": 500}})))
+        self.assertEqual(self.codes(gone), [])
+        item = next(i for i in support.items(gone, "tide-tables") if i["date"] == "2026-11-10")
+        d = support.digest_of(gone, "tide-tables", item["id"])
+        self.assertEqual((d["basis"], {c["origin"] for c in d["chapters"]} <= {"transcript"}), ("transcript", True), "the digest is made all the same")
+        self.assertTrue(any("chapter file could not be read" in n for n in self.health_of(health, "tide-tables")["notes"]))
+
+    def test_an_output_of_format_1_0_is_still_read_and_its_items_are_rebuilt(self):
+        """The first run of this version finds an output written by 0.1.0: no link_kind, none of the 1.1 members."""
+        support.run(self.out)
+        for path, data in support.tree(self.out).items():
+            if path.endswith(".json") and path not in ("health.json",):
+                value = json.loads(data)
+                value["format_version"] = "1.0"
+                for item in value.get("items", []) if isinstance(value.get("items"), list) else []:
+                    item.pop("link_kind", None)
+                for key in ("link_kind", "guests", "mentioned_resources", "chapters", "snippable_moments", "recap_cards"):
+                    value.pop(key, None)
+                if path == "state.json":   # 0.1.0 made its item keys another way, so none of them is the key of today
+                    for memory in value["sources"].values():
+                        for kept in memory["items"].values():
+                            kept["key"] = "0" * 64
+                        memory["config"] = "0" * 64
+                with open(os.path.join(self.out, *path.split("/")), "w", encoding="utf-8") as f:
+                    f.write(js.dumps(value))
+        for sid in ("harbor-voices", "tide-tables", "quay-notes", "port-gazette"):   # the hashes follow the rewritten files
+            folder = os.path.join(self.out, "sources", sid)
+            with open(os.path.join(folder, "items.json"), encoding="utf-8") as f:
+                index = json.load(f)
+            for item in index["items"]:
+                with open(os.path.join(self.out, *item["digest"]["path"].split("/")), "rb") as f:
+                    data = f.read()
+                size = len(data) - item["digest"]["bytes"]
+                item["digest"].update(sha256=pipeline.sha256(data), bytes=len(data))
+                item["bytes"] += size
+            data = js.dumps(index).encode()
+            with open(os.path.join(folder, "items.json"), "wb") as f:
+                f.write(data)
+            store = support.store(self.out)
+            for listing in store["sources"]:
+                if listing["id"] == sid:
+                    listing["items_file"].update(sha256=pipeline.sha256(data), bytes=len(data))
+                    listing["avg_bytes"] = sum(i["bytes"] for i in index["items"]) // len(index["items"])
+            with open(os.path.join(self.out, "store.json"), "w", encoding="utf-8") as f:
+                f.write(js.dumps(store))
+        self.assertEqual(self.codes(), [], "a 1.0 output is valid for a 1.1 reader")
+        health = support.run(self.out, LATER)
+        self.assertEqual(self.codes(), [])
+        self.assertTrue(all("link_kind" in i for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)))
+        self.assertEqual(health["totals"]["items"], 16)
+
     def test_the_store_listing_has_what_a_store_card_and_the_storage_choice_need(self):
         support.run(self.out)
         raw = support.tree(self.out)["store.json"]

@@ -1,0 +1,36 @@
+{
+ "version": "1.2.0",
+ "chapters": [
+  {
+   "startTime": 0,
+   "title": "Opening"
+  },
+  {
+   "startTime": 140,
+   "title": "The ledger",
+   "img": "https://evil.example.org/pixel.png",
+   "url": "https://evil.example.org/"
+  },
+  {
+   "startTime": 400.5,
+   "title": "<b>The visitor centre</b> https://evil.example.org/claim"
+  },
+  {
+   "startTime": "nan",
+   "title": "Not a time"
+  },
+  {
+   "startTime": 300,
+   "title": "Out of order, after sorting it is in order"
+  },
+  {
+   "startTime": 420,
+   "title": "Hidden from the list",
+   "toc": false
+  },
+  {
+   "startTime": 1e+300,
+   "title": "Far too late"
+  }
+ ]
+}

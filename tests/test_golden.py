@@ -170,7 +170,7 @@ class Golden(unittest.TestCase):
                 self.assertFalse(re.search(rb"/Users/|/home/|\.local\b(?!/admin)|@gmail|sk-or-|Bearer ", data), path)
                 hosts = set(re.findall(rb"https?://([A-Za-z0-9.-]+)", data))
                 self.assertTrue(all(h.endswith((b"example.org", b"example.net")) or h in (b"jsonfeed.org", b"podcastindex.org", b"localhost", b"router.local", b"192.168.1.10", b"192.168.0.10",
-                                                                                           b"www.itunes.com", b"www.w3.org") for h in hosts), (path, hosts))
+                                                                                           b"www.itunes.com", b"www.w3.org", b"podlove.org") for h in hosts), (path, hosts))
 
 
 class Workflows(unittest.TestCase):

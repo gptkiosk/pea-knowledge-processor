@@ -16,13 +16,57 @@
       "time_seconds": 0
     }
   },
+  "chapters": [
+    {
+      "end_seconds": 98,
+      "origin": "transcript",
+      "segment": 0,
+      "start_seconds": 0,
+      "title": "The Grey Point Trust voted on it in March, and the old…"
+    },
+    {
+      "end_seconds": 210,
+      "origin": "transcript",
+      "segment": 2,
+      "start_seconds": 98,
+      "title": "Because the dredging budget follows the count, and the…"
+    },
+    {
+      "end_seconds": 252,
+      "origin": "transcript",
+      "segment": 4,
+      "start_seconds": 210,
+      "title": "I think the town forgets how much of its income crosses…"
+    },
+    {
+      "end_seconds": 336,
+      "origin": "transcript",
+      "segment": 5,
+      "start_seconds": 252,
+      "title": "The Grey Point Trust pays for the apprentices out of…"
+    },
+    {
+      "end_seconds": 420,
+      "origin": "transcript",
+      "segment": 7,
+      "start_seconds": 336,
+      "title": "There is a plan from the county to build a visitor centre…"
+    },
+    {
+      "end_seconds": 540,
+      "origin": "transcript",
+      "segment": 9,
+      "start_seconds": 420,
+      "title": "Tobias Renn, keeper of the Grey Point lighthouse, thank…"
+    }
+  ],
   "connections": [],
   "contested": [],
   "date": "2026-11-11",
   "duration_seconds": 540,
   "follow_ups": [],
   "format": "pea-knowledge-digest",
-  "format_version": "1.0",
+  "format_version": "1.1",
   "glossary": [
     {
       "gloss": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
@@ -55,9 +99,12 @@
       "term": "Northwind Cooperative"
     }
   ],
+  "guests": [],
   "item_id": "2026-11-11-667e185af5",
   "language": "en",
   "link": "https://harbor.example.org/e/2026-11-11",
+  "link_kind": "episode",
+  "mentioned_resources": [],
   "numbers": [],
   "provenance": {
     "method": "extractive",
@@ -89,6 +136,68 @@
       "exact": true,
       "speaker": null,
       "text": "The lamp still burns colza oil, about 23 litres a night in the winter months."
+    }
+  ],
+  "recap_cards": [
+    {
+      "answer": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
+      "question": "What is this one about?"
+    },
+    {
+      "answer": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "question": "Who or what is Harbour Board?"
+    }
+  ],
+  "snippable_moments": [
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "end_seconds": 42,
+      "label": null,
+      "quote": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 31 years.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "end_seconds": 42,
+      "label": null,
+      "quote": "The lamp still burns colza oil, about 23 litres a night in the winter months.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 3,
+        "time_seconds": 154
+      },
+      "end_seconds": 210,
+      "label": null,
+      "quote": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 42
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "The Grey Point Trust voted on it in March, and the old lamp won by 41 votes to nine.",
+      "speaker": null
+    },
+    {
+      "at": {
+        "segment": 1,
+        "time_seconds": 42
+      },
+      "end_seconds": 98,
+      "label": null,
+      "quote": "An electric lamp would have cost the Trust 145 thousand dollars before a single night of light.",
+      "speaker": null
     }
   ],
   "source_id": "harbor-voices",
