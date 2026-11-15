@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+/dist/
+/dist.building/
+/dist.replaced/
+/work/
+/previous/
+/build/
+*.egg-info/
+.DS_Store
+.test-output*

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pea-knowledge-processor"
+version = "0.1.0"
+description = "Processes a curated list of podcast and news sources into one fixed, validated format for the PEA assistant."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+dependencies = []
+
+[project.scripts]
+pea-knowledge = "pea_knowledge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# The schemas live in schema/ at the top of the repository and are read from there. The project is meant to be run
+# from a checkout (python3 -m pea_knowledge ...); an installed copy needs schema/ copied beside the package as
+# pea_knowledge/schema/.
