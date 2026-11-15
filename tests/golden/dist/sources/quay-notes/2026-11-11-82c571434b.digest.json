@@ -1,0 +1,102 @@
+{
+  "about": "The ice house at North Quay has sold block ice to the fishing boats since 1888. The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019. The ice house makes about 14 tonnes of ice a day in summer.",
+  "background": null,
+  "basis": "notes",
+  "brief": {
+    "about": "The ice house at North Quay has sold block ice to the fishing boats since 1888. The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019. The ice house makes about 14 tonnes of ice a day in…",
+    "hook": "What was said about Lise Sorensen",
+    "points": [
+      "Lise Sorensen explains why block ice still beats flake ice for a boat that stays out for a week.",
+      "The Sorensen family kept it after the town raised 80 thousand dollars for a new compressor.",
+      "The episode ends in the cold room, where the oldest tools still hang on the wall."
+    ],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-11",
+  "duration_seconds": 1502,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [
+    {
+      "gloss": "The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019.",
+      "kind": "person",
+      "term": "Lise Sorensen"
+    }
+  ],
+  "item_id": "2026-11-11-82c571434b",
+  "language": "en",
+  "link": "https://quay.example.org/notes/2",
+  "numbers": [
+    {
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "context": "The Sorensen family kept it after the town raised 80 thousand dollars for a new compressor.",
+      "value": "80 thousand"
+    }
+  ],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "partial",
+    "notes": [
+      "made from the publisher's show notes: no transcript, so no quotes and no times"
+    ]
+  },
+  "quotes": [],
+  "source_id": "quay-notes",
+  "source_name": "Quay Notes",
+  "starters": [
+    "What was said about Lise Sorensen",
+    "The figure 80 thousand and where it comes from",
+    "The main points of this one, in order"
+  ],
+  "strongest_claim": null,
+  "talking_points": [
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "Lise Sorensen explains why block ice still beats flake ice for a boat that stays out for a week.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "The family nearly sold the building in 2021, when the Northwind Cooperative offered to buy it.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "The Sorensen family kept it after the town raised 80 thousand dollars for a new compressor.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "The episode ends in the cold room, where the oldest tools still hang on the wall.",
+      "why": null
+    }
+  ],
+  "title": "Four generations of ice",
+  "tone": "unknown"
+}

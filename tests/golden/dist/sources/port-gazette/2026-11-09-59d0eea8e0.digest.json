@@ -1,0 +1,44 @@
+{
+  "about": "Click now",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "Click now",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-09",
+  "duration_seconds": null,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-09-59d0eea8e0",
+  "language": "en",
+  "link": "https://gazette.example.org/a/1",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "port-gazette",
+  "source_name": "The Port Gazette",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "Click now",
+  "tone": "news"
+}

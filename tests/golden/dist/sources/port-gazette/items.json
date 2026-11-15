@@ -1,0 +1,107 @@
+{
+  "format": "pea-knowledge-items",
+  "format_version": "1.0",
+  "items": [
+    {
+      "bytes": 1383,
+      "date": "2026-11-12",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1383,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/port-gazette/2026-11-12-9540419a16.digest.json",
+        "sha256": "af40dbf3c62d13efd77c5a39e7492cb82f8dda417a41b795eca8bd1ab9dc61e1"
+      },
+      "duration_seconds": null,
+      "id": "2026-11-12-9540419a16",
+      "link": "https://gazette.example.org/a/4",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "The Harbour Board said on Thursday it will publish a year of radar logs. The move follows a dispute over how many ships turned back at the bar last winter.",
+      "title": "Harbour Board to publish radar logs after ledger dispute",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "none_published"
+      }
+    },
+    {
+      "bytes": 1259,
+      "date": "2026-11-11",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1259,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/port-gazette/2026-11-11-f88d7568e0.digest.json",
+        "sha256": "efac9f2dde6e0236805df58942b5dc7ead5c69eb2b7342aeb73a60dd30823bbe"
+      },
+      "duration_seconds": null,
+      "id": "2026-11-11-f88d7568e0",
+      "link": "https://gazette.example.org/a/3",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Councillors voted 7 to 2 to move the planned visitor centre away from the meadow where terns nest.",
+      "title": "County moves visitor centre plan to North Quay",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "none_published"
+      }
+    },
+    {
+      "bytes": 1209,
+      "date": "2026-11-10",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1209,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/port-gazette/2026-11-10-9a32c90fc7.digest.json",
+        "sha256": "77b932be98934ed524288b8486c6c31222b59531e15b6db875499e68435bf850"
+      },
+      "duration_seconds": null,
+      "id": "2026-11-10-9a32c90fc7",
+      "link": "https://gazette.example.org/a/2",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "The spring dredging budget will rise by 12 percent, the Harbour Board confirmed.",
+      "title": "Dredging budget rises 12 percent",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "none_published"
+      }
+    },
+    {
+      "bytes": 1044,
+      "date": "2026-11-09",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1044,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/port-gazette/2026-11-09-59d0eea8e0.digest.json",
+        "sha256": "a8891e6522a515c8d68408fdd0c4cffa44c1d7f15602042dde2b24067d44666b"
+      },
+      "duration_seconds": null,
+      "id": "2026-11-09-59d0eea8e0",
+      "link": "https://gazette.example.org/a/1",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [],
+      "teaser": "Click now",
+      "title": "Click now",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "none_published"
+      }
+    }
+  ],
+  "source_id": "port-gazette"
+}

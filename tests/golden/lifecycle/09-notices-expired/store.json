@@ -1,0 +1,57 @@
+{
+  "format": "pea-knowledge-store",
+  "format_version": "1.0",
+  "generated_at": "2027-02-24T18:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.1.0"
+  },
+  "min_app_version": null,
+  "sources": [
+    {
+      "attribution": "Tide Tables, a made-up source",
+      "available": {
+        "digest": 0,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 0,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "teal",
+        "symbol": "waveform"
+      },
+      "id": "tide-tables",
+      "item_count": 0,
+      "items_file": null,
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": null,
+      "latest_titles": [],
+      "message": null,
+      "name": "Tide Tables",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "full",
+      "publisher": "Tide Tables (made up)",
+      "purge": false,
+      "site": "https://tide.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 3,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": null,
+      "whats_new": null
+    }
+  ]
+}

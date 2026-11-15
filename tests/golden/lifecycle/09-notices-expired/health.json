@@ -1,0 +1,150 @@
+{
+  "format": "pea-knowledge-health",
+  "format_version": "1.0",
+  "generated_at": "2027-02-24T18:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.1.0"
+  },
+  "mode": "offline",
+  "model": {
+    "accepted": 0,
+    "calls": 0,
+    "completion_tokens": 0,
+    "cost_usd": 0.0,
+    "fell_back": 0,
+    "model": null,
+    "note": null,
+    "prompt_tokens": 0,
+    "requested": false,
+    "skipped_for_budget": 0,
+    "used": false
+  },
+  "sources": [
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "id": "tide-tables",
+      "items": 0,
+      "kept": 6,
+      "new": 0,
+      "notes": [
+        "1 entries skipped: the same id as an earlier one",
+        "1 entries skipped: no date",
+        "no entry is newer than 2027-01-10"
+      ],
+      "outcome": "ok",
+      "pruned": 6,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "id": "quay-notes",
+      "items": 0,
+      "kept": 0,
+      "new": 0,
+      "notes": [
+        "not in the config any more: the notice has run its time and is dropped"
+      ],
+      "outcome": "removed",
+      "pruned": 0,
+      "reason": {
+        "code": "removed",
+        "detail": ""
+      },
+      "reused": 0,
+      "stale": 0,
+      "state": "withdrawn",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "id": "port-gazette",
+      "items": 0,
+      "kept": 0,
+      "new": 0,
+      "notes": [
+        "not in the config any more: the notice has run its time and is dropped"
+      ],
+      "outcome": "removed",
+      "pruned": 0,
+      "reason": {
+        "code": "removed",
+        "detail": ""
+      },
+      "reused": 0,
+      "stale": 0,
+      "state": "withdrawn",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "id": "harbor-voices",
+      "items": 0,
+      "kept": 0,
+      "new": 0,
+      "notes": [
+        "not in the config any more: the notice has run its time and is dropped"
+      ],
+      "outcome": "removed",
+      "pruned": 0,
+      "reason": {
+        "code": "removed",
+        "detail": ""
+      },
+      "reused": 0,
+      "stale": 0,
+      "state": "withdrawn",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    }
+  ],
+  "totals": {
+    "bytes": 1887,
+    "items": 0,
+    "requests": 2,
+    "sources": 1
+  }
+}

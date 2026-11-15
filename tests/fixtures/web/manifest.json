@@ -1,0 +1,67 @@
+{
+ "about": "A saved, made-up web for offline runs. Each address maps to a file here.",
+ "responses": {
+  "https://gazette.example.org/feed.atom": {
+   "content_type": "application/atom+xml",
+   "etag": "\"gazette-1\"",
+   "file": "gazette/feed.atom"
+  },
+  "https://gazette.example.org/robots.txt": {
+   "content_type": "text/plain",
+   "file": "gazette/robots.txt"
+  },
+  "https://harbor.example.org/agent.json": {
+   "content_type": "application/json",
+   "etag": "\"harbor-1\"",
+   "file": "harbor/agent.json"
+  },
+  "https://harbor.example.org/e/2026-11-10/transcript.md": {
+   "content_type": "text/markdown",
+   "file": "harbor/2026-11-10-transcript.md"
+  },
+  "https://harbor.example.org/e/2026-11-11/transcript.md": {
+   "content_type": "text/markdown",
+   "file": "harbor/2026-11-11-transcript.md"
+  },
+  "https://harbor.example.org/e/2026-11-12/transcript.md": {
+   "content_type": "text/markdown",
+   "file": "harbor/2026-11-12-transcript.md"
+  },
+  "https://media.tide.example.org/ep0.vtt": {
+   "content_type": "text/vtt",
+   "file": "tide/ep0.vtt"
+  },
+  "https://media.tide.example.org/ep1-hostile.vtt": {
+   "content_type": "text/vtt",
+   "file": "tide/ep1-hostile.vtt"
+  },
+  "https://media.tide.example.org/ep4.json": {
+   "content_type": "application/json",
+   "file": "tide/ep4.json"
+  },
+  "https://media.tide.example.org/ep5.srt": {
+   "content_type": "application/octet-stream",
+   "file": "tide/ep5.srt"
+  },
+  "https://media.tide.example.org/ep6.vtt": {
+   "content_type": "text/vtt",
+   "file": "tide/ep6.vtt"
+  },
+  "https://media.tide.example.org/robots.txt": {
+   "status": 404
+  },
+  "https://quay.example.org/feed.json": {
+   "content_type": "application/feed+json",
+   "file": "quay/feed.json"
+  },
+  "https://tide.example.org/feed.xml": {
+   "content_type": "application/rss+xml",
+   "etag": "\"tide-1\"",
+   "file": "tide/feed.xml"
+  },
+  "https://tide.example.org/robots.txt": {
+   "content_type": "text/plain",
+   "file": "tide/robots.txt"
+  }
+ }
+}

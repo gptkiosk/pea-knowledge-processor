@@ -1,0 +1,44 @@
+{
+  "about": "A short edition.",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "A short edition.",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-09",
+  "duration_seconds": 300,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-09-95827ccd6b",
+  "language": "en",
+  "link": "https://harbor.example.org/e/2026-11-09",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "harbor-voices",
+  "source_name": "Harbor Voices",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "An edition without a transcript",
+  "tone": "unknown"
+}

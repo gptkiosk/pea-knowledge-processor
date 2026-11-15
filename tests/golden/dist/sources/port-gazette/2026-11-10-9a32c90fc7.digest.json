@@ -1,0 +1,44 @@
+{
+  "about": "The spring dredging budget will rise by 12 percent, the Harbour Board confirmed.",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "The spring dredging budget will rise by 12 percent, the Harbour Board confirmed.",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-10",
+  "duration_seconds": null,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-10-9a32c90fc7",
+  "language": "en",
+  "link": "https://gazette.example.org/a/2",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "port-gazette",
+  "source_name": "The Port Gazette",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "Dredging budget rises 12 percent",
+  "tone": "news"
+}

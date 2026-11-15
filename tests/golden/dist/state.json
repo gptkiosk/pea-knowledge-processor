@@ -1,0 +1,102 @@
+{
+  "format": "pea-knowledge-state",
+  "format_version": "1.0",
+  "sources": {
+    "harbor-voices": {
+      "config": "c6492e3fe30760e5f8094413623c7a79025e735155fc4b9e03cff8c06dfae047",
+      "etag": "\"harbor-1\"",
+      "fingerprint": "date,editions,page,show.title,title,transcript",
+      "items": {
+        "2026-11-09-95827ccd6b": {
+          "key": "f8a0f56216cb0f1d83a087b1c496558ff0c54466680a38ff48b881109912404b",
+          "method": "extractive"
+        },
+        "2026-11-10-1aeaa6c4e4": {
+          "key": "33c3162281b4533de21cc456c96306f1a239feefb5bd3925f1097fbd48d2dde3",
+          "method": "extractive"
+        },
+        "2026-11-11-667e185af5": {
+          "key": "3ee5de53208a1e042f0d4213f635873bf3b017de4446e6610bffbffec14acf81",
+          "method": "extractive"
+        },
+        "2026-11-12-8a5b8d3d14": {
+          "key": "89d5ae0715097439f3a47a599c2c94e06e998b7e4e12d4a038929c2fbcb894bd",
+          "method": "extractive"
+        }
+      },
+      "last_modified": ""
+    },
+    "port-gazette": {
+      "config": "636e0979fb057fc78bca6d01b149403c1ec5b31c5930fa966fb4de857385f877",
+      "etag": "\"gazette-1\"",
+      "fingerprint": "link,title",
+      "items": {
+        "2026-11-09-59d0eea8e0": {
+          "key": "cefec0274bc0fdd57ff45ff39ca89234e4e2bac38f3353788710febd4f5ab594",
+          "method": "extractive"
+        },
+        "2026-11-10-9a32c90fc7": {
+          "key": "98d77d80face32f5b583117328001e92e5d8e5df6c7a970786e9d73050ae0254",
+          "method": "extractive"
+        },
+        "2026-11-11-f88d7568e0": {
+          "key": "4d7b684f4612ed7c15620e99ef3dba358b656babd7ab106ecce56779cd105ad9",
+          "method": "extractive"
+        },
+        "2026-11-12-9540419a16": {
+          "key": "fc4fe5e78e916f0192f7cbf89d22ac012f4b220768bf969b4eeacb8d9e85d329",
+          "method": "extractive"
+        }
+      },
+      "last_modified": ""
+    },
+    "quay-notes": {
+      "config": "90aea4b369fa78787196ac6e9773ee4b6d493a8a592ad48701d3616cd0a0a8bc",
+      "etag": "",
+      "fingerprint": "items,title,url,version",
+      "items": {
+        "2026-11-04-cd98c5b165": {
+          "key": "d693386aa242190e40218c0e8e756e55e9adc3bcded2057b51cb0d8871d0d371",
+          "method": "extractive"
+        },
+        "2026-11-11-82c571434b": {
+          "key": "739341f7f8ad13758b9cc6813064b41e0ac580b1450306e7a288e2f370ffb343",
+          "method": "extractive"
+        }
+      },
+      "last_modified": ""
+    },
+    "tide-tables": {
+      "config": "dac448c70d17695bf5c9c7b63b23ae7504a1a0dbf39576545d00c675ed900e0a",
+      "etag": "\"tide-1\"",
+      "fingerprint": "link,podcast:transcript,title",
+      "items": {
+        "2026-11-07-420826b378": {
+          "key": "de0650913c5c2be576a03bc3af991ad4f7624af95ee782d073ae170c39ba2d7f",
+          "method": "extractive"
+        },
+        "2026-11-08-97bd63e880": {
+          "key": "10fe048db8e3a947e1f4bc3547d4d652f117421321d0eb7d0c5b832bab418b11",
+          "method": "extractive"
+        },
+        "2026-11-09-8e6fef9855": {
+          "key": "4f558d4e088fa96141aa6a5ac433f9b31d86b2297dfdf4042e5cdc54dbad644c",
+          "method": "extractive"
+        },
+        "2026-11-10-bbf6b9d195": {
+          "key": "0f6bd742f963f0558501ef140c5a5e92cceaabdb4a1186a33fbadf30b027af10",
+          "method": "extractive"
+        },
+        "2026-11-11-90db1628c6": {
+          "key": "ea4a339608c62b92a94ae979359a2d4cdde8bc9f5e26cecd2d907c66694ef841",
+          "method": "extractive"
+        },
+        "2026-11-12-49be7f43a2": {
+          "key": "b5e79ed847d3a4995131ae7d4d394819699c6cf8e780e96a71b0cd94b2ff2a10",
+          "method": "extractive"
+        }
+      },
+      "last_modified": ""
+    }
+  }
+}

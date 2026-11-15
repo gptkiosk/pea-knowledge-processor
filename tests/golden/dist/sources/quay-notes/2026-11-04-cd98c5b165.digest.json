@@ -1,0 +1,44 @@
+{
+  "about": "A short note about the winter timetable.",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "A short note about the winter timetable.",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-04",
+  "duration_seconds": 1501,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-04-cd98c5b165",
+  "language": "en",
+  "link": "https://quay.example.org/notes/1",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "quay-notes",
+  "source_name": "Quay Notes",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "A short note",
+  "tone": "unknown"
+}

@@ -1,0 +1,226 @@
+{
+  "format": "pea-knowledge-store",
+  "format_version": "1.0",
+  "generated_at": "2026-11-15T18:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.1.0"
+  },
+  "min_app_version": null,
+  "sources": [
+    {
+      "attribution": "Harbor Voices, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 4596,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": "2026-11-15T12:00:00Z",
+        "status": "stale"
+      },
+      "icon": {
+        "colour": "blue",
+        "symbol": "microphone"
+      },
+      "id": "harbor-voices",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 3627,
+        "path": "sources/harbor-voices/items.json",
+        "sha256": "df4c2631b51f93c05223bb9d8688ca068e630cedcd0a5ba02021b687f84bb409"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "Who counts the ships at Grey Point?",
+        "The lamp that the Grey Point Trust would not replace",
+        "A ledger since 1902"
+      ],
+      "message": null,
+      "name": "Harbor Voices",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Harbor Voices (made up)",
+      "purge": false,
+      "site": "https://harbor.example.org/",
+      "state": "paused",
+      "state_reason": {
+        "code": "manual",
+        "detail": ""
+      },
+      "state_since": "2026-11-15T18:00:00Z",
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": 540,
+      "whats_new": "Newest: Who counts the ships at Grey Point? (2026-11-12). Before that: The lamp that the Grey Point Trust would not replace (2026-11-11)."
+    },
+    {
+      "attribution": "Tide Tables, a made-up source",
+      "available": {
+        "digest": 6,
+        "link_back": true,
+        "transcript": 4
+      },
+      "avg_bytes": 8682,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "teal",
+        "symbol": "waveform"
+      },
+      "id": "tide-tables",
+      "item_count": 6,
+      "items_file": {
+        "bytes": 6417,
+        "path": "sources/tide-tables/items.json",
+        "sha256": "b392616e29af227e340fa463853de7cd875e045e3d6debccba8bf8ca958025b7"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "The keeper's ledger, read aloud",
+        "Colza oil and clockwork",
+        "Times that are not times"
+      ],
+      "message": null,
+      "name": "Tide Tables",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "full",
+      "publisher": "Tide Tables (made up)",
+      "purge": false,
+      "site": "https://tide.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 3,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": 518,
+      "whats_new": "Newest: The keeper's ledger, read aloud (2026-11-12). Before that: Colza oil and clockwork (2026-11-11)."
+    },
+    {
+      "attribution": "Quay Notes, a made-up source",
+      "available": {
+        "digest": 2,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 2179,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "orange",
+        "symbol": "book"
+      },
+      "id": "quay-notes",
+      "item_count": 2,
+      "items_file": {
+        "bytes": 1904,
+        "path": "sources/quay-notes/items.json",
+        "sha256": "b618083089038015e4acc792a7f9f8a79e35e775a0fccbfd8421cecde280bd58"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-11",
+      "latest_titles": [
+        "Four generations of ice",
+        "A short note"
+      ],
+      "message": null,
+      "name": "Quay Notes",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Quay Notes (made up)",
+      "purge": false,
+      "site": "https://quay.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": 1501,
+      "whats_new": "Newest: Four generations of ice (2026-11-11). Before that: A short note (2026-11-04)."
+    },
+    {
+      "attribution": "The Port Gazette, a made-up source",
+      "available": {
+        "digest": 4,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 1223,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "grey",
+        "symbol": "newspaper"
+      },
+      "id": "port-gazette",
+      "item_count": 4,
+      "items_file": {
+        "bytes": 3398,
+        "path": "sources/port-gazette/items.json",
+        "sha256": "04d86d3b51789dca8609eb6eaaf7db5ae9baaab6568f1bd16caa14300d1d7068"
+      },
+      "kind": "news",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "Harbour Board to publish radar logs after ledger dispute",
+        "County moves visitor centre plan to North Quay",
+        "Dredging budget rises 12 percent"
+      ],
+      "message": null,
+      "name": "The Port Gazette",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "The Port Gazette (made up)",
+      "purge": false,
+      "site": "https://gazette.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": null,
+      "whats_new": "Newest: Harbour Board to publish radar logs after ledger dispute (2026-11-12). Before that: County moves visitor centre plan to North Quay (2026-11-11)."
+    }
+  ]
+}

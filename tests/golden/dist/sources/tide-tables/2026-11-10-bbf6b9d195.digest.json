@@ -1,0 +1,222 @@
+{
+  "about": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine. An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.",
+  "background": null,
+  "basis": "transcript",
+  "brief": {
+    "about": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine. An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.",
+    "hook": "What was said about Harbour Board",
+    "points": [
+      "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine.",
+      "I think the town forgets how much of its income crosses that bar in the dark every single night.",
+      "Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp."
+    ],
+    "quote": {
+      "speaker": "Mara",
+      "text": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 24 years.",
+      "time_seconds": 0
+    }
+  },
+  "connections": [
+    {
+      "item_id": "2026-11-09-8e6fef9855",
+      "why": "also about North Quay"
+    }
+  ],
+  "contested": [
+    "It is unclear whose count is right, because the radar at North Quay was down for most of January."
+  ],
+  "date": "2026-11-10",
+  "duration_seconds": null,
+  "follow_ups": [
+    "How did the Grey Point Trust decide to keep the old lamp instead of fitting an electric one?",
+    "Why does it matter to a fishing family in the town whether the count is forty or eighty?"
+  ],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [
+    {
+      "gloss": "a speaker in this episode",
+      "kind": "person",
+      "term": "Mara"
+    },
+    {
+      "gloss": "a speaker in this episode",
+      "kind": "person",
+      "term": "Tobias"
+    },
+    {
+      "gloss": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.",
+      "kind": "organisation",
+      "term": "Harbour Board"
+    },
+    {
+      "gloss": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 24 years.",
+      "kind": "other",
+      "term": "Tobias Renn"
+    },
+    {
+      "gloss": "How did the Grey Point Trust decide to keep the old lamp instead of fitting an electric one?",
+      "kind": "organisation",
+      "term": "Grey Point Trust"
+    },
+    {
+      "gloss": "It is unclear whose count is right, because the radar at North Quay was down for most of January.",
+      "kind": "other",
+      "term": "North Quay"
+    },
+    {
+      "gloss": "Welcome back to Harbor Voices, the show about small ports and the people who keep them running.",
+      "kind": "other",
+      "term": "Harbor Voices"
+    },
+    {
+      "gloss": "If the bar is not dredged, the larger boats of the Northwind Cooperative cannot land their catch here.",
+      "kind": "organisation",
+      "term": "Northwind Cooperative"
+    }
+  ],
+  "item_id": "2026-11-10-bbf6b9d195",
+  "language": "en",
+  "link": "https://tide.example.org/episodes/4",
+  "numbers": [
+    {
+      "at": {
+        "segment": 12,
+        "time_seconds": 224
+      },
+      "context": "The Northwind Cooperative lands about 64 percent of the fish sold at the Saturday market.",
+      "value": "64 percent"
+    }
+  ],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": "d6f92f42ae60dacb24411eea74bb9588f0b206340bb89e89931f4ba48380473d"
+  },
+  "quality": {
+    "grade": "full",
+    "notes": [
+      "made without a model: points and glosses are sentences from the transcript; 'why' is not written",
+      "names and their kinds are found by pattern and may be wrong"
+    ]
+  },
+  "quotes": [
+    {
+      "at": {
+        "segment": 0,
+        "time_seconds": 0
+      },
+      "exact": true,
+      "speaker": "Mara",
+      "text": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 24 years."
+    },
+    {
+      "at": {
+        "segment": 8,
+        "time_seconds": null
+      },
+      "exact": true,
+      "speaker": "Mara",
+      "text": "The Harbour Board reportedly disputes that count and says its own radar logs show far fewer."
+    },
+    {
+      "at": {
+        "segment": 28,
+        "time_seconds": 448
+      },
+      "exact": true,
+      "speaker": "Tobias",
+      "text": "I would ask them to publish the radar logs, so that the town can compare them with the ledger."
+    },
+    {
+      "at": {
+        "segment": 30,
+        "time_seconds": 476
+      },
+      "exact": true,
+      "speaker": "Tobias",
+      "text": "Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902."
+    }
+  ],
+  "source_id": "tide-tables",
+  "source_name": "Tide Tables",
+  "starters": [
+    "What was said about Harbour Board",
+    "The figure 64 percent and where it comes from",
+    "How did the Grey Point Trust decide to keep the old lamp instead of fitting an electric one?"
+  ],
+  "strongest_claim": {
+    "at": {
+      "segment": 4,
+      "time_seconds": 84
+    },
+    "text": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came."
+  },
+  "talking_points": [
+    {
+      "ask": null,
+      "at": {
+        "segment": 3,
+        "time_seconds": 56
+      },
+      "point": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine.",
+      "why": null
+    },
+    {
+      "ask": "What does the ledger tell you about the harbour that the official port records do not?",
+      "at": {
+        "segment": 3,
+        "time_seconds": 56
+      },
+      "point": "An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": 11,
+        "time_seconds": 196
+      },
+      "point": "Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring.",
+      "why": null
+    },
+    {
+      "ask": "Could a young person still learn this trade, or does the knowledge end with the keepers we have?",
+      "at": {
+        "segment": 13,
+        "time_seconds": 238
+      },
+      "point": "I think the town forgets how much of its income crosses that bar in the dark every single night.",
+      "why": null
+    },
+    {
+      "ask": "Does the crowd change the place, and is there a point where the Trust would turn people away?",
+      "at": {
+        "segment": 19,
+        "time_seconds": 322
+      },
+      "point": "The Grey Point Trust pays for the apprentices out of visitor tickets and a small grant from the county.",
+      "why": null
+    },
+    {
+      "ask": "What would you ask the Harbour Board if you had five minutes in front of all its members?",
+      "at": {
+        "segment": 23,
+        "time_seconds": 378
+      },
+      "point": "There is a plan from the county to build a visitor centre on the meadow behind the keeper's cottage.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": 31,
+        "time_seconds": 490
+      },
+      "point": "Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp.",
+      "why": null
+    }
+  ],
+  "title": "Times that are not times",
+  "tone": "conversational"
+}

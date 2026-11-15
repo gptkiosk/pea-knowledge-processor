@@ -1,0 +1,45 @@
+PEA-TRANSCRIPT v1
+show: Tide Tables
+title: Times that are not times
+date: 2026-11-10
+source: https://media.tide.example.org/ep4.json
+duration: 08:37
+language: en
+format: Podcasting 2.0 JSON
+provenance: publisher transcript
+quality: full
+speakers: Mara, Tobias
+segments: 32
+---
+[00:00:00] Mara: Welcome back to Harbor Voices, the show about small ports and the people who keep them running. Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 24 years.
+[00:00:28] Tobias: Thanks, Mara. The lamp still burns colza oil, about 16 litres a night in the winter months.
+[--:--:--] Mara: How did the Grey Point Trust decide to keep the old lamp instead of fitting an electric one?
+[00:00:56] Tobias: The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine. An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.
+[00:01:24] Mara: Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came.
+[--:--:--] Tobias: The first entry is from 1902, a coal barge called the Wren, and we have 214 volumes now.
+[00:01:52] Mara: What does the ledger tell you about the harbour that the official port records do not?
+[00:02:06] Tobias: The port records count tonnage, but the ledger records weather, crews and who was late and why. Last winter the ledger showed 48 ships turning back at the bar, twice the number of the year before.
+[--:--:--] Mara: The Harbour Board reportedly disputes that count and says its own radar logs show far fewer.
+[00:02:48] Tobias: It is unclear whose count is right, because the radar at North Quay was down for most of January.
+[00:03:02] Mara: Why does it matter to a fishing family in the town whether the count is forty or eighty?
+[00:03:16] Tobias: Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring. If the bar is not dredged, the larger boats of the Northwind Cooperative cannot land their catch here.
+[00:03:44] Mara: The Northwind Cooperative lands about 64 percent of the fish sold at the Saturday market.
+[00:03:58] Tobias: I think the town forgets how much of its income crosses that bar in the dark every single night.
+[00:04:12] Mara: Let us talk about the keeper's day, because people imagine it as lonely and quiet work.
+[--:--:--] Tobias: I trim the wick at dusk, wind the clockwork every four hours, and write the ledger before I sleep.
+[00:04:40] Tobias: The clockwork was built by Halden and Sons in 1911 and it has stopped only three times since then.
+[00:04:54] Mara: Could a young person still learn this trade, or does the knowledge end with the keepers we have?
+[00:05:08] Tobias: Two apprentices started with the Trust this year, and one of them already reads the tide tables better than I do.
+[00:05:22] Mara: The Grey Point Trust pays for the apprentices out of visitor tickets and a small grant from the county.
+[00:05:36] Tobias: We had 10600 visitors last summer, which is more than the lighthouse has ever seen in one season.
+[00:05:50] Mara: Does the crowd change the place, and is there a point where the Trust would turn people away?
+[00:06:04] Tobias: We cap the tower at twelve people an hour, and nobody climbs after the lamp has been lit.
+[00:06:18] Mara: There is a plan from the county to build a visitor centre on the meadow behind the keeper's cottage.
+[00:06:32] Tobias: I am against the visitor centre where it is drawn, because the meadow is where the terns nest in May.
+[00:06:46] Mara: Supporters of the plan say the visitor centre would bring thirty jobs to a town that badly needs them.
+[00:07:00] Tobias: Both things are true, and I would rather see the centre built at North Quay beside the old customs shed.
+[00:07:14] Mara: What would you ask the Harbour Board if you had five minutes in front of all its members?
+[00:07:28] Tobias: I would ask them to publish the radar logs, so that the town can compare them with the ledger.
+[00:07:42] Mara: That is a fair request, and we will put the same question to the Harbour Board ourselves next week.
+[00:07:56] Tobias: Whatever they answer, the lamp will be lit at dusk, as it has been on every night since 1902.
+[00:08:10] Mara: Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp. Next time on Harbor Voices we visit the ice house at North Quay and the family that still runs it.

@@ -1,0 +1,137 @@
+{
+ "about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json or a digest.",
+ "files": {
+  "a-web-page.store.json": {
+   "expect": "not_json",
+   "kind": "store"
+  },
+  "an-array.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "digest-brief-over-its-limit.digest.json": {
+   "expect": "brief_too_long",
+   "kind": "digest"
+  },
+  "digest-link-to-somewhere-private.digest.json": {
+   "expect": "address",
+   "kind": "digest"
+  },
+  "digest-point-with-a-link.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
+  "digest-quote-with-markup.digest.json": {
+   "expect": "text_rule",
+   "kind": "digest"
+  },
+  "digest-starter-too-long.digest.json": {
+   "expect": "schema",
+   "kind": "digest"
+  },
+  "digest-time-huge.digest.json": {
+   "expect": "schema",
+   "kind": "digest"
+  },
+  "digest-time-not-a-number.digest.json": {
+   "expect": "not_json",
+   "kind": "digest"
+  },
+  "digest-too-many-points.digest.json": {
+   "expect": "schema",
+   "kind": "digest"
+  },
+  "empty.store.json": {
+   "expect": "not_json",
+   "kind": "store"
+  },
+  "items-path-of-another-source.store.json": {
+   "expect": "path_invalid",
+   "kind": "store"
+  },
+  "items-path-outside-the-folder.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "key-written-twice.store.json": {
+   "expect": "not_json",
+   "kind": "store"
+  },
+  "major-version-two.store.json": {
+   "expect": "unsupported_version",
+   "kind": "store"
+  },
+  "message-not-text.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "message-too-long.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "message-with-a-bare-www-link.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "message-with-a-line-break.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "message-with-a-link.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "message-with-hidden-direction-marks.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "message-with-markup.store.json": {
+   "expect": "text_rule",
+   "kind": "store"
+  },
+  "not-a-number.store.json": {
+   "expect": "not_json",
+   "kind": "store"
+  },
+  "paused-without-a-message.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "purge-on-an-active-source.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "same-source-twice.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  },
+  "site-as-numbers.store.json": {
+   "expect": "address",
+   "kind": "store"
+  },
+  "site-not-https.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "site-on-this-machine.store.json": {
+   "expect": "address",
+   "kind": "store"
+  },
+  "unknown-member-newer-minor.store.json": {
+   "expect": "ok",
+   "kind": "store"
+  },
+  "unknown-member-same-minor.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "unknown-state.store.json": {
+   "expect": "schema",
+   "kind": "store"
+  },
+  "withdrawn-that-still-lists-items.store.json": {
+   "expect": "inconsistent",
+   "kind": "store"
+  }
+ }
+}

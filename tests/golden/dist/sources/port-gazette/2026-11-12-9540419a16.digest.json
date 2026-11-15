@@ -1,0 +1,44 @@
+{
+  "about": "The Harbour Board said on Thursday it will publish a year of radar logs. The move follows a dispute over how many ships turned back at the bar last winter.",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "The Harbour Board said on Thursday it will publish a year of radar logs. The move follows a dispute over how many ships turned back at the bar last winter.",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-12",
+  "duration_seconds": null,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-12-9540419a16",
+  "language": "en",
+  "link": "https://gazette.example.org/a/4",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "port-gazette",
+  "source_name": "The Port Gazette",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "Harbour Board to publish radar logs after ledger dispute",
+  "tone": "news"
+}

@@ -1,0 +1,209 @@
+{
+  "format": "pea-knowledge-store",
+  "format_version": "1.0",
+  "generated_at": "2026-11-16T12:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.1.0"
+  },
+  "min_app_version": null,
+  "sources": [
+    {
+      "attribution": "Tide Tables, a made-up source",
+      "available": {
+        "digest": 6,
+        "link_back": true,
+        "transcript": 4
+      },
+      "avg_bytes": 8682,
+      "cadence": "daily",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": null,
+        "status": "fresh"
+      },
+      "icon": {
+        "colour": "teal",
+        "symbol": "waveform"
+      },
+      "id": "tide-tables",
+      "item_count": 6,
+      "items_file": {
+        "bytes": 6417,
+        "path": "sources/tide-tables/items.json",
+        "sha256": "b392616e29af227e340fa463853de7cd875e045e3d6debccba8bf8ca958025b7"
+      },
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": "2026-11-12",
+      "latest_titles": [
+        "The keeper's ledger, read aloud",
+        "Colza oil and clockwork",
+        "Times that are not times"
+      ],
+      "message": null,
+      "name": "Tide Tables",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "full",
+      "publisher": "Tide Tables (made up)",
+      "purge": false,
+      "site": "https://tide.example.org/",
+      "state": "active",
+      "state_reason": null,
+      "state_since": null,
+      "suggested_keep": 3,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": 518,
+      "whats_new": "Newest: The keeper's ledger, read aloud (2026-11-12). Before that: Colza oil and clockwork (2026-11-11)."
+    },
+    {
+      "attribution": "Quay Notes, a made-up source",
+      "available": {
+        "digest": 0,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 0,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": "2026-11-15T18:00:00Z",
+        "status": "stale"
+      },
+      "icon": {
+        "colour": "orange",
+        "symbol": "book"
+      },
+      "id": "quay-notes",
+      "item_count": 0,
+      "items_file": null,
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": null,
+      "latest_titles": [],
+      "message": "Removed because the notes were too thin to talk about.",
+      "name": "Quay Notes",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Quay Notes (made up)",
+      "purge": false,
+      "site": "https://quay.example.org/",
+      "state": "withdrawn",
+      "state_reason": {
+        "code": "quality",
+        "detail": ""
+      },
+      "state_since": "2026-11-16T00:00:00Z",
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": null,
+      "whats_new": null
+    },
+    {
+      "attribution": "The Port Gazette, a made-up source",
+      "available": {
+        "digest": 0,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 0,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": "2026-11-16T00:00:00Z",
+        "status": "stale"
+      },
+      "icon": {
+        "colour": "grey",
+        "symbol": "newspaper"
+      },
+      "id": "port-gazette",
+      "item_count": 0,
+      "items_file": null,
+      "kind": "news",
+      "language": "en",
+      "latest_date": null,
+      "latest_titles": [],
+      "message": "Removed at the publisher's request. Local copies must be deleted.",
+      "name": "The Port Gazette",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "The Port Gazette (made up)",
+      "purge": true,
+      "site": "https://gazette.example.org/",
+      "state": "withdrawn",
+      "state_reason": {
+        "code": "takedown",
+        "detail": ""
+      },
+      "state_since": "2026-11-16T06:00:00Z",
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": null,
+      "whats_new": null
+    },
+    {
+      "attribution": "Harbor Voices, a made-up source",
+      "available": {
+        "digest": 0,
+        "link_back": true,
+        "transcript": 0
+      },
+      "avg_bytes": 0,
+      "cadence": "unknown",
+      "categories": [
+        "harbour",
+        "test"
+      ],
+      "description": "A made-up source used by the tests of the PEA knowledge processor.",
+      "freshness": {
+        "failed_runs": 0,
+        "last_ok": "2026-11-15T12:00:00Z",
+        "status": "stale"
+      },
+      "icon": {
+        "colour": "blue",
+        "symbol": "microphone"
+      },
+      "id": "harbor-voices",
+      "item_count": 0,
+      "items_file": null,
+      "kind": "podcast",
+      "language": "en",
+      "latest_date": null,
+      "latest_titles": [],
+      "message": "The curator removed this source.",
+      "name": "Harbor Voices",
+      "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
+      "publish": "digest_only",
+      "publisher": "Harbor Voices (made up)",
+      "purge": false,
+      "site": "https://harbor.example.org/",
+      "state": "withdrawn",
+      "state_reason": {
+        "code": "removed",
+        "detail": ""
+      },
+      "state_since": "2026-11-16T12:00:00Z",
+      "suggested_keep": 4,
+      "terms_summary": "A made-up source for tests. Nothing real is described.",
+      "typical_duration_seconds": null,
+      "whats_new": null
+    }
+  ]
+}

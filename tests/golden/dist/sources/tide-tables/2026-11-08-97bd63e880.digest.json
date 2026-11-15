@@ -1,0 +1,44 @@
+{
+  "about": "Mara and Tobias at the Grey Point lighthouse.",
+  "background": null,
+  "basis": "headline",
+  "brief": {
+    "about": "Mara and Tobias at the Grey Point lighthouse.",
+    "hook": "What this one is about, going by its headline",
+    "points": [],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-08",
+  "duration_seconds": 518,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [],
+  "item_id": "2026-11-08-97bd63e880",
+  "language": "en",
+  "link": "https://tide.example.org/episodes/2",
+  "numbers": [],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "headline",
+    "notes": [
+      "the headline and the publisher's short description only: follow the link for the piece itself"
+    ]
+  },
+  "quotes": [],
+  "source_id": "tide-tables",
+  "source_name": "Tide Tables",
+  "starters": [
+    "What this one is about, going by its headline"
+  ],
+  "strongest_claim": null,
+  "talking_points": [],
+  "title": "The episode whose transcript is gone",
+  "tone": "unknown"
+}

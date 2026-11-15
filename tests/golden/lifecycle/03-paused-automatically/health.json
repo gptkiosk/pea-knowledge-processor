@@ -1,0 +1,134 @@
+{
+  "format": "pea-knowledge-health",
+  "format_version": "1.0",
+  "generated_at": "2026-11-15T06:00:00Z",
+  "generator": {
+    "name": "pea-knowledge-processor",
+    "version": "0.1.0"
+  },
+  "mode": "offline",
+  "model": {
+    "accepted": 0,
+    "calls": 0,
+    "completion_tokens": 0,
+    "cost_usd": 0.0,
+    "fell_back": 0,
+    "model": null,
+    "note": null,
+    "prompt_tokens": 0,
+    "requested": false,
+    "skipped_for_budget": 0,
+    "used": false
+  },
+  "sources": [
+    {
+      "digests": {
+        "extractive": 4,
+        "model": 0
+      },
+      "id": "harbor-voices",
+      "items": 4,
+      "kept": 4,
+      "new": 0,
+      "notes": [],
+      "outcome": "unchanged",
+      "pruned": 0,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 1,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 3,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 6,
+        "model": 0
+      },
+      "id": "tide-tables",
+      "items": 6,
+      "kept": 6,
+      "new": 0,
+      "notes": [],
+      "outcome": "failed",
+      "pruned": 0,
+      "reason": {
+        "code": "fetch_failed",
+        "detail": "503"
+      },
+      "reused": 0,
+      "stale": 0,
+      "state": "paused",
+      "transcripts": {
+        "fetch_failed": 1,
+        "none_published": 1,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 4
+      }
+    },
+    {
+      "digests": {
+        "extractive": 2,
+        "model": 0
+      },
+      "id": "quay-notes",
+      "items": 2,
+      "kept": 0,
+      "new": 0,
+      "notes": [],
+      "outcome": "ok",
+      "pruned": 0,
+      "reason": null,
+      "reused": 2,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 2,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 4,
+        "model": 0
+      },
+      "id": "port-gazette",
+      "items": 4,
+      "kept": 4,
+      "new": 0,
+      "notes": [],
+      "outcome": "unchanged",
+      "pruned": 0,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 4,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    }
+  ],
+  "totals": {
+    "bytes": 106194,
+    "items": 16,
+    "requests": 10,
+    "sources": 4
+  }
+}

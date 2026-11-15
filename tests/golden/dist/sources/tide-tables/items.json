@@ -1,0 +1,185 @@
+{
+  "format": "pea-knowledge-items",
+  "format_version": "1.0",
+  "items": [
+    {
+      "bytes": 11760,
+      "date": "2026-11-12",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 7364,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-12-49be7f43a2.digest.json",
+        "sha256": "aca4a93c1b1555bcdf1d1ede2d095a61eed67106667659089dc22c08bd19e995"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-12-49be7f43a2",
+      "link": "https://tide.example.org/episodes/6",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 36 votes to nine. An electric lamp would have cost the Trust 120 thousand dollars before a single night of light.",
+      "title": "The keeper's ledger, read aloud",
+      "transcript": {
+        "available": "yes",
+        "file": {
+          "bytes": 4396,
+          "path": "sources/tide-tables/2026-11-12-49be7f43a2.transcript.pea.txt",
+          "sha256": "fa717b43bfafb3c047ecd1b189bbbd6a7863dbed96bb890bd757220fc43a994c"
+        },
+        "reason": null
+      }
+    },
+    {
+      "bytes": 11653,
+      "date": "2026-11-11",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 7259,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-11-90db1628c6.digest.json",
+        "sha256": "eeb838d0d14b1eb078b7d5fd9a515554b480cf970ffd0960c38cc79757f31a68"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-11-90db1628c6",
+      "link": "https://tide.example.org/episodes/5",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 35 votes to nine. An electric lamp would have cost the Trust 115 thousand dollars before a single night of light.",
+      "title": "Colza oil and clockwork",
+      "transcript": {
+        "available": "yes",
+        "file": {
+          "bytes": 4394,
+          "path": "sources/tide-tables/2026-11-11-90db1628c6.transcript.pea.txt",
+          "sha256": "c5302d74a8f99a6b49e5259647dce2e572b7f4bb457fc4407ff333e63e174899"
+        },
+        "reason": null
+      }
+    },
+    {
+      "bytes": 11692,
+      "date": "2026-11-10",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 7270,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-10-bbf6b9d195.digest.json",
+        "sha256": "7d373a000bf4249ab989d65aa8cecd73ba8ca39e63ac9b35ad36314778461b5e"
+      },
+      "duration_seconds": null,
+      "id": "2026-11-10-bbf6b9d195",
+      "link": "https://tide.example.org/episodes/4",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine. An electric lamp would have cost the Trust 110 thousand dollars before a single night of light.",
+      "title": "Times that are not times",
+      "transcript": {
+        "available": "yes",
+        "file": {
+          "bytes": 4422,
+          "path": "sources/tide-tables/2026-11-10-bbf6b9d195.transcript.pea.txt",
+          "sha256": "d6f92f42ae60dacb24411eea74bb9588f0b206340bb89e89931f4ba48380473d"
+        },
+        "reason": null
+      }
+    },
+    {
+      "bytes": 3724,
+      "date": "2026-11-09",
+      "digest": {
+        "basis": "notes",
+        "bytes": 3724,
+        "grade": "partial",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-09-8e6fef9855.digest.json",
+        "sha256": "bb097e02e02b7d291761004b6f40e95166183d453e4c35bf229bded1863e3e05"
+      },
+      "duration_seconds": 1740,
+      "id": "2026-11-09-8e6fef9855",
+      "link": "https://tide.example.org/episodes/3",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why…",
+      "title": "The tide gate at North Quay",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "none_published"
+      }
+    },
+    {
+      "bytes": 1143,
+      "date": "2026-11-08",
+      "digest": {
+        "basis": "headline",
+        "bytes": 1143,
+        "grade": "headline",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-08-97bd63e880.digest.json",
+        "sha256": "60dc15622219e32d10bff328ed7cf90c8382d0f106ce5b67f2b0c6ec21980082"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-08-97bd63e880",
+      "link": "https://tide.example.org/episodes/2",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "Mara and Tobias at the Grey Point lighthouse.",
+      "title": "The episode whose transcript is gone",
+      "transcript": {
+        "available": "no",
+        "file": null,
+        "reason": "fetch_failed"
+      }
+    },
+    {
+      "bytes": 12125,
+      "date": "2026-11-07",
+      "digest": {
+        "basis": "transcript",
+        "bytes": 7199,
+        "grade": "full",
+        "method": "extractive",
+        "path": "sources/tide-tables/2026-11-07-420826b378.digest.json",
+        "sha256": "e3e58f3626b7e2f11f764a717f76964ad2a60434f0d0148830cf2b1ae1a9ed5b"
+      },
+      "duration_seconds": 518,
+      "id": "2026-11-07-420826b378",
+      "link": "https://tide.example.org/episodes/1",
+      "stale": false,
+      "stale_reason": null,
+      "tags": [
+        "harbour"
+      ],
+      "teaser": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 21 years. An electric lamp would have cost the Trust 95 thousand dollars before a single night of light.",
+      "title": "A transcript that shouts orders & links",
+      "transcript": {
+        "available": "yes",
+        "file": {
+          "bytes": 4926,
+          "path": "sources/tide-tables/2026-11-07-420826b378.transcript.pea.txt",
+          "sha256": "58cc1dfc230d91177aa1548a9adc4c1255deaae179baa465488dddb245e6db89"
+        },
+        "reason": null
+      }
+    }
+  ],
+  "source_id": "tide-tables"
+}

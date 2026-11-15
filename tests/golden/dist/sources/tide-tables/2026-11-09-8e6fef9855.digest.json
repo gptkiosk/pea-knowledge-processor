@@ -1,0 +1,103 @@
+{
+  "about": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why it closes only on spring tides, and why the Northwind Cooperative asked for it.",
+  "background": null,
+  "basis": "notes",
+  "brief": {
+    "about": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that land there. The gate cost 4 million dollars and took three years to build. Ines Okafor explains why…",
+    "hook": "What was said about Ines Okafor",
+    "points": [
+      "The Harbour Board expects 30 closures a year.",
+      "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run…",
+      "The Northwind Cooperative lands most of its catch at the quay."
+    ],
+    "quote": null
+  },
+  "connections": [],
+  "contested": [],
+  "date": "2026-11-09",
+  "duration_seconds": 1740,
+  "follow_ups": [],
+  "format": "pea-knowledge-digest",
+  "format_version": "1.0",
+  "glossary": [
+    {
+      "gloss": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that…",
+      "kind": "person",
+      "term": "Ines Okafor"
+    },
+    {
+      "gloss": "Mara walks the length of North Quay with the harbour master, Ines Okafor, and asks what the new tide gate will change for the boats that…",
+      "kind": "other",
+      "term": "North Quay"
+    },
+    {
+      "gloss": "Ines Okafor explains why it closes only on spring tides, and why the Northwind Cooperative asked for it.",
+      "kind": "organisation",
+      "term": "Northwind Cooperative"
+    }
+  ],
+  "item_id": "2026-11-09-8e6fef9855",
+  "language": "en",
+  "link": "https://tide.example.org/episodes/3",
+  "numbers": [
+    {
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "context": "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run North Quay since 2015 and grew…",
+      "value": "4 million"
+    }
+  ],
+  "provenance": {
+    "method": "extractive",
+    "model": null,
+    "transcript_sha256": null
+  },
+  "quality": {
+    "grade": "partial",
+    "notes": [
+      "made from the publisher's show notes: no transcript, so no quotes and no times"
+    ]
+  },
+  "quotes": [],
+  "source_id": "tide-tables",
+  "source_name": "Tide Tables",
+  "starters": [
+    "What was said about Ines Okafor",
+    "The figure 4 million and where it comes from",
+    "The main points of this one, in order"
+  ],
+  "strongest_claim": null,
+  "talking_points": [
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "The Harbour Board expects 30 closures a year.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "(02:10) Why the old gate failed in the storm of 2019 (11:45) Who pays for the 4 million dollars (19:30) What the fishing families think of the plan Ines Okafor has run North Quay since 2015 and grew up above the customs shed.",
+      "why": null
+    },
+    {
+      "ask": null,
+      "at": {
+        "segment": null,
+        "time_seconds": null
+      },
+      "point": "The Northwind Cooperative lands most of its catch at the quay.",
+      "why": null
+    }
+  ],
+  "title": "The tide gate at North Quay",
+  "tone": "unknown"
+}

@@ -1,0 +1,44 @@
+{
+ "version": "https://jsonfeed.org/version/1.1",
+ "title": "Quay Notes",
+ "language": "en",
+ "home_page_url": "https://quay.example.org/",
+ "items": [
+  {
+   "id": "quay-2",
+   "url": "https://quay.example.org/notes/2",
+   "title": "Four generations of ice",
+   "date_published": "2026-11-11T09:00:00+01:00",
+   "content_text": "The ice house at North Quay has sold block ice to the fishing boats since 1888. The Sorensen family has run it for four generations, and Lise Sorensen took over from her father in 2019. The ice house makes about 14 tonnes of ice a day in summer. Lise Sorensen explains why block ice still beats flake ice for a boat that stays out for a week. The family nearly sold the building in 2021, when the Northwind Cooperative offered to buy it. The Sorensen family kept it after the town raised 80 thousand dollars for a new compressor. The episode ends in the cold room, where the oldest tools still hang on the wall.",
+   "tags": [
+    "Quay Life",
+    "ice"
+   ],
+   "attachments": [
+    {
+     "url": "https://quay.example.org/a/2.mp3",
+     "mime_type": "audio/mpeg",
+     "duration_in_seconds": 1502
+    }
+   ]
+  },
+  {
+   "id": "quay-1",
+   "url": "https://quay.example.org/notes/1",
+   "title": "A short note",
+   "date_published": "2026-11-04T09:00:00+01:00",
+   "content_text": "A short note about the winter timetable.",
+   "tags": [
+    "Quay Life",
+    "ice"
+   ],
+   "attachments": [
+    {
+     "url": "https://quay.example.org/a/1.mp3",
+     "mime_type": "audio/mpeg",
+     "duration_in_seconds": 1501
+    }
+   ]
+  }
+ ]
+}

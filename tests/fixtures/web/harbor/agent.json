@@ -1,0 +1,67 @@
+{
+ "site": "https://harbor.example.org",
+ "show": {
+  "title": "Harbor Voices",
+  "host": "Mara"
+ },
+ "editions": [
+  {
+   "date": "2026-11-12",
+   "weekday": "Thu",
+   "type": "daily",
+   "title": "Who counts the ships at Grey Point?",
+   "tags": [
+    "harbour",
+    "Lighthouses!"
+   ],
+   "durationMin": 9,
+   "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
+   "html": "https://harbor.example.org/e/2026-11-12",
+   "markdown": "https://harbor.example.org/e/2026-11-12.md",
+   "transcript": "https://harbor.example.org/e/2026-11-12/transcript.md"
+  },
+  {
+   "date": "2026-11-11",
+   "weekday": "Thu",
+   "type": "daily",
+   "title": "The lamp that the Grey Point Trust would not replace",
+   "tags": [
+    "harbour",
+    "Lighthouses!"
+   ],
+   "durationMin": 9,
+   "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
+   "html": "https://harbor.example.org/e/2026-11-11",
+   "markdown": "https://harbor.example.org/e/2026-11-11.md",
+   "transcript": "https://harbor.example.org/e/2026-11-11/transcript.md"
+  },
+  {
+   "date": "2026-11-10",
+   "weekday": "Thu",
+   "type": "daily",
+   "title": "A ledger since 1902",
+   "tags": [
+    "harbour",
+    "Lighthouses!"
+   ],
+   "durationMin": 9,
+   "teaser": "Mara talks to the keeper of the Grey Point lighthouse about the ledger he keeps, and why the Harbour Board disputes what it shows.",
+   "html": "https://harbor.example.org/e/2026-11-10",
+   "markdown": "https://harbor.example.org/e/2026-11-10.md",
+   "transcript": "https://harbor.example.org/e/2026-11-10/transcript.md"
+  },
+  {
+   "date": "not a date",
+   "title": "A row that is broken",
+   "markdown": "ftp://harbor.example.org/x"
+  },
+  {
+   "date": "2026-11-09",
+   "title": "An edition without a transcript",
+   "teaser": "A short edition.",
+   "html": "https://harbor.example.org/e/2026-11-09",
+   "markdown": "https://harbor.example.org/e/2026-11-09.md",
+   "durationMin": 5
+  }
+ ]
+}
