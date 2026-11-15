@@ -55,7 +55,7 @@ More Less Other Another Plus After Before During While Since Until Although Thou
 Episode Part Mr Mrs Ms Dr""".split())
 _ORGANISATION = re.compile(r"(?:\b(?:Inc|Corp|Corporation|Company|Labs?|AI|University|Institute|Foundation|Group|Bank|Capital|Ventures|"
                            r"Department|Agency|Committee|Commission|Association|Technologies|Systems|Networks|Media|News|Times|Post|Journal|"
-                           r"Court|Senate|Congress|Council|Board|Trust|Cooperative|Sons|Ministry|Party|Union|Society|Studio|Studios|Index)\b|^[A-Z]{2,6}$)")
+                           r"Court|Senate|Congress|Council|Board|Trust|Cooperative|Sons|Ministry|Party|Union|Society|Studio|Studios|Index)\b)")
 _PERSON_CUE = r"(?:%s(?:'s|’s)?\s+(?:said|says|told|argues|argued|wrote|writes|thinks|believes|joined|explains|explained|asked|added|noted)\b|\b(?:CEO|founder|co-founder|president|professor|senator|director|host|author|Mr\.?|Ms\.?|Mrs\.?|Dr\.?)\s+%s)"
 
 
@@ -204,7 +204,9 @@ def _glossary(units, speakers):
             short["term"] = name
             continue
         tokens = name.split()
-        if _ORGANISATION.search(name):
+        if len(tokens) == 1 and _ORGANISATION.fullmatch(name):
+            continue  # "Studio", "Board": a word that only hints at an organisation is not a name
+        if len(tokens) >= 2 and _ORGANISATION.search(name):
             kind = "organisation"
         elif 2 <= len(tokens) <= 3 and all(t[:1].isupper() and t.replace("-", "").isalpha() for t in tokens) \
                 and re.search(_PERSON_CUE % (re.escape(name), re.escape(name)), text_all):
