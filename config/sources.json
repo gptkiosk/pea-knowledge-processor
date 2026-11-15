@@ -626,6 +626,76 @@
       "hosts": [
         "James Cridland"
       ]
+    },
+    {
+      "id": "lex-fridman",
+      "name": "Lex Fridman Podcast",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://lexfridman.com/feed/podcast/",
+      "site": "https://lexfridman.com/podcast/",
+      "publisher": "Lex Fridman",
+      "language": "en",
+      "description": "Long conversations with scientists, engineers, historians, athletes and leaders, two to five hours each.",
+      "overview": "A long-form interview show. The beat is wide: artificial intelligence, science, history, war, sport, politics and what makes a good life. The voice is slow, earnest and curious; the host asks open questions and lets guests answer at length, often for three hours or more. An episode opens with a short introduction by the host and sponsor notes, then runs as one conversation with one to three guests, divided into named chapters. New episodes come two or three times a month.",
+      "categories": [
+        "interviews",
+        "science",
+        "technology",
+        "history",
+        "ai"
+      ],
+      "icon": {
+        "symbol": "people",
+        "colour": "grey"
+      },
+      "publish": "digest_only",
+      "attribution": "Lex Fridman Podcast, lexfridman.com",
+      "retention_days": 120,
+      "max_items": 4,
+      "suggested_keep": 2,
+      "transcript_page": {
+        "from": "notes_link",
+        "host": "lexfridman.com",
+        "path_ends": "-transcript",
+        "extract": {
+          "row": [
+            ".ts-segment"
+          ],
+          "speaker": [
+            ".ts-name"
+          ],
+          "time": [
+            ".ts-timestamp"
+          ]
+        }
+      },
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://lexfridman.com/robots.txt",
+          "finding": "Disallows everything for ia_archiver only; no rule for robots in general and no crawl delay. Read 2026-11-15."
+        },
+        "licence": {
+          "url": null,
+          "finding": "No licence and no copyright line: not in the feed and not on the transcript pages, whose footer only names the author and the category."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "No terms page was found: /terms answers 404 and the transcript pages link to none. Each transcript page says it is a human generated transcript and links to the episode page."
+        },
+        "summary": "The publisher posts a full transcript page for each episode on its own site, open to everyone, and its robots file allows reading. No licence allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "No terms of use were found, so nothing is written either way about automated reading or short quoted excerpts in a public digest. Asking the publisher would settle it.",
+          "The transcript is read from a web page by named elements (ts-segment, ts-name, ts-timestamp). If the site changes its theme, new episodes stop reading and the source is paused until the rule is updated.",
+          "Most transcripts are longer than the 150,000 characters the pipeline keeps, so a digest covers about the first two and a half hours of a longer episode."
+        ]
+      },
+      "transcript_route": "Each episode's notes link to a transcript page on lexfridman.com (29 of the newest 30 entries, read 2026-11-15): one block per turn with the speaker and a time.",
+      "chosen_because": "Approved by the owner; the publisher posts a full, human-made transcript for every new episode on its own site, with speakers and times.",
+      "hosts": [
+        "Lex Fridman"
+      ]
     }
   ]
 }
