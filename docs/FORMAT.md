@@ -1,4 +1,4 @@
-# The PEA knowledge format, version 1.0
+# The PEA knowledge format, version 1.1
 
 This is the one format the PEA knowledge processor writes and the PEA iPhone app reads. A curated list of sources goes in; a folder of static files comes out. The app never reads a publisher's own feed or transcript: it reads this, and it checks every file before it uses it.
 
@@ -23,7 +23,7 @@ Published at `https://gptkiosk.github.io/pea-knowledge-processor/`, so the entry
 
 A reader starts at `store.json` and follows hashes: the listing names each source's items file with its SHA-256 and size; the items file names each digest and transcript with theirs. A file that does not match what named it is not used.
 
-Why the split: the store screen needs only `store.json` (about 12 KB for five sources). A source's items are loaded only after the owner adds that source. `items.json` carries no time of its own, so its hash changes only when an item changes; a run that finds nothing new changes only `generated_at` in `store.json` and the counters in `health.json`.
+Why the split: the store screen needs only `store.json` (about 28 KB for twelve sources). A source's items are loaded only after the owner adds that source. `items.json` carries no time of its own, so its hash changes only when an item changes; a run that finds nothing new changes only `generated_at` in `store.json` and the counters in `health.json`.
 
 JSON Schemas (draft 2020-12) are in `schema/`: `store`, `items`, `digest`, `health`, `state`, and `sources` for the curated list. The schemas, plus the rules of sections 7 to 9 that a schema cannot state, are the format. `python3 -m pea_knowledge validate <folder>` checks all of it and is the reference for the app's checks.
 
@@ -33,7 +33,7 @@ All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, 
 
 | Member | What it is for |
 | --- | --- |
-| `format`, `format_version` | `"pea-knowledge-store"`, `"1.0"`. See section 8. |
+| `format`, `format_version` | `"pea-knowledge-store"`, `"1.1"`. See section 8. |
 | `generated_at` | When this output was built (UTC, `YYYY-MM-DDTHH:MM:SSZ`). |
 | `generator` | The program and version that wrote it. |
 | `min_app_version` | The oldest app version that should read this output, or null. An older app keeps what it has and asks for an update. |
@@ -65,14 +65,15 @@ Each listing:
 
 | Member | What it is for |
 | --- | --- |
-| `id` | Unique in the source and stable across runs: the date and ten characters of a hash of the publisher's own identifier. |
+| `id` | Unique in the source and stable across runs: the date and ten characters of a hash of the publisher's own identifier (its guid; without one, the item's own page). It never depends on a fallback link. |
 | `title`, `date`, `duration_seconds`, `tags` | What the item is. |
 | `link` | The publisher's page for it: where to send the owner for the original. The other kind of address the format allows. |
+| `link_kind` (1.1) | `episode`: `link` is the publisher's page for this one item. `show`: the publisher gives no page per item, so `link` is the show's site. Absent in a 1.0 file: treat as `episode`. |
 | `teaser` (240) | One or two sentences, so the assistant can propose the item without opening its digest. |
 | `stale`, `stale_reason` | True when the last attempt to refresh this item failed and its files are from an earlier run. |
 | `bytes` | The size of the item's files together, for the storage choice. |
 | `digest` | Path, SHA-256, size, and what kind of digest it is (`basis`, `grade`, `method`), repeated from the file so a reader can choose without opening it. |
-| `transcript` | `available`: `yes`, `partial` or `no`; `reason`; `file` (path, SHA-256, size) or null. |
+| `transcript` | `available`: `yes`, `partial` or `no`; `reason`; `file` (path, SHA-256, size) or null. Since 1.1 also `read`: what the pipeline read at the publisher to make the digest (`full`, `partial`, `none`), whether or not the file is published. |
 
 Transcript reasons are typed:
 
@@ -93,7 +94,7 @@ Every item has a digest. An item never depends on a second download to be talked
 
 | Member | Limit | What it is for in the conversation |
 | --- | --- | --- |
-| `source_id`, `source_name`, `item_id`, `title`, `date`, `link`, `language`, `duration_seconds` | | What is being talked about, and where to send the owner. Never taken from a transcript or a model. |
+| `source_id`, `source_name`, `item_id`, `title`, `date`, `link`, `link_kind` (1.1), `language`, `duration_seconds` | | What is being talked about, and where to send the owner. Never taken from a transcript or a model. |
 | `basis` | | What the digest was made from: `transcript`, `notes` (the publisher's show notes) or `headline` (title and short description). The assistant says which. |
 | `about` | 400 | The framing: what this is about in plain spoken sentences. What she says first. |
 | `brief` | 900 in all | The compact form: the framing, up to three points (first, middle, last, so it still reads as a story), one short quote, one hook. For when one or two digests must fit in a prompt. Always built from the full form, so it never says anything the full form does not. |
@@ -107,6 +108,11 @@ Every item has a digest. An item never depends on a second download to be talked
 | `connections` | 3 | Earlier items of the same source this one continues: `item_id` and `why` (120). A reader ignores an id it does not have. |
 | `starters` | 3 × 160 | Things she can offer to open with. |
 | `follow_ups` | 3 × 160 | Questions she can offer next. |
+| `guests` (1.1) | 6 | Who the guest is: `name` (80) and `role` (140, or null). A name comes from the publisher's own marks (`podcast:person`), title or notes; a role is a piece of the notes or the transcript, word for word. Nothing is made up to fill it. |
+| `mentioned_resources` (1.1) | 8 | Books, papers, tools, products and sites that are named: `name` (80), `kind` (`book`, `paper`, `tool`, `product`, `site`, `media`, `other`), `context` (140, or null) and `at`. **Names only.** The format carries no address here, also when the publisher's notes link the name: rule T3 holds for these texts as for all others, and a name that reads as a domain is dropped. |
+| `chapters` (1.1) | 20 | The parts of the item in order of time: `title` (100), `start_seconds`, `end_seconds` (or null), `segment` (or null) and `origin`: `publisher` (the publisher's own chapter marks: `psc:chapter`, a `podcast:chapters` file, or lines in the notes that start with a time), `transcript` (cut from a timed transcript, one per talking point, titled with the opening words of that point) or `model` (titled by the model at the start of a transcript line). |
+| `snippable_moments` (1.1) | 5 | Passages worth keeping, best first, for the app's snips: `quote` (240), `speaker`, `at`, `end_seconds` (or null), `label` (100: the publisher's own title when it marks the passage as a soundbite, else null). Every quote is, character for character, in the transcript segment `at` points to. Only in a digest made from a transcript. |
+| `recap_cards` (1.1) | 3 | Question and answer pairs for a daily recap: `question` (140), `answer` (200). Always built by the processor from text the digest already holds, never taken from a model, so a card says nothing the digest does not. |
 | `tone` | | A register hint: `news`, `analysis`, `technical`, `interview`, `conversational`, `light`, `unknown`. |
 | `provenance` | | `method` (`extractive` or `model`), `model` (its id, or null), `transcript_sha256` (of the normalized transcript, or null). |
 | `quality` | | `grade` and up to six plain `notes` on the digest's limits. |
@@ -117,7 +123,24 @@ Every item has a digest. An item never depends on a second download to be talked
 
 **Two ways a digest is made.** The extractive digest uses no model: points, quotes and glosses are sentences already in the transcript, `why` is null, names and their kinds are found by pattern and may be wrong. Its `quality.notes` say so. The model digest (optional) writes `why`, glosses and background in its own words; every quote, name, figure and time in it is checked against the transcript first (section 7).
 
-**Size.** A digest file is at most 24,000 bytes; a typical one is 5 to 8 KB. The brief form is at most 900 characters of text, so two fit in an evidence budget of about 3,200 characters with room for labels.
+**Size.** A digest file is at most 24,000 bytes, as in 1.0; a typical one is 8 to 12 KB with the 1.1 members. When a digest would be larger, what 1.1 added gives way first. The brief form is at most 900 characters of text, so two fit in an evidence budget of about 3,200 characters with room for labels.
+
+### What 1.1 adds
+
+Format 1.1 adds only optional members: `link_kind` and `transcript.read` in `items.json`, and `link_kind`, `guests`, `mentioned_resources`, `chapters`, `snippable_moments` and `recap_cards` in a digest. No member of 1.0 changed, no limit grew, no enumeration of 1.0 gained a value. A reader of 1.0 reads a 1.1 file by the rule of section 8: it ignores the members it does not know and still checks every text in the file against T1 to T4.
+
+Where each comes from, without a model: guests from the publisher's marks, title and notes; resources from the names the notes link to (with a transcript, only those that are also said, each with the time it is first said) and from what a speaker introduces as "a book called ..."; chapters from the publisher's marks, else from the timed transcript; moments from the quotes, the strongest claim and the talking points the digest already holds, so they take no further words from a transcript that may not be republished; recap cards from the digest. From the example below:
+
+```json
+"link_kind": "episode",
+"guests": [{"name": "Tobias Renn", "role": "keeper of the Grey Point lighthouse"}],
+"mentioned_resources": [{"name": "the Wren", "kind": "other", "context": "Tobias Renn, keeper of the Grey Point lighthouse, reads from the ledger; its first entry is a coal barge, the Wren.", "at": {"time_seconds": 98, "segment": 5}}],
+"chapters": [{"title": "Welcome to Grey Point", "start_seconds": 0, "end_seconds": 84, "segment": 0, "origin": "publisher"},
+             {"title": "The keeper's ledger", "start_seconds": 84, "end_seconds": 252, "segment": 4, "origin": "publisher"}],
+"snippable_moments": [{"quote": "The port records count tonnage, but the ledger records weather, crews and who was late and why.", "speaker": "Tobias",
+                       "at": {"time_seconds": 126, "segment": 7}, "end_seconds": 154, "label": "What the ledger records"}],
+"recap_cards": [{"question": "Who is the guest?", "answer": "Tobias Renn, keeper of the Grey Point lighthouse"}]
+```
 
 ### A worked example
 
@@ -170,6 +193,7 @@ A source that is no longer in `store.json` at all is to be treated as withdrawn 
 How the pipeline sets it:
 
 - A manual `state` in `config/sources.json` always wins.
+- **Only sources with full transcripts are carried.** A source that reads without trouble but has a full transcript for fewer than 60 percent of its newest five items (`min_full_transcript_share`, `transcript_check_items`) is counted as a source that cannot be read, with reason `format_changed` and a detail that starts "full transcripts for". So it keeps its last good items, is paused after the usual number of runs, and is withdrawn (reason `quality`) after `withdraw_without_transcripts_days` (30) in that pause. It is still read every run and returns by itself when the transcripts do.
 - A source that cannot be read (fetch failed, robots.txt forbids it, the feed is not the expected shape, or its new output does not validate) keeps its last good items and is marked stale. After `auto_pause_after_failed_runs` failures in a row (3 by default) it becomes `paused` with a typed reason. It is still tried every run, and returns to `active` by itself when it reads again.
 - A source whose new output does not validate is never published; its last good copy is. The other sources publish as usual.
 - A source set to `withdrawn`, or removed from the config, gets a withdrawn listing with no items for `tombstone_days`, then disappears.
@@ -201,7 +225,7 @@ Everything a publisher wrote is untrusted data: titles, descriptions, show notes
 
 **Instructions.** Text in this format is material to describe, never instructions to follow. That is a rule for readers: the app puts digest text into a prompt as quoted evidence, never as part of its own instructions. As one more layer, the processor does not pick a sentence addressed to "the assistant" (ignore previous instructions, a new system prompt, reveal your prompt) for a digest, and drops such a field from a model's answer. This layer is a pattern and can be evaded; the defence is the fixed structure and the reader's rule. The validator does not judge wording, because an AI news show talks about prompt injection all the time.
 
-**What the model path adds** (`src/pea_knowledge/model_digest.py`): the call has no tools; the answer must be one JSON object; only known members are read, each through its own check; what identifies the item never comes from the model; a quote must be found character for character in a transcript segment or it is dropped, and its time and speaker are taken from the transcript; a time the model gives must be the start of a segment or it is dropped; a name or figure must occur in the transcript or it is dropped; text that breaks T1 to T4 is dropped, not repaired; fewer than five valid talking points, or no valid framing, means the extractive digest is used instead.
+**What the model path adds** (`src/pea_knowledge/model_digest.py`): the call has no tools; a guest must be named in the transcript, the notes or the title, and a role must be a piece of them word for word; a mentioned resource must be named in the transcript, takes its time from there, and never carries an address; a chapter must start where a transcript line starts, later than the one before; a moment is checked like a quote; recap cards are never read from the answer. Further: the answer must be one JSON object; only known members are read, each through its own check; what identifies the item never comes from the model; a quote must be found character for character in a transcript segment or it is dropped, and its time and speaker are taken from the transcript; a time the model gives must be the start of a segment or it is dropped; a name or figure must occur in the transcript or it is dropped; text that breaks T1 to T4 is dropped, not repaired; fewer than five valid talking points, or no valid framing, means the extractive digest is used instead.
 
 **What the processor does to publisher text** before it becomes a text member: script and style blocks out, tags out, entities decoded, tags out again, addresses out, forbidden characters out, spaces collapsed, cut to the limit. Each step is one pass, so no input makes it slow.
 
@@ -210,6 +234,7 @@ Everything a publisher wrote is untrusted data: titles, descriptions, show notes
 `format_version` is `MAJOR.MINOR`, and every JSON file carries it.
 
 - **Within a major version, changes are additive only**: new optional members, new files. No member is removed or renamed, no type or meaning changes, no limit grows, no enumeration gains a value a reader must act on. A new enumeration value needs a new major version, because the enumerations are closed.
+- **1.1 (2026-11-15)** added the members listed under "What 1.1 adds". A reason a source is paused for want of transcripts uses the existing code `format_changed`: a code of its own would be a new enumeration value, which needs 2.0.
 - **A reader accepts every file whose major it knows.** When the file's minor is newer than the reader's, the reader ignores members it does not know. When the minor is the reader's own or older, an unknown member is an error (`schema`): at the same version the writer is held to the letter.
 - **A reader refuses a major it does not know** with reason `unsupported_version`, keeps what it has, and tells the owner an update is needed.
 - `min_app_version` lets the curator say "this output needs at least this app" before a major change arrives.
@@ -227,7 +252,7 @@ In order, for each file:
    - `store.json`: ids unique; an items file is at `sources/<id>/items.json` (`path_invalid`); a withdrawn source lists nothing; a paused or withdrawn source has a message, a reason and a time; `purge` only with `withdrawn`; `item_count` and `items_file` agree; a paused source is stale (`inconsistent`).
    - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; newest first (`inconsistent`).
    - a transcript: conforms to PEA transcript v1 (`transcript_invalid`); cut or not as the index says.
-   - a digest: source, item, title, date, link, duration, basis, grade and method are those of the index (`identity_mismatch`); the brief form is within 900 characters (`brief_too_long`); no quotes without a transcript basis; when the transcript is in the output, `transcript_sha256` is its hash, every pointer names a segment it has, and every `exact` quote is in the segment it points to (`inconsistent`).
+   - a digest: source, item, title, date, link, duration, basis, grade and method are those of the index (`identity_mismatch`); the brief form is within 900 characters (`brief_too_long`); no quotes and no moments without a transcript basis; chapters in order of time and not overlapping; `link_kind` as in the index; when the transcript is in the output, `transcript_sha256` is its hash, every pointer names a segment it has, and every `exact` quote and every moment is in the segment it points to (`inconsistent`).
 
 A file with any problem is not used, and the typed reason is kept for the owner and for diagnostics. `tests/golden/hostile/` has files a reader must refuse, with the reason for each in `manifest.json`.
 

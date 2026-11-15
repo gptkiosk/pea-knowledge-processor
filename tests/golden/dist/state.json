@@ -3,7 +3,7 @@
   "format_version": "1.1",
   "sources": {
     "harbor-voices": {
-      "config": "b34ca005b5b70835ee7e44453ced12486bfc776406199d026fa23e10e7373cf7",
+      "config": "d4b155f73a261079558b7e42f02c376ff45c64804715e01768e8404944426e06",
       "etag": "\"harbor-1\"",
       "fingerprint": "date,editions,page,show.title,title,transcript",
       "items": {
@@ -27,7 +27,7 @@
       "last_modified": ""
     },
     "port-gazette": {
-      "config": "89959023841b6d202ccf41d15c15ea992b15d943d057ee81b9134f63df4d85ea",
+      "config": "143e1fee121e303fd1e9df2aa4fead75fac9c8f05273216754769705adc22a3f",
       "etag": "\"gazette-1\"",
       "fingerprint": "link,title",
       "items": {
@@ -51,7 +51,7 @@
       "last_modified": ""
     },
     "quay-notes": {
-      "config": "aadec4619e7691315f11be979afa3385c8b7cb6ad09ef2657f1a87007f184c26",
+      "config": "a395bfcc44cf00e5b7291a4d40804c7d40fb5368f039c19cb0121d2ea769a790",
       "etag": "",
       "fingerprint": "items,title,url,version",
       "items": {
@@ -67,7 +67,7 @@
       "last_modified": ""
     },
     "tide-tables": {
-      "config": "d68133699d7e18755707f6a72c006b27194249a3f7c9aa8d36a71945f8436d8d",
+      "config": "0d933cc8de6279de2c67b6237e3cf173c3654b11677ecb8af35ad0f230ab4a7d",
       "etag": "\"tide-1\"",
       "fingerprint": "link,podcast:transcript,title",
       "items": {

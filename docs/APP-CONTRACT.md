@@ -38,7 +38,7 @@ Two rules that matter most:
 - **`store.json` that fails validation is ignored whole.** The app keeps the last good one and everything it has, and says "couldn't check for updates". It never disables, pauses or deletes anything because of a file it refused.
 - **A source or item that fails is refused alone.** The other sources and items are used as normal.
 
-Versions: the app accepts major 1. For a file whose minor is newer than the app knows, unknown members are ignored. `min_app_version` newer than the app: keep everything, show "update PEA to get new items", fetch nothing new.
+Versions: the app accepts major 1. The output is format 1.1 since 2026-11-15; a reader written for 1.0 keeps working unchanged, because every 1.1 member is optional and unknown to it (see "Reading 1.1" below). For a file whose minor is newer than the app knows, unknown members are ignored. `min_app_version` newer than the app: keep everything, show "update PEA to get new items", fetch nothing new.
 
 ## 3. Caching and refresh
 
@@ -97,11 +97,24 @@ Retention is the owner's choice. The catalog only suggests.
 - Suggestions come from `teaser`, `starters`, `follow_ups`, `connections` and the listing's `whats_new`, from active sources only.
 - Show `attribution` wherever an item is shown.
 
-## 7. What the app's tests should cover
+## 7. Reading 1.1
+
+Nothing here is required of a 1.0 reader. A reader that wants the new members sets its known minor to 1, takes the 1.1 schemas, and may then use:
+
+- `link_kind` (items and digests): when `show`, say "open the show's page" instead of "open the episode"; absent means `episode`.
+- `transcript.read` (items): `full`, `partial` or `none`: what the digest was made from at the publisher, also when the transcript itself is not published.
+- `chapters`: a chapter list for the item's screen and for "what is the part about X?". `origin` says whose they are; say "the publisher's chapters" only for `publisher`.
+- `snippable_moments`: candidates for a snip or a finding, best first. Each quote is exact and has its time; `label` is the publisher's own title for the passage when there is one. The owner chooses; nothing is saved by itself.
+- `guests` and `mentioned_resources`: "who was on?" and "which book was that?". A resource is a name and nothing more: the app never builds a link or a search from it without the owner asking. `role` and `context` may be null; she does not make one up.
+- `recap_cards`: up to three question and answer pairs for a daily recap card. They repeat the digest and add nothing.
+- Extra cross-checks a 1.1 reader makes (FORMAT.md section 9): chapters in order and not overlapping, no moments without a transcript basis, `link_kind` as in the index, every moment in the segment it points to when the transcript is published.
+- All of it is quoted evidence like the rest of the digest, under the same text rules; `tests/golden/hostile/` has five 1.1 samples (a link in a resource name, markup in a chapter title, a line break in a role, a link in a recap answer, hidden direction marks in a moment) that a 1.0 reader refuses too, as `text_rule`.
+
+## 8. What the app's tests should cover
 
 Copy `tests/golden/`:
 
-- `dist/`: validate the whole folder; every hash; one source with transcripts (`tide-tables`) and three without.
+- `dist/`: validate the whole folder; every hash; one source with transcripts (`tide-tables`) and three without; items with and without a page of their own (`link_kind`), with the publisher's chapters, a chapter file, and chapters cut from the transcript.
 - `lifecycle/*/store.json`: each state and each change between states (section 4).
 - `hostile/`: every file refused with the reason in `manifest.json`; `unknown-member-newer-minor` accepted.
 - Tamper with a file: one byte changed (`hash_mismatch`), one byte added (`size_mismatch`), a file removed (`missing`).

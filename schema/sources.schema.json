@@ -473,6 +473,28 @@
                 }
               }
             }
+          },
+          "transcript_route": {
+            "description": "For the curator: where the publisher offers the full transcript and in what form.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "chosen_because": {
+            "description": "For the curator: why this source is in the catalog.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "hosts": {
+            "description": "The show's regular hosts, so that a host is never listed as a guest of an item.",
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
           }
         }
       }

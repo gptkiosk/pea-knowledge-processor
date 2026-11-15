@@ -268,8 +268,8 @@ def shape(answer, source, item, transcript):
     notes = " ".join(t for t in (item.get("summary", ""), item.get("notes", "")) if t)
     known = " ".join((lowered, notes.lower(), item["title"].lower()))
     squeezed = " ".join(known.split())
-    d["guests"] = dg.guests(item, transcript.speakers)
-    hosts = {n.lower() for n, role in item.get("people", []) if role != "guest"}
+    d["guests"] = dg.guests(item, transcript.speakers, source.get("hosts", ()))
+    hosts = {n.lower() for n, role in item.get("people", []) if role != "guest"} | {h.lower() for h in source.get("hosts", ())}
     for r in rows("guests", dg.GUESTS):
         name = _line(r.get("name"), dg.GUEST_NAME_CHARS) if isinstance(r, dict) else None
         if name is None or name.lower() in hosts or not dg._mentions(name, known) or any(g["name"].lower() == name.lower() for g in d["guests"]):
@@ -277,7 +277,7 @@ def shape(answer, source, item, transcript):
         role = _line(r.get("role"), dg.GUEST_ROLE_CHARS)
         d["guests"].append({"name": name, "role": role if role and len(role) >= 4 and role.lower() in squeezed else None})   # a role is a piece of the source, or nothing
     units = [u for u in dg.units_of(transcript) if dg.usable(u.text)]
-    apart = [g["name"] for g in d["guests"]] + list(transcript.speakers) + [source["name"]]
+    apart = [g["name"] for g in d["guests"]] + list(transcript.speakers) + [source["name"]] + list(source.get("hosts", ()))
     d["mentioned_resources"] = dg.resources(item, units, apart)
     for r in rows("mentioned_resources", dg.RESOURCES):
         name = _line(r.get("name"), dg.RESOURCE_NAME_CHARS) if isinstance(r, dict) else None

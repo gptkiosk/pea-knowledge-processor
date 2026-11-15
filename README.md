@@ -1,6 +1,6 @@
 # PEA knowledge processor
 
-A scheduled pipeline that reads a short, curated list of podcast and news sources and turns them into **one fixed, validated format**, published as static files. The PEA iPhone app reads only that format, and checks every file before using it.
+A scheduled pipeline that reads a short, curated list of podcasts whose publishers offer full transcripts and turns them into **one fixed, validated format**, published as static files. The PEA iPhone app reads only that format, and checks every file before using it.
 
 Why it exists: an assistant cannot talk well about a podcast episode if every publisher's feed and transcript arrives in a different shape and has to be untangled on the phone. Here the untangling happens once, in the open, with tests. The app always gets the data it expects in the form it expects, or a typed reason why not.
 
@@ -8,7 +8,7 @@ Why it exists: an assistant cannot talk well about a podcast episode if every pu
 - Python 3.11 or later, standard library only. Nothing to install.
 - Works with no API key. A model digest through OpenRouter is optional.
 
-**Status: 0.1.0, not yet published.** See "Before the first publish".
+**Status: 0.2.0, format 1.1.** Twelve sources. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
 
 ## What comes out
 
@@ -21,7 +21,8 @@ health.json                                  what the last run did
 ```
 
 - **The store listing** (`store.json`) is small and is all the app needs to show the catalog: name, description, topics, how often items come, how long and how large they are, the three newest titles, the terms.
-- **A digest** is built for conversation: a framing, five to eight talking points in story order (each with why it matters, a pointer into the transcript and a question worth asking), exact quotes with speaker and time, a glossary of the names that come up, the figures, what is disputed, links to earlier items, conversation starters and follow-up questions, and a compact brief form of at most 900 characters.
+- **A digest** is built for conversation: a framing, five to eight talking points in story order (each with why it matters, a pointer into the transcript and a question worth asking), exact quotes with speaker and time, a glossary of the names that come up, the figures, what is disputed, links to earlier items, conversation starters and follow-up questions, and a compact brief form of at most 900 characters. Since format 1.1 also: the guests, the books, tools and sites that are named (names only, never a link), chapters (the publisher's own where it marks them), up to five exact passages worth snipping with their times, and three recap cards.
+- **Every item links to its own page** at the publisher. Where a feed gives no page per episode, the item links to the show and says so (`link_kind: show`).
 - **Every source has a lifecycle state** (`active`, `paused`, `withdrawn`), so a source can be switched off for every app with one commit.
 
 The full description is [docs/FORMAT.md](docs/FORMAT.md). What the app must do with it is [docs/APP-CONTRACT.md](docs/APP-CONTRACT.md). The sources and what their terms allow are in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md).
@@ -31,7 +32,7 @@ The full description is [docs/FORMAT.md](docs/FORMAT.md). What the app must do w
 From a checkout:
 
 ```
-python3 -m pea_knowledge run --config config/sources.json --out dist      # the real sources (about a minute, about 30 polite requests)
+python3 -m pea_knowledge run --config config/sources.json --out dist      # the real sources (two minutes and about 100 polite requests the first time, then seconds)
 python3 -m pea_knowledge validate dist                                    # check a folder the way the app does
 python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dist --offline-fixtures tests/fixtures/web   # no network: made-up sources
 ```
@@ -41,7 +42,7 @@ python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dis
 Tests:
 
 ```
-python3 -I -m unittest                               # 90 tests, no network, about 20 seconds
+python3 -I -m unittest                               # 112 tests, no network, about 20 seconds
 python3 -I spec/transcript-v1/test_conformance.py    # the transcript format's own 40 tests
 PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use the real network
 ```
@@ -51,9 +52,9 @@ PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use t
 | Stage | What it does |
 | --- | --- |
 | 1. Fetch (`fetch.py`) | https only; the host name is resolved, every address must be public, and the connection goes to the address that was checked; redirects are checked again; robots.txt is obeyed and crawl delays honoured; conditional requests; size and time caps; no cookies; a User-Agent that names this project and its repository. |
-| 2. Normalize (`adapters.py`, `transcript/`) | Reads an agent index (`agent.json`), RSS or Atom with `podcast:transcript`, or JSON Feed. Converts WebVTT, SubRip, Podcasting 2.0 JSON, markdown and plain text into PEA transcript v1. A missing or unusable transcript gets a typed reason. |
+| 2. Normalize (`adapters.py`, `transcript/`) | Reads an agent index (`agent.json`), RSS or Atom with `podcast:transcript`, or JSON Feed; a feed larger than 8 MB is read up to its newest whole entries. Finds each item's own page, and what the publisher marks up itself: people, chapters (`psc:chapter`, `podcast:chapters`, timed lines in the notes), soundbites, the names the notes link to. Converts WebVTT, SubRip, Podcasting 2.0 JSON, markdown and plain text into PEA transcript v1. A missing or unusable transcript gets a typed reason. |
 | 3. Digest (`digest.py`, `model_digest.py`) | An extractive digest, always: sentences picked from the transcript, the same result for the same input. Optionally a model digest; anything invalid in it falls back to the extractive one. |
-| 4. Build (`pipeline.py`, `validate.py`) | Writes the output with hashes, keeps the last good copy of what failed, sets each source's state, prunes old items, validates everything, and only then replaces the previous output. |
+| 4. Build (`pipeline.py`, `validate.py`) | Writes the output with hashes, keeps the last good copy of what failed, sets each source's state (also: too few full transcripts), prunes old items, validates everything, and only then replaces the previous output. |
 
 In CI these run as three jobs: fetching has no secrets; the digest job is the only one given the model key; publishing validates before it deploys.
 
@@ -63,13 +64,23 @@ Off by default (`"model": {"enabled": false}` in `config/sources.json`). To use 
 
 - Default model `openai/gpt-4.1-nano` (listed on OpenRouter on 2026-11-14 at USD 0.10 per million input tokens and 0.40 per million output tokens). Any chat model there can be named instead.
 - The call has no tools. The answer is checked field by field: quotes must be in the transcript word for word, times must exist, names and figures must occur in the transcript, everything is length-capped, links and markup are dropped.
-- Cost: an episode of up to 60,000 characters is about 20,000 tokens in and at most 2,000 out, so **about USD 0.003 per episode**. Only new episodes are sent. With the five sources here that is one or two a day: **well under one cent a day**; the very first run, with about sixteen transcripts, about five cents. Limits: USD 0.02 per item and USD 0.25 per run (`max_cost_usd_per_item`, `max_cost_usd_per_run`), 24 calls per run. What was spent is in `health.json` and in the run summary.
+- The model is shown the transcript (at most 60,000 characters) and the show notes (at most 3,000), and may also propose guests, named resources, chapters and moments. Each is checked like a quote or a name: against the transcript and the notes, never trusted. Recap cards are never taken from it.
+- Cost: an episode is at most about 21,000 tokens in and 2,800 out, so **at most about USD 0.0035 per episode**, usually less. Only new episodes are sent. The twelve sources publish about four episodes a day between them: **about one to one and a half cents a day, under fifty cents a month.** The very first run has 55 transcripts; 24 calls per run are allowed, so it takes three runs and about 15 cents in all. Limits: USD 0.02 per item and USD 0.25 per run (`max_cost_usd_per_item`, `max_cost_usd_per_run`). What was spent is in `health.json` and in the run summary.
 - No real key is used in the tests; they run against a small local server. The model path has not been run against the real service yet.
+
+## Time, and what one failure costs
+
+Measured on 2026-11-15 against the twelve real sources, one process, no model: a first run with nothing published yet took **1 minute 58 seconds** (98 requests, 55 transcripts fetched and converted, 56 digests); the next run, with nothing new, took **17 seconds** (22 requests). In CI the three jobs add about a minute of setup each, so a scheduled run is two to five minutes on a standard runner, far under ten. What keeps it there: conditional requests (a feed that answers "not modified" costs one request), an item whose key did not change is not fetched or digested again, and the model is called for new items only. Requests go one host at a time with a pause, on purpose. A source that fails, times out, changes shape or loses its transcripts never stops the others: it keeps its last good items and the rest publish as usual (`tests/test_pipeline.py`).
+
+## The schedule stays on
+
+GitHub switches off a scheduled workflow after 60 days without activity in the repository. The last job of "Process sources" (`keep-alive`, scheduled runs only, also after a failed run) asks GitHub to enable that same workflow, which it already is. The call changes nothing and counts as activity. It needs `actions: write` for that one job and nothing else: no checkout, no commit, no branch, no third-party action, and a call made with the job's own token cannot start another run. It has not run on GitHub yet. If the call is ever refused, that job fails visibly and publishing is not affected; the fallback is to press "Enable workflow" in the Actions tab once every two months.
 
 ## Add a source
 
+0. **Only sources with full transcripts are carried.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
 1. Go through the terms checklist in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md): robots.txt, licence, terms of use.
-2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.** A news source is always `digest_only`: headline, a short description and the link, never the article text.
+2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the hosts, where the transcript is (`transcript_route`), why it is there (`chosen_because`), the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
 3. `python3 -m pea_knowledge run --config config/sources.json --out dist`, read the summary, open a digest.
 4. Open a pull request. The tests run on it.
 
@@ -87,6 +98,7 @@ Edit the source in `config/sources.json`, commit to `main`, and run the workflow
 - The message is text only: no links, no markup, at most 240 characters. The run refuses a config that breaks this.
 - A withdrawn source's files leave the published output at once; its listing stays for 90 days (`tombstone_days`) as a notice so every app learns of it, then disappears. After that the entry can be deleted from the config.
 - Deleting the entry from the config outright also works: the next run lists it as withdrawn ("The curator removed this source.") for 90 days. An app that finds a source gone treats it as withdrawn anyway.
+- Automatic, no transcripts: a source with a full transcript for fewer than 60 percent of its newest five items is treated as one that cannot be read (next line), with a message that says why, and is withdrawn after 30 days in that pause. It comes back by itself when the transcripts do.
 - Automatic: a source that cannot be read three runs in a row (`auto_pause_after_failed_runs`) is paused with its last good items kept, and resumes by itself when it reads again. `"state": "active"` on a source stops the automatic pause.
 - Emergency stop for everything: disable the workflow in the Actions tab. The published files stay as they are.
 
@@ -107,7 +119,7 @@ The owner has to:
 5. Run "Process sources" once by hand and read the run summary. The files appear at `https://gptkiosk.github.io/pea-knowledge-processor/store.json`.
 6. Read [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md), "What is uncertain overall", and decide.
 
-Good to know: GitHub disables scheduled workflows in a repository with no activity for 60 days; and the first scheduled run finds nothing published yet, which is expected.
+Good to know: the first scheduled run finds nothing published yet, which is expected. The first run of 0.2.0 over an output written by 0.1.0 rebuilds every digest (format 1.1) and lists the removed news source as withdrawn for 90 days.
 
 ## Layout
 

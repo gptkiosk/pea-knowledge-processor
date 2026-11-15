@@ -367,7 +367,8 @@ _GUEST_CUE = re.compile(r"\b(?:[Jj]oined by|[Gg]uests?(?: today| this week)?(?: 
                         r"(?:\s+and\s+" + _TITLE_WORD + "(" + _NAME + "))?")
 _TITLE_GUEST = (re.compile(r"\((?:with|feat\.?|featuring)\s+" + _TITLE_WORD + "(" + _NAME + r")\)"),
                 re.compile(r"\s[|—–]\s+" + _TITLE_WORD + "(" + _NAME + r")(?=$|,|\s\()"),
-                re.compile("^" + _TITLE_WORD + "(" + _NAME + r")\s+on\s"))
+                re.compile("^" + _TITLE_WORD + "(" + _NAME + r")\s+on\s"),
+                re.compile("^" + _TITLE_WORD + "(" + _NAME + r"):\s"))
 _ROLE_AFTER = r"(?:\s*,\s+|\s+\(|\s+is\s+(?=the\s|an?\s))((?:the\s+|an?\s+)?(?:[a-z][a-z\-]+|CEO|CTO|CFO|COO|VP)\b[^,.;:!?()]{3,%d})(?=[,.;:!?()]|$)" % (GUEST_ROLE_CHARS - 10)
 _RESOURCE_CUE = re.compile(r"\b(book|paper|essay|novel|memoir|article|report|study|documentary|film|movie|podcast|newsletter|blog|app|tool|library"
                            r"|framework|plugin|product|game|website|site)s?,?\s+(?:is\s+)?(?:called|titled|named|entitled)\s+[\"“'‘]?(?=[A-Z0-9])")
@@ -394,11 +395,11 @@ def role_in(name, text):
     return role if 4 <= len(role) <= GUEST_ROLE_CHARS and usable(role) else None
 
 
-def guests(item, speakers=()):
+def guests(item, speakers=(), hosts=()):
     """The guests of an item: the people the publisher marks as guests, then names the title or the notes introduce as
     one ("joined by ...", "(with ...)"). A name is never made up: each comes from the publisher's own words."""
     words = " ".join(t for t in (item.get("summary", ""), item.get("notes", "")) if t)
-    hosts = {n.lower() for n, role in item.get("people", []) if role != "guest"}
+    hosts = {n.lower() for n, role in item.get("people", []) if role != "guest"} | {h.lower() for h in hosts}
     out, seen = [], set()
 
     def add(name):
@@ -409,7 +410,7 @@ def guests(item, speakers=()):
         out.append({"name": name, "role": role_in(name, words)})
 
     for name, role in item.get("people", []):
-        if role == "guest" and usable(name) and len(name) <= GUEST_NAME_CHARS and name.lower() not in seen:
+        if role == "guest" and usable(name) and len(name) <= GUEST_NAME_CHARS and name.lower() not in seen and name.lower() not in hosts:
             seen.add(name.lower())
             out.append({"name": name, "role": role_in(name, words)})
     for m in _GUEST_CUE.finditer(item["title"] + ". " + words):
@@ -419,7 +420,7 @@ def guests(item, speakers=()):
     known = words + " " + " ".join(speakers)
     for n, pattern in enumerate(_TITLE_GUEST):
         m = pattern.search(item["title"])
-        if m and (n == 0 or _mentions(m.group(1), known)):
+        if m and (n in (0, 3) or _mentions(m.group(1), known)):
             add(m.group(1))
     return out[:GUESTS]
 
@@ -431,9 +432,28 @@ def _resource_name(text):
     if not m:
         return ""
     tokens = m.group(1).split()
+    for n, t in enumerate(tokens):   # "Django MCPX and I've ..." ends before the speaker goes on
+        if n and t.strip(",").split("'")[0].split("’")[0] in ("I", "We", "It", "He", "She", "They", "You", "But", "So", "That", "This"):
+            tokens = tokens[:n]
+            break
     while tokens and tokens[-1].strip(",") in small.split("|") + ["by"]:
         tokens = tokens[:-1]
     return " ".join(tokens).strip(" ,.'’\"”")
+
+
+_SMALL_WORDS = frozenset("of the and for in to a an on with at from or as is by vs".split())
+_NOT_A_RESOURCE = re.compile(r"(?i)\b(?:membership|members|courses?|sponsors?|subscribe|newsletter|patreon|merch|donate|fan mail|discount|coupon|promo)\b")
+_SPONSOR = re.compile(r"(?i)\b(?:sponsor(?:s|ed)?|brought to you by|promo code|discount|% off|free trial|use code|support the show|thanks to our)\b")
+
+
+def _titled(name):
+    """True for a name written as names and titles are: every word starts with a capital or a digit, small words
+    ("of", "the") only in between. "The Power Law" is; "says Bloomberg in a paid article" is not."""
+    tokens = name.split()
+    if not tokens or tokens[0].lower() in _SMALL_WORDS and len(tokens) == 1 or tokens[-1].lower() in _SMALL_WORDS:
+        return False
+    return all(t[:1].isupper() or t[:1].isdigit() or (t.lower() in _SMALL_WORDS and 0 < n) or (n == 0 and t.lower() == "the") for n, t in enumerate(tokens)) \
+        and any(t[:1].isupper() for t in tokens)
 
 
 def resources(item, units=None, exclude=()):
@@ -450,8 +470,12 @@ def resources(item, units=None, exclude=()):
             return
         seen.add(low)
         said = next((s for s in note_sentences if _mentions(name, s) and usable(s) and s.strip() != name), None)
-        if kind is None:
-            cue = re.search(r"(?i)\b(book|novel|memoir|paper|essay|article|report|study|documentary|film|podcast|newsletter|app|tool|library|framework|website)\b", said or "")
+        if kind is None:   # a linked name: what it is only when the notes say so right before it ("the book The Power Law")
+            if not _titled(name) or _NOT_A_RESOURCE.search(name) or (said and _SPONSOR.search(said)):
+                seen.discard(low)
+                return
+            cue = re.search(r"(?i)\b(book|novel|memoir|paper|essay|article|report|study|documentary|film|newsletter|app|tool|library|framework|website)s?\W{1,4}(?:[a-z]+\W{1,3}){0,2}$",
+                            said[:said.lower().find(low)] if said and low in said.lower() else "")
             kind = _RESOURCE_KIND[cue.group(1).lower()] if cue else "other"
         out.append({"name": name, "kind": kind, "context": textrules.shorten(said, RESOURCE_CONTEXT_CHARS) if said else None, "at": at})
 
@@ -607,8 +631,9 @@ def extractive(source, item, transcript=None, budget=None, earlier=()):
         if from_publisher and len(item.get("notes", "")) >= 200 and not item["notes"].startswith(d["about"][:60]):
             background = textrules.first_sentences(item["notes"], BACKGROUND_CHARS, most=3)
             d["background"] = background if usable(background) else None
-        d["guests"] = guests(item, transcript.speakers)
-        d["mentioned_resources"] = resources(item, [u for u in units if usable(u.text)], [g["name"] for g in d["guests"]] + list(transcript.speakers) + [source["name"]])
+        d["guests"] = guests(item, transcript.speakers, source.get("hosts", ()))
+        d["mentioned_resources"] = resources(item, [u for u in units if usable(u.text)],
+                                             [g["name"] for g in d["guests"]] + list(transcript.speakers) + [source["name"]] + list(source.get("hosts", ())))
         if budget is not None:
             within(d, budget)
         d["chapters"] = publisher_chapters(item, transcript) or (transcript_chapters(d, stretch_starts, item.get("duration_seconds")) if transcript.timed else [])
@@ -635,8 +660,8 @@ def extractive(source, item, transcript=None, budget=None, earlier=()):
         d["talking_points"] = [{"point": textrules.shorten(u.text, POINT_CHARS), "why": None, "at": dict(NOWHERE), "ask": None} for u in points]
         d["glossary"] = _glossary(units, [])
         d["numbers"] = _numbers(units, set())
-        d["guests"] = guests(item)
-        d["mentioned_resources"] = resources(item, None, [g["name"] for g in d["guests"]] + [source["name"]])
+        d["guests"] = guests(item, (), source.get("hosts", ()))
+        d["mentioned_resources"] = resources(item, None, [g["name"] for g in d["guests"]] + [source["name"]] + list(source.get("hosts", ())))
         d["chapters"] = publisher_chapters(item)
         d["starters"] = _offers(d, [])
         d["quality"]["grade"] = "partial"

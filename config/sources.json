@@ -9,19 +9,22 @@
     "tombstone_days": 90,
     "excerpt_budget_chars": 1500,
     "suggested_keep": 5,
-    "max_total_bytes": 40000000
+    "max_total_bytes": 40000000,
+    "min_full_transcript_share": 0.6,
+    "transcript_check_items": 5,
+    "withdraw_without_transcripts_days": 30
   },
   "model": {
     "enabled": false,
     "model": "openai/gpt-4.1-nano",
     "base_url": "https://openrouter.ai/api/v1",
     "max_input_chars": 60000,
-    "max_output_tokens": 2000,
+    "max_output_tokens": 2800,
     "max_items_per_run": 24,
     "max_cost_usd_per_item": 0.02,
     "max_cost_usd_per_run": 0.25,
-    "price_per_million_input_usd": 0.10,
-    "price_per_million_output_usd": 0.40
+    "price_per_million_input_usd": 0.1,
+    "price_per_million_output_usd": 0.4
   },
   "sources": [
     {
@@ -35,19 +38,43 @@
       "language": "en",
       "description": "A daily episode on the most important AI news and what it means, in about half an hour.",
       "overview": "A daily solo show about artificial intelligence: the day's headlines first, then one main story argued at length. The beat is AI companies, models, policy, chips and money. The voice is one host thinking aloud, opinionated but careful to say what is reported and what is his own read. Most episodes open with a short statement of the main story, run through shorter headlines, read sponsor messages, and then spend most of the time on the main story with quotes from posts and articles.",
-      "categories": ["ai", "technology", "business", "news"],
-      "icon": {"symbol": "sparkles", "colour": "indigo"},
+      "categories": [
+        "ai",
+        "technology",
+        "business",
+        "news"
+      ],
+      "icon": {
+        "symbol": "sparkles",
+        "colour": "indigo"
+      },
       "publish": "digest_only",
       "attribution": "The AI Daily Brief, aidailybrief.ai",
       "suggested_keep": 7,
       "terms": {
         "checked": "2026-11-14",
-        "robots": {"url": "https://aidailybrief.ai/robots.txt", "finding": "Allows everything for every robot except /admin, /api/admin and one sponsor page. Read 2026-11-14."},
-        "licence": {"url": null, "finding": "No licence statement was found: not in agent.json, not in llms.txt, and there is no page at /terms (404)."},
-        "terms_of_use": {"url": "https://aidailybrief.ai/llms.txt", "finding": "The site publishes agent.json and llms.txt as a machine-readable offering for agents, listing a page, a markdown twin, structured JSON and a transcript for each edition. That invites reading; it says nothing about republishing."},
+        "robots": {
+          "url": "https://aidailybrief.ai/robots.txt",
+          "finding": "Allows everything for every robot except /admin, /api/admin and one sponsor page. Read 2026-11-14."
+        },
+        "licence": {
+          "url": null,
+          "finding": "No licence statement was found: not in agent.json, not in llms.txt, and there is no page at /terms (404)."
+        },
+        "terms_of_use": {
+          "url": "https://aidailybrief.ai/llms.txt",
+          "finding": "The site publishes agent.json and llms.txt as a machine-readable offering for agents, listing a page, a markdown twin, structured JSON and a transcript for each edition. That invites reading; it says nothing about republishing."
+        },
         "summary": "The publisher offers its editions to agents in machine-readable form and its robots file allows reading. No licence allows republishing transcripts, so only digests with a link back are published.",
-        "uncertain": ["Whether the publisher is content with short quoted excerpts in a public digest. Reading is clearly invited; republishing is not addressed. Asking the publisher would settle it."]
-      }
+        "uncertain": [
+          "Whether the publisher is content with short quoted excerpts in a public digest. Reading is clearly invited; republishing is not addressed. Asking the publisher would settle it."
+        ]
+      },
+      "transcript_route": "agent.json lists a markdown transcript with a time every minute for every edition.",
+      "chosen_because": "The owner's daily AI show; number five on Snipd's most-listened list (read 2026-11-15); the publisher offers transcripts to agents in machine-readable form.",
+      "hosts": [
+        "Nathaniel Whittemore"
+      ]
     },
     {
       "id": "podcasting-20",
@@ -60,19 +87,43 @@
       "language": "en",
       "description": "The weekly board meeting of the Podcast Index: open podcasting, its standards, apps and money.",
       "overview": "A long weekly conversation between the two people who run the Podcast Index. The beat is open podcasting: the podcast namespace and its tags, hosting companies and apps, value for value payments, and what the large platforms are doing. The voice is informal and joking, with strong opinions and a lot of insider shorthand. An episode usually opens with banter, works through the week's news and developer mail, thanks supporters by name, and runs well over an hour.",
-      "categories": ["podcasting", "technology", "open-standards"],
-      "icon": {"symbol": "waveform", "colour": "red"},
+      "categories": [
+        "podcasting",
+        "technology",
+        "open-standards"
+      ],
+      "icon": {
+        "symbol": "waveform",
+        "colour": "red"
+      },
       "publish": "digest_only",
       "attribution": "Podcasting 2.0, podcastindex.org",
       "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-14",
-        "robots": {"url": "https://feeds.podcastindex.org/robots.txt", "finding": "No robots file on the feed host (404), so nothing is restricted. The transcript host (mp3s.nashownotes.com) has one that disallows nothing and asks for ten seconds between requests."},
-        "licence": {"url": null, "finding": "The feed states no licence and no copyright line. It is marked podcast:locked, which is about moving the feed to another host, not about the content."},
-        "terms_of_use": {"url": null, "finding": "None found for the show."},
+        "robots": {
+          "url": "https://feeds.podcastindex.org/robots.txt",
+          "finding": "No robots file on the feed host (404), so nothing is restricted. The transcript host (mp3s.nashownotes.com) has one that disallows nothing and asks for ten seconds between requests."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed states no licence and no copyright line. It is marked podcast:locked, which is about moving the feed to another host, not about the content."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None found for the show."
+        },
         "summary": "The feed and its SubRip transcripts are public and no robots rule restricts them. No licence allows republishing transcripts, so only digests with a link back are published.",
-        "uncertain": ["The show is produced on a value-for-value basis and its makers promote open use of feeds, but no licence says so in writing. If the owner wants full transcripts published, ask the publisher."]
-      }
+        "uncertain": [
+          "The show is produced on a value-for-value basis and its makers promote open use of feeds, but no licence says so in writing. If the owner wants full transcripts published, ask the publisher."
+        ]
+      },
+      "transcript_route": "podcast:transcript in the feed: SubRip captions on mp3s.nashownotes.com for every episode.",
+      "chosen_because": "The show of the people who define podcast:transcript; every episode has captions, chapters and named people in the feed.",
+      "hosts": [
+        "Adam Curry",
+        "Dave Jones"
+      ]
     },
     {
       "id": "build-your-saas",
@@ -85,8 +136,15 @@
       "language": "en",
       "description": "The founders of a small podcast hosting company talk through running it. Episodes are occasional.",
       "overview": "An occasional conversation among the people who run Transistor, a small podcast hosting company. The beat is building and running a bootstrapped software business: customers, support, pricing, hiring, and how the founders feel about it. The voice is candid and unhurried, two or three named speakers, often with a guest from the team. An episode is one conversation on one question, around forty minutes, with chapter marks in the notes. Months can pass between episodes.",
-      "categories": ["business", "startups", "software"],
-      "icon": {"symbol": "briefcase", "colour": "teal"},
+      "categories": [
+        "business",
+        "startups",
+        "software"
+      ],
+      "icon": {
+        "symbol": "briefcase",
+        "colour": "teal"
+      },
       "publish": "digest_only",
       "attribution": "Build Your SaaS, saas.transistor.fm",
       "retention_days": 400,
@@ -94,12 +152,29 @@
       "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-14",
-        "robots": {"url": "https://share.transistor.fm/robots.txt", "finding": "The transcript host allows everything for robots in general. The feed host answers 400 for robots.txt, which restricts nothing."},
-        "licence": {"url": null, "finding": "The feed carries a copyright line (Transistor, Inc.) and no licence."},
-        "terms_of_use": {"url": null, "finding": "None found for the show itself. The hosting company's general terms were not read."},
+        "robots": {
+          "url": "https://share.transistor.fm/robots.txt",
+          "finding": "The transcript host allows everything for robots in general. The feed host answers 400 for robots.txt, which restricts nothing."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed carries a copyright line (Transistor, Inc.) and no licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None found for the show itself. The hosting company's general terms were not read."
+        },
         "summary": "The feed and its WebVTT transcripts are public and no robots rule restricts them. The content is under the publisher's copyright with no licence to republish, so only digests with a link back are published.",
-        "uncertain": ["The hosting company's terms of service were not read; they govern its customers more than readers of a feed, but the owner may want to check."]
-      }
+        "uncertain": [
+          "The hosting company's terms of service were not read; they govern its customers more than readers of a feed, but the owner may want to check."
+        ]
+      },
+      "transcript_route": "podcast:transcript in the feed: WebVTT, SubRip, JSON and text on share.transistor.fm for every episode.",
+      "chosen_because": "Full transcripts with named speakers in four formats. Episodes are rare (the newest is from April 2026): the first candidate to drop if the list must shrink.",
+      "hosts": [
+        "Justin Jackson",
+        "Jon Buda"
+      ]
     },
     {
       "id": "buzzcast",
@@ -112,45 +187,439 @@
       "language": "en",
       "description": "A weekly, friendly show about making a podcast: tools, habits and news for people who publish one.",
       "overview": "A weekly show from the team at a podcast hosting company, for people who make podcasts. The beat is practical: recording and editing tools, growing an audience, what changed in the podcast apps. The voice is light and friendly, three regular hosts who tease each other, with listener mail read out. Episodes vary from a quarter of an hour to an hour: a short personal opening, one or two main topics, then listener messages.",
-      "categories": ["podcasting", "how-to", "audio"],
-      "icon": {"symbol": "microphone", "colour": "green"},
+      "categories": [
+        "podcasting",
+        "how-to",
+        "audio"
+      ],
+      "icon": {
+        "symbol": "microphone",
+        "colour": "green"
+      },
       "publish": "digest_only",
       "attribution": "Buzzcast, buzzcast.buzzsprout.com",
       "suggested_keep": 4,
       "terms": {
         "checked": "2026-11-14",
-        "robots": {"url": "https://www.buzzsprout.com/robots.txt", "finding": "Disallows one unrelated feed only; the show's feed and transcript files are not restricted."},
-        "licence": {"url": null, "finding": "The feed carries a copyright line (Buzzsprout) and no licence. It is marked podcast:locked."},
-        "terms_of_use": {"url": null, "finding": "None found for the show itself. The hosting company's general terms were not read."},
+        "robots": {
+          "url": "https://www.buzzsprout.com/robots.txt",
+          "finding": "Disallows one unrelated feed only; the show's feed and transcript files are not restricted."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed carries a copyright line (Buzzsprout) and no licence. It is marked podcast:locked."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None found for the show itself. The hosting company's general terms were not read."
+        },
         "summary": "The feed and its transcripts are public and no robots rule restricts them. The content is under the publisher's copyright with no licence to republish, so only digests with a link back are published.",
-        "uncertain": ["The transcript marks a speaker only where the speaker changes, so a quote can be credited to the previous speaker. Speaker names in this source's quotes should be treated as likely, not certain."]
-      }
+        "uncertain": [
+          "The transcript marks a speaker only where the speaker changes, so a quote can be credited to the previous speaker. Speaker names in this source's quotes should be treated as likely, not certain."
+        ]
+      },
+      "transcript_route": "podcast:transcript in the feed: SubRip, WebVTT and JSON on www.buzzsprout.com for 257 of 269 episodes.",
+      "chosen_because": "Weekly, with transcripts, chapter marks and soundbites in the feed.",
+      "hosts": [
+        "Alban Brooke",
+        "Jordan Blair",
+        "Kevin Finn"
+      ]
     },
     {
-      "id": "eff-deeplinks",
-      "name": "EFF Deeplinks",
-      "kind": "news",
+      "id": "diary-of-a-ceo",
+      "name": "The Diary Of A CEO",
+      "kind": "podcast",
       "adapter": "feed",
-      "url": "https://www.eff.org/rss/updates.xml",
-      "site": "https://www.eff.org/",
-      "publisher": "Electronic Frontier Foundation",
+      "url": "https://rss2.flightcast.com/xmsftuzjjykcmqwolaqn6mdn.rss",
+      "site": "https://steven.com/",
+      "publisher": "Steven Bartlett",
       "language": "en",
-      "description": "News and commentary on privacy, free speech and technology law. Headline, a short description and a link.",
-      "overview": "The blog of a civil liberties organisation, written by its lawyers, technologists and activists. The beat is digital rights: privacy and surveillance, free expression, copyright and patents, security, and how new technology such as AI is regulated. The voice is advocacy: it takes a side and says so, and it cites the bills, cases and filings it argues about. Pieces are articles of a few minutes' reading. Only the headline, a short description and the link are carried here.",
-      "categories": ["privacy", "law", "technology", "news"],
-      "icon": {"symbol": "shield", "colour": "blue"},
+      "description": "Long interviews with founders, scientists and performers about health, work and money, twice a week.",
+      "overview": "A long-form interview show hosted by Steven Bartlett. The beat is self-improvement in a broad sense: health and sleep, psychology and relationships, building companies, money. The voice is earnest and personal; the host presses guests for practical advice and personal stories. A full episode is one guest for one and a half to two hours with chapter marks; shorter Most Replayed Moment episodes repeat one passage of an earlier interview.",
+      "categories": [
+        "interviews",
+        "health",
+        "business",
+        "self-improvement"
+      ],
+      "icon": {
+        "symbol": "people",
+        "colour": "purple"
+      },
       "publish": "digest_only",
-      "attribution": "Electronic Frontier Foundation, eff.org, CC BY 4.0",
-      "max_items": 10,
-      "suggested_keep": 10,
+      "attribution": "The Diary Of A CEO with Steven Bartlett, steven.com",
+      "transcript_route": "podcast:transcript in the feed: WebVTT on rss.flightcast.com for the newest episodes (335 of 910 entries; all of the newest eight).",
+      "chosen_because": "Named by the owner; number two on Snipd's most-listened list (read 2026-11-15). The publisher's own feed carries full WebVTT transcripts.",
+      "suggested_keep": 4,
       "terms": {
-        "checked": "2026-11-14",
-        "robots": {"url": "https://www.eff.org/robots.txt", "finding": "Asks robots in general for thirty seconds between requests; the feed address is not disallowed."},
-        "licence": {"url": "https://www.eff.org/copyright", "finding": "Original material on the site may be freely distributed under the Creative Commons Attribution 4.0 International licence unless noted otherwise; material not original to the publisher may need permission."},
-        "terms_of_use": {"url": "https://www.eff.org/copyright", "finding": "Redistribution with a note of where it came from is appreciated."},
-        "summary": "Original material is under Creative Commons Attribution 4.0. This project still carries only the headline, a short description and the link, with credit, and never the article text.",
-        "uncertain": ["A piece may include material that is not the publisher's own and is not under the same licence. Carrying only the headline, the opening sentences and the link keeps clear of that."]
-      }
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://rss.flightcast.com/robots.txt",
+          "finding": "Allows everything for robots in general except a few administrative paths, and asks for one second between requests. The feed host rss2.flightcast.com restricts nothing that the run reads. Read 2026-11-15."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed carries no copyright line and no licence. podcast:locked is no."
+        },
+        "terms_of_use": {
+          "url": "https://www.flightcast.com/terms-of-service",
+          "finding": "The hosting company's terms (last updated 2026-08-15) bar reaching its services by bots, crawlers or scrapers without permission, search engines and browsers excepted. They do not say how a published RSS feed and the transcripts it lists may be read by others."
+        },
+        "summary": "The publisher's feed lists a full transcript for each new episode and the robots file allows reading it. No licence allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "The hosting company's terms forbid automated access to its services in general words; a podcast feed and the files it lists exist to be read by programs, but the terms do not say so. Asking the publisher would settle it.",
+          "The feed gives no page per episode, so every item links to the show's site and is marked link_kind show."
+        ]
+      },
+      "hosts": [
+        "Steven Bartlett"
+      ]
+    },
+    {
+      "id": "lennys-podcast",
+      "name": "Lenny's Podcast",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://api.substack.com/feed/podcast/10845.rss",
+      "site": "https://www.lennysnewsletter.com/podcast",
+      "publisher": "Lenny Rachitsky",
+      "language": "en",
+      "description": "Weekly interviews with product leaders and founders on building products, growth and careers.",
+      "overview": "A weekly interview show hosted by Lenny Rachitsky. The beat is how products get built: product management, growth, hiring, pricing, and lately building with AI. The voice is practical and warm; the host asks for frameworks, examples and concrete numbers, and ends with a lightning round of fixed questions. An episode is one guest for about ninety minutes, with chapter marks and a list of what was referenced in the notes.",
+      "categories": [
+        "product",
+        "startups",
+        "careers",
+        "business"
+      ],
+      "icon": {
+        "symbol": "briefcase",
+        "colour": "orange"
+      },
+      "publish": "digest_only",
+      "attribution": "Lenny's Podcast, lennysnewsletter.com",
+      "transcript_route": "podcast:transcript in the feed: WebVTT on api.substack.com for 350 of 369 episodes.",
+      "chosen_because": "Number nine on Snipd's most-listened list (read 2026-11-15); full WebVTT transcripts, chapter lists and per-episode pages in the publisher's feed.",
+      "suggested_keep": 3,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://api.substack.com/robots.txt",
+          "finding": "For robots in general it disallows private feeds, sign-in and a few interface paths; the public podcast feed and the transcript files are not among them. Read 2026-11-15."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed's copyright line names Lenny Rachitsky; no licence."
+        },
+        "terms_of_use": {
+          "url": "https://substack.com/tos",
+          "finding": "The hosting company's terms (last updated 2026-10-06) forbid crawling, scraping or spidering any part of Substack and copying a significant portion of its content. They do not mention RSS feeds."
+        },
+        "summary": "The feed lists a full transcript for each episode and the robots file does not restrict it. No licence allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "The hosting company's terms forbid crawling and scraping in general words while its robots file leaves the public feed open, and a podcast feed exists to be read by programs. Whether reading the transcript files the feed lists is within those terms is not stated. The owner should decide or ask the publisher."
+        ]
+      },
+      "hosts": [
+        "Lenny Rachitsky"
+      ]
+    },
+    {
+      "id": "darknet-diaries",
+      "name": "Darknet Diaries",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://podcast.darknetdiaries.com/",
+      "site": "https://darknetdiaries.com/",
+      "publisher": "Jack Rhysider",
+      "language": "en",
+      "description": "True stories from the dark side of the internet: hackers, breaches and the people who chase them.",
+      "overview": "A narrative show written and hosted by Jack Rhysider. The beat is computer crime and security told as stories: break-ins, malware, scams, spies, and the people on both sides. The voice is a calm storyteller who explains the technical parts in plain words and lets the guest tell what happened. An episode is one story of forty to eighty minutes, built from an interview with narration around it, every two weeks.",
+      "categories": [
+        "security",
+        "technology",
+        "true-stories"
+      ],
+      "icon": {
+        "symbol": "shield",
+        "colour": "red"
+      },
+      "publish": "digest_only",
+      "attribution": "Darknet Diaries, darknetdiaries.com",
+      "transcript_route": "podcast:transcript in the feed: WebVTT or text on f.prxu.org for 177 of 183 episodes; the site also has a transcript page for each episode.",
+      "chosen_because": "A widely followed security show that publishes a full transcript for nearly every episode, with a page per episode.",
+      "suggested_keep": 3,
+      "retention_days": 120,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": null,
+          "finding": "The feed host podcast.darknetdiaries.com has no robots file (404), which restricts nothing; the transcript host f.prxu.org did not restrict the transcript files. Checked by the run of 2026-11-15."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed's copyright line names Jack Rhysider; the site's footer has a bare copyright year. No licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "No terms page was found on the site (its footer links to none)."
+        },
+        "summary": "The feed and the site publish full transcripts and no robots rule restricts them. The content is under the publisher's copyright with no licence to republish, so only digests with a link back are published.",
+        "uncertain": [
+          "No terms of use were found, so nothing is written either way about short quoted excerpts in a public digest."
+        ]
+      },
+      "hosts": [
+        "Jack Rhysider"
+      ]
+    },
+    {
+      "id": "80000-hours",
+      "name": "80,000 Hours Podcast",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://feeds.transistor.fm/80000-hours-podcast",
+      "site": "https://80000hours.org/podcast/",
+      "publisher": "80,000 Hours",
+      "language": "en",
+      "description": "In-depth conversations about the world's most pressing problems and what can be done about them.",
+      "overview": "A long-form interview show from the nonprofit 80,000 Hours. The beat is large problems and careers that address them: AI safety and policy above all, also pandemics, global health and how to reason about doing good. The voice is analytical and patient; hosts ask experts to lay out arguments and where they are uncertain. Full episodes run two to three hours; the feed also carries short clips and highlights of earlier episodes.",
+      "categories": [
+        "ai",
+        "policy",
+        "science",
+        "careers"
+      ],
+      "icon": {
+        "symbol": "globe",
+        "colour": "teal"
+      },
+      "publish": "digest_only",
+      "attribution": "80,000 Hours Podcast, 80000hours.org",
+      "transcript_route": "podcast:transcript in the feed: plain text on share.transistor.fm for the newer episodes (209 of 370; all of the newest eight).",
+      "chosen_because": "Full transcripts in the feed, long notes, a page per episode; a strong source on AI policy and safety.",
+      "suggested_keep": 3,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://share.transistor.fm/robots.txt",
+          "finding": "The transcript host allows everything for robots in general. The feed host answers 400 for robots.txt, which restricts nothing. Read 2026-11-15."
+        },
+        "licence": {
+          "url": "https://80000hours.org/legal/",
+          "finding": "The feed says all rights reserved. The site's legal page says its materials are copyrighted, all rights reserved, and asks to be contacted before redistributing, translating or adapting them."
+        },
+        "terms_of_use": {
+          "url": "https://80000hours.org/legal/",
+          "finding": "Nothing on automated access."
+        },
+        "summary": "The feed lists a full transcript for each new episode and no robots rule restricts it. All rights are reserved, so only digests with a link back are published.",
+        "uncertain": [
+          "The publisher asks to be contacted before its work is adapted. A digest with short quotes is not redistribution of the work, but asking would be courteous and would settle it."
+        ]
+      },
+      "hosts": [
+        "Rob Wiblin",
+        "Luisa Rodriguez"
+      ]
+    },
+    {
+      "id": "talk-python",
+      "name": "Talk Python To Me",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://talkpython.fm/episodes/rss",
+      "site": "https://talkpython.fm/",
+      "publisher": "Michael Kennedy",
+      "language": "en",
+      "description": "Weekly conversations with the people behind Python's libraries, tools and big projects.",
+      "overview": "A weekly interview show hosted by Michael Kennedy. The beat is the Python world: libraries and frameworks, data science, web development, tooling, and the people who maintain them. The voice is friendly and technical; the host asks how a thing works and why it was built that way. An episode is one topic with one or two guests for about an hour, with a list of links in the notes.",
+      "categories": [
+        "python",
+        "software",
+        "technology"
+      ],
+      "icon": {
+        "symbol": "chip",
+        "colour": "yellow"
+      },
+      "publish": "digest_only",
+      "attribution": "Talk Python To Me, talkpython.fm",
+      "transcript_route": "podcast:transcript in the feed: WebVTT on talkpython.fm for every episode; the publisher also keeps the transcripts in a public repository and invites their use.",
+      "chosen_because": "Every one of 567 episodes has a transcript in the feed, and the publisher says of them: feel free to use the files.",
+      "suggested_keep": 3,
+      "retention_days": 90,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://talkpython.fm/robots.txt",
+          "finding": "The feed and the transcript files are on this one host; its robots file was read by the run of 2026-11-15 and did not restrict them."
+        },
+        "licence": {
+          "url": "https://github.com/talkpython/talk-python-transcripts",
+          "finding": "The feed has a copyright line without a licence. The publisher's public transcript repository says to feel free to use the files to explore the conversations; the name of its licence was not read."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None found on the episode pages."
+        },
+        "summary": "The publisher lists a full transcript for every episode in its feed and invites use of the files. No licence was confirmed that allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "The licence file of the publisher's transcript repository was not read. If it allows redistribution, this source could publish full transcripts."
+        ]
+      },
+      "hosts": [
+        "Michael Kennedy"
+      ]
+    },
+    {
+      "id": "python-bytes",
+      "name": "Python Bytes",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://pythonbytes.fm/episodes/rss",
+      "site": "https://pythonbytes.fm/",
+      "publisher": "Michael Kennedy and Brian Okken",
+      "language": "en",
+      "description": "A weekly half hour of Python news: new releases, tools and articles, six items an episode.",
+      "overview": "A weekly news show hosted by Michael Kennedy and Brian Okken. The beat is what happened in Python this week: releases, new tools, articles worth reading. The voice is quick and conversational, two hosts trading items and opinions, sometimes with a guest. An episode is about half an hour: each host brings items in turn, then extras and a joke, with every item linked in the notes.",
+      "categories": [
+        "python",
+        "software",
+        "news"
+      ],
+      "icon": {
+        "symbol": "chip",
+        "colour": "blue"
+      },
+      "publish": "digest_only",
+      "attribution": "Python Bytes, pythonbytes.fm",
+      "transcript_route": "podcast:transcript in the feed: WebVTT on pythonbytes.fm for every episode.",
+      "chosen_because": "Short, weekly, and every one of 504 episodes has a transcript in the feed; a sister show of Talk Python To Me.",
+      "suggested_keep": 3,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://pythonbytes.fm/robots.txt",
+          "finding": "The feed and the transcript files are on this one host; its robots file was read by the run of 2026-11-15 and did not restrict them."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed has a copyright line without a licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None read."
+        },
+        "summary": "The publisher lists a full transcript for every episode in its feed and no robots rule restricts it. No licence allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "The site's terms were not read."
+        ]
+      },
+      "hosts": [
+        "Michael Kennedy",
+        "Brian Okken"
+      ]
+    },
+    {
+      "id": "oxide-and-friends",
+      "name": "Oxide and Friends",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://feeds.transistor.fm/oxide-and-friends",
+      "site": "https://oxide.computer/",
+      "publisher": "Oxide Computer Company",
+      "language": "en",
+      "description": "Engineers at a computer company talk shop: hardware, systems software, and the history of both.",
+      "overview": "A conversation show from the founders and engineers of Oxide Computer Company, recorded live with guests joining in. The beat is systems engineering: hardware bring-up, operating systems, Rust, debugging stories, the business of building computers, and books about technology. The voice is fast, funny and opinionated, several named speakers interrupting each other. An episode runs about ninety minutes with a long list of links in the notes.",
+      "categories": [
+        "engineering",
+        "hardware",
+        "software"
+      ],
+      "icon": {
+        "symbol": "chip",
+        "colour": "green"
+      },
+      "publish": "digest_only",
+      "attribution": "Oxide and Friends, oxide.computer",
+      "transcript_route": "podcast:transcript in the feed: WebVTT, SubRip, JSON and text on share.transistor.fm for every episode.",
+      "chosen_because": "Every one of 192 episodes has a transcript with named speakers; the feed names the people in each episode.",
+      "suggested_keep": 3,
+      "retention_days": 90,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://share.transistor.fm/robots.txt",
+          "finding": "The transcript host allows everything for robots in general. The feed host answers 400 for robots.txt, which restricts nothing. Read 2026-11-15."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed's copyright line names Oxide Computer Company; no licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None found for the show. The hosting company's general terms were not read."
+        },
+        "summary": "The feed and its transcripts are public and no robots rule restricts them. The content is under the publisher's copyright with no licence to republish, so only digests with a link back are published.",
+        "uncertain": [
+          "The hosting company's terms of service were not read."
+        ]
+      },
+      "hosts": [
+        "Bryan Cantrill",
+        "Adam Leventhal"
+      ]
+    },
+    {
+      "id": "podnews-daily",
+      "name": "Podnews Daily",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://podnews.net/rss",
+      "site": "https://podnews.net/",
+      "publisher": "Podnews LLC",
+      "language": "en",
+      "description": "The day's podcasting industry news in about four minutes, every weekday.",
+      "overview": "A short daily news bulletin from Podnews, read from its newsletter. The beat is the podcast business: companies, deals, numbers, new shows, apps and standards. The voice is a brisk newsreader with a dry aside now and then. An episode is three to five minutes: the main story, a run of shorter items, then moves and events, with every story linked in the notes.",
+      "categories": [
+        "podcasting",
+        "news",
+        "business"
+      ],
+      "icon": {
+        "symbol": "newspaper",
+        "colour": "grey"
+      },
+      "publish": "digest_only",
+      "attribution": "Podnews Daily, podnews.net",
+      "transcript_route": "podcast:transcript in the feed: WebVTT on podnews.net for 150 of 151 episodes.",
+      "chosen_because": "Daily and short, with a transcript for nearly every episode and a page per episode.",
+      "max_items": 5,
+      "suggested_keep": 5,
+      "terms": {
+        "checked": "2026-11-15",
+        "robots": {
+          "url": "https://podnews.net/robots.txt",
+          "finding": "The feed and the transcript files are on this one host; its robots file was read by the run of 2026-11-15 and did not restrict them."
+        },
+        "licence": {
+          "url": null,
+          "finding": "The feed's copyright line names Podnews LLC; no licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "None read."
+        },
+        "summary": "The feed lists a full transcript for nearly every episode and no robots rule restricts it. No licence allows republishing, so only digests with a link back are published.",
+        "uncertain": [
+          "The site's terms were not read."
+        ]
+      },
+      "hosts": [
+        "James Cridland"
+      ]
     }
   ]
 }

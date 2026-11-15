@@ -98,9 +98,12 @@ class Schemas(unittest.TestCase):
         config = pipeline.load_config(os.path.join(support.ROOT, "config", "sources.json"))
         self.assertGreaterEqual(len(config["sources"]), 4)
         for s in config["sources"]:
-            self.assertEqual(s["terms"]["checked"], "2026-11-14")
+            self.assertRegex(s["terms"]["checked"], r"^2026-11-1[45]$")
             self.assertEqual(s["publish"], "digest_only", "full transcripts are published only where the terms clearly allow it")
-        self.assertEqual(sum(1 for s in config["sources"] if s["kind"] == "news"), 1)
+            self.assertEqual(s["kind"], "podcast", "only sources with full transcripts are carried: no headline-only news")
+            self.assertTrue(s.get("transcript_route") and s.get("chosen_because"), s["id"])
+            self.assertTrue(s["terms"]["uncertain"], "every source says what is not settled")
+        self.assertGreaterEqual(config["defaults"]["min_full_transcript_share"], 0.5, "the rule of the catalog is switched on")
         self.assertFalse(config["model"]["enabled"])
 
     def test_a_bad_source_list_stops_the_run(self):

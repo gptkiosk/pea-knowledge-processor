@@ -194,13 +194,25 @@ class Workflows(unittest.TestCase):
     def test_only_the_digest_job_gets_the_key_and_nothing_else_has_secrets(self):
         text = self.read("process.yml")
         jobs = self.jobs(text)
-        self.assertEqual(list(jobs), ["fetch-and-normalize", "digest", "publish"])
+        self.assertEqual(list(jobs), ["fetch-and-normalize", "digest", "publish", "keep-alive"])
+        self.assertNotIn("secrets.", jobs["keep-alive"])
         self.assertNotIn("${{ secrets", text.split("\njobs:\n")[0])
         self.assertNotIn("secrets.", jobs["fetch-and-normalize"])
         self.assertNotIn("secrets.", jobs["publish"])
         self.assertEqual(re.findall(r"secrets\.([A-Z_]+)", jobs["digest"]), ["OPENROUTER_API_KEY"])
         self.assertNotIn("secrets.", self.read("test.yml"))
         self.assertNotIn("pull_request_target", text + self.read("test.yml"))
+
+    def test_the_keep_alive_job_can_do_one_thing_only(self):
+        """It may enable this workflow again, which resets GitHub's 60-day clock for schedules. Nothing else."""
+        job = self.jobs(self.read("process.yml"))["keep-alive"]
+        self.assertEqual(re.findall(r"(?m)^      ([a-z-]+): (\w+)$", job.split("steps:")[0]), [("actions", "write")])
+        self.assertNotIn("uses:", job, "no action to pin, no checkout: the job never sees the code or the output")
+        self.assertNotIn("git ", job.split("steps:")[1], "no commit and no push, so it cannot start a run of itself")
+        self.assertIn("github.event_name == 'schedule'", job)
+        self.assertIn("always()", job, "also after a failed run, so failures cannot let the schedule lapse")
+        self.assertEqual(re.findall(r"api\.github\.com/\S+", job), ['api.github.com/repos/$REPOSITORY/actions/workflows/process.yml/enable"'])
+        self.assertIn("timeout-minutes: 2", job)
 
     def test_rights_schedule_and_order(self):
         text = self.read("process.yml")
