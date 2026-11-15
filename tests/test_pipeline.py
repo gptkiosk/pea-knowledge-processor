@@ -406,16 +406,16 @@ class Lifecycle(Base):
         def source(name, sid):
             return next((s for s in seen[name][0]["sources"] if s["id"] == sid), None)
         tide = source("02-stale-after-one-failure", "tide-tables")
-        self.assertEqual((tide["state"], tide["freshness"]["status"], tide["freshness"]["failed_runs"], tide["item_count"], tide["message"]), ("active", "stale", 1, 6, None))
+        self.assertEqual((tide["state"], tide["freshness"]["status"], tide["freshness"]["failed_runs"], tide["item_count"], tide["message"]), ("active", "stale", 1, 4, None))
         tide = source("03-paused-automatically", "tide-tables")
-        self.assertEqual((tide["state"], tide["state_reason"]["code"], tide["freshness"]["failed_runs"], tide["item_count"], tide["purge"]), ("paused", "fetch_failed", 3, 6, False))
+        self.assertEqual((tide["state"], tide["state_reason"]["code"], tide["freshness"]["failed_runs"], tide["item_count"], tide["purge"]), ("paused", "fetch_failed", 3, 4, False))
         self.assertEqual(tide["message"], "This source could not be read 3 times in a row. What is shown is the last good copy.")
         self.assertEqual((tide["state_since"], tide["freshness"]["last_ok"]), ("2026-11-15T06:00:00Z", "2026-11-14T12:00:00Z"))
         self.assertEqual(source("03-paused-automatically", "harbor-voices")["state"], "active", "the other sources are not touched")
         tide = source("04-recovered", "tide-tables")
         self.assertEqual((tide["state"], tide["state_since"], tide["message"], tide["freshness"]), ("active", None, None, {"status": "fresh", "last_ok": None, "failed_runs": 0}))
         harbor = source("05-paused-by-the-curator", "harbor-voices")
-        self.assertEqual((harbor["state"], harbor["state_reason"]["code"], harbor["item_count"], harbor["freshness"]["status"]), ("paused", "manual", 4, "stale"))
+        self.assertEqual((harbor["state"], harbor["state_reason"]["code"], harbor["item_count"], harbor["freshness"]["status"]), ("paused", "manual", 3, "stale"))
         self.assertTrue(harbor["message"].startswith("Paused while the publisher"))
         self.assertEqual(source("06-withdrawn", "harbor-voices")["state_since"], harbor["state_since"], "the time a state began does not move")
         quay = source("06-withdrawn", "quay-notes")
@@ -460,31 +460,85 @@ class Lifecycle(Base):
 
 
 class OnlyFullTranscripts(Base):
-    """The rule of the catalog: only sources with full transcripts are carried. A source whose newest items mostly
-    have none is counted as failed, so it is paused like any source that cannot be read, and later withdrawn."""
+    """The rule of the catalog. An item is listed only when the assistant has a full path to its whole text (`discussable`: the transcript was
+    read in full or in part and the item carries `transcript_source`). A source with too few discussable items among its newest is counted as
+    failed, so it is paused like any source that cannot be read, and later withdrawn."""
 
     def strict(self, **more):
-        return support.load_config(lambda c: c["defaults"].update(dict(min_full_transcript_share=0.6, transcript_check_items=5, **more)))
+        values = dict(dict(min_full_transcript_share=0.6, min_discussable_items=2, transcript_check_items=5, phone_probe=False), **more)
+        return support.load_config(lambda c: (support.strict(c), c["defaults"].update(values)))
 
-    def test_a_source_without_transcripts_is_never_published_and_the_others_are(self):
+    def test_an_item_without_a_path_to_its_whole_text_is_not_listed(self):
+        health = support.run(self.out, config=self.strict(min_discussable_items=0, min_full_transcript_share=0))
+        self.assertEqual(self.codes(), [])
+        tide = {i["date"]: i for i in support.items(self.out, "tide-tables")}
+        self.assertEqual(sorted(tide), ["2026-11-07", "2026-11-10", "2026-11-11", "2026-11-12"], "the item with no transcript (11-09) and the one that failed to fetch (11-08) are out")
+        for item in tide.values():
+            self.assertIn(item["transcript"]["read"], ("full", "partial"))
+            self.assertIn("transcript_source", item)
+        harbor = support.items(self.out, "harbor-voices")
+        self.assertEqual(len(harbor), 3, "read and withheld, with an address to fetch the whole text from: listed; the one without a transcript is not")
+        self.assertTrue(all(i["transcript"]["read"] == "full" and "transcript_source" in i for i in harbor))
+        listing = support.listing(self.out, "tide-tables")
+        self.assertEqual((listing["item_count"], listing["available"]["digest"], len(listing["latest_titles"])), (4, 4, 3), "the card counts discussable items only")
+        report = self.health_of(health, "tide-tables")
+        self.assertEqual((report["items"], report["dropped"]), (4, {"none_published": 1, "fetch_failed": 1, "unreadable": 0, "no_source": 0, "phone_probe": 0}))
+        self.assertEqual(self.health_of(health, "harbor-voices")["dropped"]["none_published"], 1)
+        self.assertEqual(sum(1 for p in support.tree(self.out) if p.endswith(".digest.json")), health["totals"]["items"], "a dropped item has no digest in the output either")
+        self.assertEqual(js.validate(health, validate.schema("health")), [])
+
+    def test_what_was_skipped_is_remembered_and_shown_again_when_the_feed_is_unchanged(self):
+        config = self.strict(min_discussable_items=0, min_full_transcript_share=0)
+        first = support.run(self.out, config=config)
+        again = support.run(self.out, LATER, config=config)   # the feed answers "not modified"
+        report = self.health_of(again, "harbor-voices")
+        self.assertEqual((report["outcome"], report["items"], report["new"], report["dropped"]["none_published"]), ("unchanged", 3, 0, 1))
+        self.assertEqual(self.health_of(again, "tide-tables")["dropped"], self.health_of(first, "tide-tables")["dropped"])
+        self.assertEqual(self.health_of(again, "tide-tables")["items"], 4)
+
+    def test_a_feed_read_again_does_not_bring_a_dropped_item_back(self):
+        config = self.strict(min_discussable_items=0, min_full_transcript_share=0)
+        support.run(self.out, config=config)
+        changed = self.web(lambda r: r["https://tide.example.org/feed.xml"].update(etag='"tide-2"'))
+        health = support.run(self.out, support.T0 + datetime.timedelta(days=10), config, changed)
+        tide = self.health_of(health, "tide-tables")
+        self.assertEqual((tide["outcome"], tide["items"], tide["new"], tide["dropped"]["none_published"], tide["dropped"]["fetch_failed"]), ("ok", 4, 0, 1, 1))
+        self.assertEqual(sorted(i["date"] for i in support.items(self.out, "tide-tables")), ["2026-11-07", "2026-11-10", "2026-11-11", "2026-11-12"])
+        self.assertEqual(self.codes(), [])
+
+    def test_an_output_written_before_the_rule_loses_its_undiscussable_items_without_new_requests(self):
+        support.run(self.out)   # the fixtures' own config keeps every item, as the generator did before 0.5.0
+        self.assertEqual(len(support.items(self.out, "tide-tables")), 6)
+        before = {p: d for p, d in support.tree(self.out).items() if p.startswith("sources/tide-tables/") and p.endswith(".digest.json")}
+        health = support.run(self.out, LATER, self.strict(min_discussable_items=0, min_full_transcript_share=0))
+        self.assertEqual(self.codes(), [])
+        tide = self.health_of(health, "tide-tables")
+        self.assertEqual((tide["items"], tide["reused"], tide["new"], tide["dropped"]["none_published"]), (4, 4, 0, 1))
+        self.assertEqual(sorted(i["date"] for i in support.items(self.out, "tide-tables")), ["2026-11-07", "2026-11-10", "2026-11-11", "2026-11-12"])
+        kept = {p for p in support.tree(self.out) if p.startswith("sources/tide-tables/") and p.endswith(".digest.json")}
+        self.assertEqual(len(kept), 4, "the digests of the items that left are gone too")
+        self.assertTrue(all(support.tree(self.out)[p] == before[p] for p in kept), "what stays is exactly what it was")
+
+    def test_a_source_below_the_minimum_is_not_published_and_the_others_are(self):
         health = support.run(self.out, config=self.strict())
         self.assertEqual(self.codes(), [])
         states = {s["id"]: (s["state"], s["freshness"]["status"], s["item_count"]) for s in support.store(self.out)["sources"]}
-        self.assertEqual(states, {"harbor-voices": ("active", "fresh", 4), "tide-tables": ("active", "fresh", 6), "quay-notes": ("active", "stale", 0), "port-gazette": ("active", "stale", 0),
+        self.assertEqual(states, {"harbor-voices": ("active", "fresh", 3), "tide-tables": ("active", "fresh", 4), "quay-notes": ("active", "stale", 0), "port-gazette": ("active", "stale", 0),
                                   "lamp-room": ("active", "stale", 0)},
                          "three of four and three of five are enough; show notes alone and headlines alone are not")
         quay = self.health_of(health, "quay-notes")
-        self.assertEqual((quay["outcome"], quay["reason"]["code"]), ("failed", "format_changed"))
+        self.assertEqual((quay["outcome"], quay["reason"]["code"]), ("failed", "empty"))
         self.assertIn("full transcripts for 0 of the newest 2 items", quay["reason"]["detail"])
+        self.assertEqual(quay["dropped"]["none_published"], 2, "what was skipped is counted, with its reason")
         self.assertFalse(os.path.exists(os.path.join(self.out, "sources", "quay-notes")))
-        self.assertEqual({i["transcript"]["read"] for i in support.items(self.out, "harbor-voices")}, {"full", "none"}, "what was read is said even when it is not published")
+        self.assertEqual({i["transcript"]["read"] for i in support.items(self.out, "harbor-voices")}, {"full"}, "what was read is said, and only what was read is listed")
 
     def test_it_is_paused_after_the_usual_number_of_runs_and_then_withdrawn(self):
         config = self.strict(withdraw_without_transcripts_days=30)
         for n in range(3):
             support.run(self.out, support.T0 + datetime.timedelta(hours=6 * n), config)
         quay = support.listing(self.out, "quay-notes")
-        self.assertEqual((quay["state"], quay["state_reason"]["code"], quay["freshness"]["failed_runs"]), ("paused", "format_changed", 3))
+        self.assertEqual((quay["state"], quay["state_reason"]["code"], quay["freshness"]["failed_runs"]), ("paused", "empty", 3))
         self.assertIn("no longer publishes full transcripts", quay["message"])
         self.assertIsNone(textrules.check(quay["message"]))
         self.assertEqual(self.codes(), [])
@@ -522,7 +576,7 @@ class OnlyFullTranscripts(Base):
             health = support.run(self.out, support.T0 + datetime.timedelta(hours=6 * n), config, web)
             self.assertEqual(self.codes(), [])
         tide = support.listing(self.out, "tide-tables")
-        self.assertEqual((tide["state"], tide["state_reason"]["code"], tide["item_count"]), ("paused", "format_changed", 6))
+        self.assertEqual((tide["state"], tide["state_reason"]["code"], tide["item_count"]), ("paused", "format_changed", 4), "it used to have items, so the reason says it changed")
         self.assertEqual({p: d for p, d in support.tree(self.out).items() if p.startswith("sources/tide-tables/")},
                          {p: d for p, d in before.items() if p.startswith("sources/tide-tables/")}, "the last good items are kept exactly as they were")
         self.assertEqual(support.listing(self.out, "harbor-voices")["state"], "active", "one source never holds up another")
@@ -530,24 +584,33 @@ class OnlyFullTranscripts(Base):
         tide = support.listing(self.out, "tide-tables")
         self.assertEqual((tide["state"], tide["freshness"]["status"]), ("active", "fresh"), "the transcripts are back, and so is the source")
 
-    def test_what_counts_as_a_full_transcript(self):
+    def test_what_counts_as_discussable_and_how_many_are_enough(self):
         config = self.strict()
         source = config["sources"][0]
-        def item(status, reuse=False, iid="a"):
-            return {"id": iid, "reuse": reuse, "transcript": {"status": status}}
-        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("yes")] * 3 + [item("no")] * 2}, {}))
-        self.assertIn("2 of the newest 5", pipeline.too_few_transcripts(config, source, {"items": [item("yes"), item("partial")] + [item("no")] * 3 + [item("yes")] * 9}, {}))
-        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": []}, {}), "nothing new to judge")
-        old = {"a": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None}, "digest": {"basis": "transcript", "grade": "full"}},
-               "b": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None, "read": "partial"}, "digest": {"basis": "transcript", "grade": "partial"}}}
-        self.assertEqual((pipeline.transcript_read(old["a"]), pipeline.transcript_read(old["b"])), ("full", "partial"))
-        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "a")]}, old))
-        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "b")]}, old),
-                          "a transcript this pipeline cut at its size cap is still one the publisher offers in full")
-        old["c"] = {"transcript": {"available": "no", "reason": "unreadable", "file": None, "read": "none"}, "digest": {"basis": "notes", "grade": "partial"}}
-        self.assertIsNotNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "c")]}, old))
-        off = support.load_config(lambda c: c["defaults"].update(min_full_transcript_share=0))
-        self.assertIsNone(pipeline.too_few_transcripts(off, off["sources"][0], {"items": [item("no")] * 5}, {}))
+
+        def item(ok):
+            return {"discussable": ok}
+        judge = lambda items, before=None: pipeline.judge(config, source, {"items": items}, before or {})   # noqa: E731
+        self.assertIsNone(judge([item(True)] * 3 + [item(False)] * 2), "three of five: 60 percent and at least two")
+        self.assertIn("2 of the newest 5", judge([item(True)] * 2 + [item(False)] * 3 + [item(True)] * 9)["detail"], "only the newest five are looked at")
+        self.assertEqual(judge([item(True)] * 2 + [item(False)] * 3)["code"], "format_changed", "two of five is below 60 percent although it is not below two")
+        self.assertIsNone(judge([item(True)] * 2), "two of two")
+        self.assertEqual(judge([item(True)])["code"], "format_changed", "one is below the minimum of two, however few items the source has")
+        self.assertEqual(judge([])["code"], "empty", "nothing at all is not a source")
+        self.assertEqual(judge([item(False)] * 5)["code"], "empty", "nothing now and never before")
+        had = {"a": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None, "read": "full"}, "transcript_source": {"link": "https://x.example.org/t.vtt"}}}
+        self.assertEqual(judge([item(False)] * 5, had)["code"], "format_changed", "it used to have items: the source changed")
+        floor = self.strict(min_full_transcript_share=0)
+        self.assertIsNone(pipeline.judge(floor, floor["sources"][0], {"items": [item(True)] * 2 + [item(False)] * 3}, {}), "the floor of two alone: two of five is enough")
+        self.assertIsNotNone(pipeline.judge(floor, floor["sources"][0], {"items": [item(True)] + [item(False)] * 4}, {}))
+        off = support.load_config(lambda c: c["defaults"].update(min_full_transcript_share=0, min_discussable_items=0))
+        self.assertIsNone(pipeline.judge(off, off["sources"][0], {"items": [item(False)] * 5}, {}), "both at zero switches the check off")
+        entry = lambda **t: {"transcript": dict({"available": "no", "reason": "none_published", "file": None}, **t), "digest": {"basis": "notes", "grade": "partial"}}   # noqa: E731
+        self.assertTrue(pipeline.discussable(dict(entry(read="full"), transcript_source={"link": "https://x.example.org/t"})))
+        self.assertFalse(pipeline.discussable(entry(read="full")), "read, but nowhere to fetch the whole text: not discussable")
+        self.assertFalse(pipeline.discussable(dict(entry(read="none"), transcript_source={"link": "https://x.example.org/t"})))
+        self.assertEqual((pipeline.drop_reason(entry(read="none")), pipeline.drop_reason(entry(read="none", reason="fetch_failed")), pipeline.drop_reason(entry(read="full"))),
+                         ("none_published", "fetch_failed", "no_source"))
 
 
 class Restore(Base):

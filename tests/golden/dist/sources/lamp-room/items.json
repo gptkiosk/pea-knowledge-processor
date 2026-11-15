@@ -99,64 +99,6 @@
         "link": "https://lamp.example.org/ep3-transcript",
         "route": "notes_link"
       }
-    },
-    {
-      "bytes": 1498,
-      "date": "2026-11-11",
-      "digest": {
-        "basis": "headline",
-        "bytes": 1498,
-        "grade": "headline",
-        "method": "extractive",
-        "path": "sources/lamp-room/2026-11-11-23c6c8ee22.digest.json",
-        "sha256": "acd6740e4788bd8c31ca32b473f2225f8da992b2c4c6e6fa332f3cf97a85a180"
-      },
-      "duration_seconds": 518,
-      "id": "2026-11-11-23c6c8ee22",
-      "link": "https://lamp.example.org/ep2/?utm_source=rss",
-      "link_kind": "episode",
-      "stale": false,
-      "stale_reason": null,
-      "tags": [],
-      "teaser": "Mara and Tobias in the lamp room at Grey Point. Transcript: Sponsors: a sponsor",
-      "title": "The keeper's winter",
-      "topics": [],
-      "topics_by": "keywords",
-      "transcript": {
-        "available": "no",
-        "file": null,
-        "read": "none",
-        "reason": "unreadable"
-      }
-    },
-    {
-      "bytes": 1485,
-      "date": "2026-11-10",
-      "digest": {
-        "basis": "headline",
-        "bytes": 1485,
-        "grade": "headline",
-        "method": "extractive",
-        "path": "sources/lamp-room/2026-11-10-05a3c75e16.digest.json",
-        "sha256": "ea40e7eed146f3fe3bb44571612958716243e447c3ddbf35a7c42eb720b35685"
-      },
-      "duration_seconds": 518,
-      "id": "2026-11-10-05a3c75e16",
-      "link": "https://lamp.example.org/ep1/?utm_source=rss",
-      "link_kind": "episode",
-      "stale": false,
-      "stale_reason": null,
-      "tags": [],
-      "teaser": "Mara and Tobias in the lamp room at Grey Point. Sponsors: a sponsor",
-      "title": "An episode whose transcript is not out yet",
-      "topics": [],
-      "topics_by": "keywords",
-      "transcript": {
-        "available": "no",
-        "file": null,
-        "read": "none",
-        "reason": "none_published"
-      }
     }
   ],
   "source_id": "lamp-room"

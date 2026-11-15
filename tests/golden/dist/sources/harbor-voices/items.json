@@ -115,35 +115,6 @@
         "link": "https://harbor.example.org/e/2026-11-10/transcript.md",
         "route": "feed_tag"
       }
-    },
-    {
-      "bytes": 1320,
-      "date": "2026-11-09",
-      "digest": {
-        "basis": "headline",
-        "bytes": 1320,
-        "grade": "headline",
-        "method": "extractive",
-        "path": "sources/harbor-voices/2026-11-09-95827ccd6b.digest.json",
-        "sha256": "a8b7ef2551ab11124f2e2e2bf4020cf1978bc6cc0fef40ba5fc65cdf1ea751c2"
-      },
-      "duration_seconds": 300,
-      "id": "2026-11-09-95827ccd6b",
-      "link": "https://harbor.example.org/e/2026-11-09",
-      "link_kind": "episode",
-      "stale": false,
-      "stale_reason": null,
-      "tags": [],
-      "teaser": "A short edition.",
-      "title": "An edition without a transcript",
-      "topics": [],
-      "topics_by": "keywords",
-      "transcript": {
-        "available": "no",
-        "file": null,
-        "read": "none",
-        "reason": "none_published"
-      }
     }
   ],
   "source_id": "harbor-voices"

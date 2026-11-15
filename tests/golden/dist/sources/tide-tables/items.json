@@ -126,68 +126,6 @@
       }
     },
     {
-      "bytes": 5198,
-      "date": "2026-11-09",
-      "digest": {
-        "basis": "notes",
-        "bytes": 5198,
-        "grade": "partial",
-        "method": "extractive",
-        "path": "sources/tide-tables/2026-11-09-8e6fef9855.digest.json",
-        "sha256": "7c7dbcd7ef009625122f87d1aaf23d5a1123d2692c95566134614a5566747ba6"
-      },
-      "duration_seconds": 1740,
-      "id": "2026-11-09-8e6fef9855",
-      "link": "https://tide.example.org/episodes/3",
-      "link_kind": "episode",
-      "stale": false,
-      "stale_reason": null,
-      "tags": [
-        "harbour"
-      ],
-      "teaser": "Mara is joined by Ines Okafor, the harbour master of North Quay, and asks what the new tide gate will change for the boats that land there. Ines Okafor recommends the book The Tide Almanac to anyone who wants the long history. The gate…",
-      "title": "The tide gate at North Quay",
-      "topics": [],
-      "topics_by": "keywords",
-      "transcript": {
-        "available": "no",
-        "file": null,
-        "read": "none",
-        "reason": "none_published"
-      }
-    },
-    {
-      "bytes": 1404,
-      "date": "2026-11-08",
-      "digest": {
-        "basis": "headline",
-        "bytes": 1404,
-        "grade": "headline",
-        "method": "extractive",
-        "path": "sources/tide-tables/2026-11-08-97bd63e880.digest.json",
-        "sha256": "becb6f9977992c31ff421ad80804aa14bc732c0a4ce103e8225243e63e95417b"
-      },
-      "duration_seconds": 518,
-      "id": "2026-11-08-97bd63e880",
-      "link": "https://tide.example.org/episodes/2",
-      "link_kind": "episode",
-      "stale": false,
-      "stale_reason": null,
-      "tags": [
-        "harbour"
-      ],
-      "teaser": "Mara and Tobias at the Grey Point lighthouse.",
-      "title": "The episode whose transcript is gone",
-      "topics": [],
-      "topics_by": "keywords",
-      "transcript": {
-        "available": "no",
-        "file": null,
-        "read": "none",
-        "reason": "fetch_failed"
-      }
-    },
-    {
       "bytes": 14806,
       "date": "2026-11-07",
       "digest": {

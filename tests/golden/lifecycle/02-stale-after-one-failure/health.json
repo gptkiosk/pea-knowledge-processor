@@ -4,7 +4,7 @@
   "generated_at": "2026-11-14T18:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "mode": "offline",
   "model": {
@@ -23,15 +23,29 @@
   "sources": [
     {
       "digests": {
-        "extractive": 4,
+        "extractive": 3,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "harbor-voices",
-      "items": 4,
-      "kept": 4,
+      "items": 3,
+      "kept": 3,
       "new": 0,
       "notes": [],
       "outcome": "unchanged",
+      "phone_probe": {
+        "checked_at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-12-8a5b8d3d14",
+        "reason": null,
+        "result": "ok",
+        "reused": true
+      },
       "pruned": 0,
       "reason": null,
       "reused": 0,
@@ -39,7 +53,7 @@
       "state": "active",
       "transcripts": {
         "fetch_failed": 0,
-        "none_published": 1,
+        "none_published": 0,
         "partial": 0,
         "unreadable": 0,
         "withheld_terms": 3,
@@ -48,15 +62,23 @@
     },
     {
       "digests": {
-        "extractive": 6,
+        "extractive": 4,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 0,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "tide-tables",
-      "items": 6,
-      "kept": 6,
+      "items": 4,
+      "kept": 4,
       "new": 0,
       "notes": [],
       "outcome": "failed",
+      "phone_probe": null,
       "pruned": 0,
       "reason": {
         "code": "fetch_failed",
@@ -66,8 +88,8 @@
       "stale": 0,
       "state": "active",
       "transcripts": {
-        "fetch_failed": 1,
-        "none_published": 1,
+        "fetch_failed": 0,
+        "none_published": 0,
         "partial": 0,
         "unreadable": 0,
         "withheld_terms": 0,
@@ -76,65 +98,103 @@
     },
     {
       "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 2,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
+      "id": "quay-notes",
+      "items": 0,
+      "kept": 0,
+      "new": 0,
+      "notes": [
+        "2026-11-11-82c571434b: not listed, no full path to its text (none published)",
+        "2026-11-04-cd98c5b165: not listed, no full path to its text (none published)"
+      ],
+      "outcome": "ok",
+      "phone_probe": null,
+      "pruned": 0,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
+        "extractive": 0,
+        "model": 0
+      },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 4,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
+      "id": "port-gazette",
+      "items": 0,
+      "kept": 0,
+      "new": 0,
+      "notes": [
+        "2026-11-12-9540419a16: not listed, no full path to its text (none published)",
+        "2026-11-11-f88d7568e0: not listed, no full path to its text (none published)",
+        "2026-11-10-9a32c90fc7: not listed, no full path to its text (none published)",
+        "2026-11-09-59d0eea8e0: not listed, no full path to its text (none published)"
+      ],
+      "outcome": "ok",
+      "phone_probe": null,
+      "pruned": 0,
+      "reason": null,
+      "reused": 0,
+      "stale": 0,
+      "state": "active",
+      "transcripts": {
+        "fetch_failed": 0,
+        "none_published": 0,
+        "partial": 0,
+        "unreadable": 0,
+        "withheld_terms": 0,
+        "yes": 0
+      }
+    },
+    {
+      "digests": {
         "extractive": 2,
         "model": 0
       },
-      "id": "quay-notes",
-      "items": 2,
-      "kept": 0,
-      "new": 0,
-      "notes": [],
-      "outcome": "ok",
-      "pruned": 0,
-      "reason": null,
-      "reused": 2,
-      "stale": 0,
-      "state": "active",
-      "transcripts": {
+      "dropped": {
         "fetch_failed": 0,
-        "none_published": 2,
-        "partial": 0,
-        "unreadable": 0,
-        "withheld_terms": 0,
-        "yes": 0
-      }
-    },
-    {
-      "digests": {
-        "extractive": 4,
-        "model": 0
-      },
-      "id": "port-gazette",
-      "items": 4,
-      "kept": 4,
-      "new": 0,
-      "notes": [],
-      "outcome": "unchanged",
-      "pruned": 0,
-      "reason": null,
-      "reused": 0,
-      "stale": 0,
-      "state": "active",
-      "transcripts": {
-        "fetch_failed": 0,
-        "none_published": 4,
-        "partial": 0,
-        "unreadable": 0,
-        "withheld_terms": 0,
-        "yes": 0
-      }
-    },
-    {
-      "digests": {
-        "extractive": 4,
-        "model": 0
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 1
       },
       "id": "lamp-room",
-      "items": 4,
-      "kept": 4,
+      "items": 2,
+      "kept": 2,
       "new": 0,
       "notes": [],
       "outcome": "unchanged",
+      "phone_probe": {
+        "checked_at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-13-ff7b73e406",
+        "reason": null,
+        "result": "ok",
+        "reused": true
+      },
       "pruned": 0,
       "reason": null,
       "reused": 0,
@@ -142,17 +202,17 @@
       "state": "active",
       "transcripts": {
         "fetch_failed": 0,
-        "none_published": 1,
+        "none_published": 0,
         "partial": 0,
-        "unreadable": 1,
+        "unreadable": 0,
         "withheld_terms": 2,
         "yes": 0
       }
     }
   ],
   "totals": {
-    "bytes": 161341,
-    "items": 20,
+    "bytes": 128777,
+    "items": 9,
     "requests": 12,
     "sources": 5
   }

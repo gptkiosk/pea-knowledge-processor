@@ -4,7 +4,7 @@
   "generated_at": "2026-11-16T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "mode": "offline",
   "model": {
@@ -23,28 +23,31 @@
   "sources": [
     {
       "digests": {
-        "extractive": 6,
+        "extractive": 4,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 1,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "tide-tables",
-      "items": 6,
-      "kept": 0,
+      "items": 4,
+      "kept": 4,
       "new": 0,
-      "notes": [
-        "1 of 8 entries have no page of their own in the feed: they link to the show",
-        "1 entries skipped: the same id as an earlier one",
-        "1 entries skipped: no date",
-        "2026-11-08-97bd63e880: no transcript (not found (404))"
-      ],
-      "outcome": "ok",
+      "notes": [],
+      "outcome": "unchanged",
+      "phone_probe": null,
       "pruned": 0,
       "reason": null,
-      "reused": 6,
+      "reused": 0,
       "stale": 0,
       "state": "active",
       "transcripts": {
-        "fetch_failed": 1,
-        "none_published": 1,
+        "fetch_failed": 0,
+        "none_published": 0,
         "partial": 0,
         "unreadable": 0,
         "withheld_terms": 0,
@@ -56,12 +59,20 @@
         "extractive": 0,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 0,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "quay-notes",
       "items": 0,
       "kept": 0,
       "new": 0,
       "notes": [],
       "outcome": "skipped",
+      "phone_probe": null,
       "pruned": 0,
       "reason": null,
       "reused": 0,
@@ -81,12 +92,20 @@
         "extractive": 0,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 0,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "port-gazette",
       "items": 0,
       "kept": 0,
       "new": 0,
       "notes": [],
       "outcome": "skipped",
+      "phone_probe": null,
       "pruned": 0,
       "reason": null,
       "reused": 0,
@@ -103,15 +122,29 @@
     },
     {
       "digests": {
-        "extractive": 4,
+        "extractive": 2,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 1
+      },
       "id": "lamp-room",
-      "items": 4,
-      "kept": 4,
+      "items": 2,
+      "kept": 2,
       "new": 0,
       "notes": [],
       "outcome": "unchanged",
+      "phone_probe": {
+        "checked_at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-13-ff7b73e406",
+        "reason": null,
+        "result": "ok",
+        "reused": true
+      },
       "pruned": 0,
       "reason": null,
       "reused": 0,
@@ -119,9 +152,9 @@
       "state": "active",
       "transcripts": {
         "fetch_failed": 0,
-        "none_published": 1,
+        "none_published": 0,
         "partial": 0,
-        "unreadable": 1,
+        "unreadable": 0,
         "withheld_terms": 2,
         "yes": 0
       }
@@ -131,6 +164,13 @@
         "extractive": 0,
         "model": 0
       },
+      "dropped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 0,
+        "phone_probe": 0,
+        "unreadable": 0
+      },
       "id": "harbor-voices",
       "items": 0,
       "kept": 0,
@@ -139,7 +179,8 @@
         "not in the config any more"
       ],
       "outcome": "removed",
-      "pruned": 4,
+      "phone_probe": null,
+      "pruned": 3,
       "reason": {
         "code": "removed",
         "detail": ""
@@ -158,9 +199,9 @@
     }
   ],
   "totals": {
-    "bytes": 108713,
-    "items": 10,
-    "requests": 6,
+    "bytes": 95398,
+    "items": 6,
+    "requests": 4,
     "sources": 5
   }
 }

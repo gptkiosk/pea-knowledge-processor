@@ -36,6 +36,16 @@ def load_config(change=None):
         os.remove(path)
 
 
+def strict(raw):
+    """The rules of the catalog on, as the curated list runs them: only discussable items, and the phone-style probe. The source-level
+    minimum stays off here (tests of it set it); the made-up sources include some without any transcript."""
+    raw["defaults"].update(only_discussable_items=True, phone_probe=True)
+
+
+def load_strict(change=None):
+    return load_config((lambda raw: (strict(raw), change(raw) if change else None)))
+
+
 def web_copy(target, change=None):
     """A copy of the saved web whose manifest `change(responses)` may alter. Returns the folder."""
     shutil.copytree(WEB, target)
@@ -108,7 +118,7 @@ def walk_lifecycle(base, snapshot):
     def go(change=None, web=WEB, days=0):
         now = T0 + datetime.timedelta(hours=6 * step[0], days=days)
         step[0] += 1
-        return run(out, now, load_config(chain(no_topics, change) if change else no_topics), web)
+        return run(out, now, load_config(chain(strict, no_topics, change) if change else chain(strict, no_topics)), web)
 
     def manual(sid, **values):
         def change(raw):

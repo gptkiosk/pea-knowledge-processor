@@ -3,11 +3,12 @@
   "format_version": "1.2",
   "sources": {
     "harbor-voices": {
-      "config": "04827bccfd666ac03d11ba83272d808bb3025c73df9ee153476bd51576e04d17",
+      "config": "e1525e59f9d1d14ec2f4179755d8affb16c60e3e9fc1a0ac318421083b3feff3",
       "etag": "\"harbor-1\"",
       "fingerprint": "date,editions,page,show.title,title,transcript",
       "items": {
         "2026-11-09-95827ccd6b": {
+          "dropped": "none_published",
           "key": "62a7efd0b298f703d7310b6f5893c7db6165e0fe964c2248e0d21aa5a1a127d9",
           "method": "extractive"
         },
@@ -24,18 +25,34 @@
           "method": "extractive"
         }
       },
-      "last_modified": ""
+      "last_modified": "",
+      "probe": {
+        "at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-12-8a5b8d3d14",
+        "key": "e3c2373181710aee4f6c1eea80666e8810aa2269c467b2720fd76984b717adc9",
+        "link": "https://harbor.example.org/e/2026-11-12/transcript.md",
+        "result": "ok"
+      },
+      "skipped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 0
+      }
     },
     "lamp-room": {
-      "config": "54d300f535517502fc43b15af542e9cf4d1f8375f3d55a6e32fc06f1427d00a5",
+      "config": "1dcc99b98950220924d0ae9df4710cc0ef10fad0b4a13a967753aaef6aeb255c",
       "etag": "\"lamp-1\"",
       "fingerprint": "link,title",
       "items": {
         "2026-11-10-05a3c75e16": {
+          "dropped": "none_published",
           "key": "b79a6a599479a9133b1c0ee902b0d9cde99a5d2eb4e859439e9fe1a6fd4d5655",
           "method": "extractive"
         },
         "2026-11-11-23c6c8ee22": {
+          "dropped": "unreadable",
           "key": "5d2659149397e138722a84c06269caa45d1d6b6bd6e404ada47af1c5a504f1df",
           "method": "extractive"
         },
@@ -48,50 +65,84 @@
           "method": "extractive"
         }
       },
-      "last_modified": ""
+      "last_modified": "",
+      "probe": {
+        "at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-13-ff7b73e406",
+        "key": "2c423db1aadeb79932689ac1a48ee16bfc1d02e6b0768746b3df34af1fa45b25",
+        "link": "https://lamp.example.org/ep4-transcript/",
+        "result": "ok"
+      },
+      "skipped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 1
+      }
     },
     "port-gazette": {
-      "config": "11ef8d2bc19a9f601b5a305bc464dfb7b832c0d5bc7b76bbd2299545bb7d20eb",
+      "config": "6a5e2a8b34cdd6158a811386e0705ca75137e52708df33804a8bed11a856df7a",
       "etag": "\"gazette-1\"",
       "fingerprint": "link,title",
       "items": {
         "2026-11-09-59d0eea8e0": {
+          "dropped": "none_published",
           "key": "07e90dfd524b9a2cc76f5bacae96d6da87898ab07c0fc09be9ddd720f655b2a2",
           "method": "extractive"
         },
         "2026-11-10-9a32c90fc7": {
+          "dropped": "none_published",
           "key": "91c2139ff7555c4dd014a42826abc59035988a2f34f80792d914d94c94b3038a",
           "method": "extractive"
         },
         "2026-11-11-f88d7568e0": {
+          "dropped": "none_published",
           "key": "d4efbb3070a2bdf84ef396f051ef5bc1851d46d50b9c82aef6352cdaa7914697",
           "method": "extractive"
         },
         "2026-11-12-9540419a16": {
+          "dropped": "none_published",
           "key": "2a14d7d4a71fe32f6989ecad1fb4b6c39868f047790370d716e1db2b00624330",
           "method": "extractive"
         }
       },
-      "last_modified": ""
+      "last_modified": "",
+      "skipped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 4,
+        "phone_probe": 0,
+        "unreadable": 0
+      }
     },
     "quay-notes": {
-      "config": "a2ec66fe1483d6a9e6c389e7729471c82b3f20fe68817c9177d7cab0d89b1b2f",
+      "config": "2355f74bfab58ee8237cefb6294e962ef09670f34307620a1fdc7f16646df04b",
       "etag": "",
       "fingerprint": "items,title,url,version",
       "items": {
         "2026-11-04-cd98c5b165": {
+          "dropped": "none_published",
           "key": "79b918de13eb851e13020b2b5e7715d904d9794dc9d5911b430fc259644863ea",
           "method": "extractive"
         },
         "2026-11-11-82c571434b": {
+          "dropped": "none_published",
           "key": "8c0b4cef77b16f97ffe938c576c53b00688e109a99234384b17c9e92275fb8f0",
           "method": "extractive"
         }
       },
-      "last_modified": ""
+      "last_modified": "",
+      "skipped": {
+        "fetch_failed": 0,
+        "no_source": 0,
+        "none_published": 2,
+        "phone_probe": 0,
+        "unreadable": 0
+      }
     },
     "tide-tables": {
-      "config": "94ec086b1ed14e5a7f3cb2ddb27221b5c9ac5dc22172eb092d807bd28de52934",
+      "config": "db42ef3035e519a39d0e0d988705a999c76f83903cd4001b41d8945b844df7dd",
       "etag": "\"tide-1\"",
       "fingerprint": "link,podcast:transcript,title",
       "items": {
@@ -100,10 +151,12 @@
           "method": "extractive"
         },
         "2026-11-08-97bd63e880": {
+          "dropped": "fetch_failed",
           "key": "34b06bf65758c705013357a8b6283a14d5e30686c98f20753bbfbbfb90d1dbe5",
           "method": "extractive"
         },
         "2026-11-09-8e6fef9855": {
+          "dropped": "none_published",
           "key": "0210db66fe9535452bf4b9ea68fa9675c76dbb8378a87c93d336bb31a5551741",
           "method": "extractive"
         },
@@ -120,7 +173,21 @@
           "method": "extractive"
         }
       },
-      "last_modified": ""
+      "last_modified": "",
+      "probe": {
+        "at": "2026-11-14T12:00:00Z",
+        "item": "2026-11-12-49be7f43a2",
+        "key": "7432f29c25c5dc91f0235d6961602a29d8190d213c21c3ad9ed1a0053e6932be",
+        "link": "https://media.tide.example.org/ep6.vtt",
+        "result": "ok"
+      },
+      "skipped": {
+        "fetch_failed": 1,
+        "no_source": 0,
+        "none_published": 1,
+        "phone_probe": 0,
+        "unreadable": 0
+      }
     }
   }
 }

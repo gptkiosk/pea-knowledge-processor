@@ -20,7 +20,7 @@ class Golden(unittest.TestCase):
     def setUpClass(cls):
         cls.base = tempfile.mkdtemp(prefix="pea-golden-test-")
         cls.out = os.path.join(cls.base, "dist")
-        support.run(cls.out)
+        support.run(cls.out, config=support.load_strict())
         cls.states = {}
         walk = os.path.join(cls.base, "walk")
         os.makedirs(walk)
@@ -39,7 +39,7 @@ class Golden(unittest.TestCase):
     def test_the_golden_output_validates(self):
         report = validate.check_folder(DIST)
         self.assertEqual(report.problems, [])
-        self.assertEqual((report.sources, report.items), (5, 20))
+        self.assertEqual((report.sources, report.items), (5, 9))
 
     def test_the_golden_lifecycle_states_are_what_the_pipeline_writes(self):
         folder = os.path.join(support.GOLDEN, "lifecycle")
@@ -90,6 +90,9 @@ class Golden(unittest.TestCase):
         store = support.store(DIST)
         for listing in store["sources"]:
             self.assertGreaterEqual(listing["suggested_keep"], 1)
+            if listing["item_count"] == 0:   # a source with nothing discussable lists no items and no files
+                self.assertEqual((listing["avg_bytes"], listing["items_file"], listing["available"]), (0, None, {"digest": 0, "transcript": 0, "link_back": True}))
+                continue
             self.assertGreater(listing["avg_bytes"], 0)
             total = 0
             for item in support.items(DIST, listing["id"]):
@@ -129,11 +132,11 @@ class Golden(unittest.TestCase):
         self.assertEqual(codes(edit(digest, b"keeper", b"keepers")), ["size_mismatch"])
         self.assertEqual(codes(edit(transcript, b"Mara", b"Sara")), ["hash_mismatch"])
         self.assertEqual(codes(lambda f: os.remove(os.path.join(f, *digest.split("/")))), ["missing"])
-        self.assertEqual(codes(lambda f: os.remove(os.path.join(f, "sources", "quay-notes", "items.json"))), ["missing", "unlisted_file"])
+        self.assertEqual(codes(lambda f: os.remove(os.path.join(f, "sources", "harbor-voices", "items.json"))), ["missing", "unlisted_file"])
         self.assertEqual(codes(lambda f: open(os.path.join(f, "sources", "tide-tables", "extra.json"), "w").close()), ["unlisted_file"])
         self.assertEqual(codes(lambda f: os.makedirs(os.path.join(f, "sources", "stranger"))), ["unlisted_file"])
         self.assertEqual(codes(lambda f: os.remove(os.path.join(f, "store.json"))), ["missing"])
-        self.assertEqual(codes(edit("store.json", b'"item_count": 6', b'"item_count": 5')), ["inconsistent"])
+        self.assertEqual(codes(edit("store.json", b'"item_count": 4', b'"item_count": 3')), ["inconsistent"])
         self.assertEqual(codes(edit("sources/tide-tables/items.json", b'"stale": false', b'"stale": true ')), ["hash_mismatch", "unlisted_file"])
         self.assertEqual(codes(lambda f: open(os.path.join(f, "store.json"), "ab").write(b" " * 600_000)), ["too_large"])
 

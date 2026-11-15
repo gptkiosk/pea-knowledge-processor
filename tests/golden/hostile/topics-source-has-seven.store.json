@@ -4,18 +4,18 @@
   "generated_at": "2026-11-14T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "min_app_version": null,
   "sources": [
     {
       "attribution": "Harbor Voices, a made-up source",
       "available": {
-        "digest": 4,
+        "digest": 3,
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 6945,
+      "avg_bytes": 8821,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -32,11 +32,11 @@
         "symbol": "microphone"
       },
       "id": "harbor-voices",
-      "item_count": 4,
+      "item_count": 3,
       "items_file": {
-        "bytes": 4623,
+        "bytes": 3763,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "1a0c7ae4a196e9aa198dfd340ba053baa65e75681be4c7833409e45fc0df925d"
+        "sha256": "a2697f4eb9c5e22c3c8434a62abb0f55390b673830600eb3c591a11474a10a70"
       },
       "kind": "podcast",
       "language": "en",
@@ -73,11 +73,11 @@
     {
       "attribution": "Tide Tables, a made-up source",
       "available": {
-        "digest": 6,
+        "digest": 4,
         "link_back": true,
         "transcript": 4
       },
-      "avg_bytes": 10910,
+      "avg_bytes": 14715,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -94,11 +94,11 @@
         "symbol": "waveform"
       },
       "id": "tide-tables",
-      "item_count": 6,
+      "item_count": 4,
       "items_file": {
-        "bytes": 7714,
+        "bytes": 5709,
         "path": "sources/tide-tables/items.json",
-        "sha256": "984e41332f0b9d24eecf16208dc528d975d064d65e1b7ab840d18693efee9811"
+        "sha256": "c960cd35ee62b94c97797109900522a90f38fdebcaaa60c7f2f497ffe02593c7"
       },
       "kind": "podcast",
       "language": "en",
@@ -129,11 +129,11 @@
     {
       "attribution": "Quay Notes, a made-up source",
       "available": {
-        "digest": 2,
+        "digest": 0,
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 2700,
+      "avg_bytes": 0,
       "cadence": "unknown",
       "categories": [
         "harbour",
@@ -150,19 +150,12 @@
         "symbol": "book"
       },
       "id": "quay-notes",
-      "item_count": 2,
-      "items_file": {
-        "bytes": 2205,
-        "path": "sources/quay-notes/items.json",
-        "sha256": "d3ad1c6e6ce2516197e83e08e6c360e149b2a5a9eb3d88c7874f8aaf499ae348"
-      },
+      "item_count": 0,
+      "items_file": null,
       "kind": "podcast",
       "language": "en",
-      "latest_date": "2026-11-11",
-      "latest_titles": [
-        "Four generations of ice",
-        "A short note"
-      ],
+      "latest_date": null,
+      "latest_titles": [],
       "message": null,
       "name": "Quay Notes",
       "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
@@ -178,18 +171,18 @@
       "topics": [
         "technology"
       ],
-      "typical_duration_seconds": 1501,
-      "whats_new": "Newest: Four generations of ice (2026-11-11). Before that: A short note (2026-11-04)."
+      "typical_duration_seconds": null,
+      "whats_new": null
     },
     {
       "attribution": "The Port Gazette, a made-up source",
       "available": {
-        "digest": 4,
+        "digest": 0,
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 1525,
-      "cadence": "daily",
+      "avg_bytes": 0,
+      "cadence": "unknown",
       "categories": [
         "harbour",
         "test"
@@ -205,20 +198,12 @@
         "symbol": "newspaper"
       },
       "id": "port-gazette",
-      "item_count": 4,
-      "items_file": {
-        "bytes": 3818,
-        "path": "sources/port-gazette/items.json",
-        "sha256": "5bdba16ce7be40329f18624d0c88a3ed55e77b8d1ead79fce55ae2f7a07a7561"
-      },
+      "item_count": 0,
+      "items_file": null,
       "kind": "news",
       "language": "en",
-      "latest_date": "2026-11-12",
-      "latest_titles": [
-        "Harbour Board to publish radar logs after ledger dispute",
-        "County moves visitor centre plan to North Quay",
-        "Dredging budget rises 12 percent"
-      ],
+      "latest_date": null,
+      "latest_titles": [],
       "message": null,
       "name": "The Port Gazette",
       "overview": "A made-up source. Its beat is one invented harbour town; its voice is plain. An item is one conversation or one short article.",
@@ -235,17 +220,17 @@
         "technology"
       ],
       "typical_duration_seconds": null,
-      "whats_new": "Newest: Harbour Board to publish radar logs after ledger dispute (2026-11-12). Before that: County moves visitor centre plan to North Quay (2026-11-11)."
+      "whats_new": null
     },
     {
       "attribution": "The Lamp Room, a made-up source",
       "available": {
-        "digest": 4,
+        "digest": 2,
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 5276,
-      "cadence": "daily",
+      "avg_bytes": 9061,
+      "cadence": "unknown",
       "categories": [
         "harbour",
         "test"
@@ -261,19 +246,18 @@
         "symbol": "book"
       },
       "id": "lamp-room",
-      "item_count": 4,
+      "item_count": 2,
       "items_file": {
-        "bytes": 4619,
+        "bytes": 2788,
         "path": "sources/lamp-room/items.json",
-        "sha256": "9424b141acc612b8141334e55a9e433d9391a655a30615961c32818d4242eaf2"
+        "sha256": "fc929f9b94e7c406c75c8801ed236a9760aa7fbed608fb3fbe92a79e20c11498"
       },
       "kind": "podcast",
       "language": "en",
       "latest_date": "2026-11-13",
       "latest_titles": [
         "The night the lamp went out",
-        "A page that hides its orders",
-        "The keeper's winter"
+        "A page that hides its orders"
       ],
       "message": null,
       "name": "The Lamp Room",

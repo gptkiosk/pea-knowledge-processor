@@ -111,7 +111,7 @@ def main():
         shutil.rmtree(support.GOLDEN, ignore_errors=True)
         out = os.path.join(base, "plain", "dist")
         os.makedirs(os.path.dirname(out))
-        support.run(out)
+        support.run(out, config=support.load_strict())   # the rules of the catalog on: only discussable items, the phone-style probe
         shutil.copytree(out, os.path.join(support.GOLDEN, "dist"))
 
         def snapshot(name, folder):

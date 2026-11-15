@@ -9,7 +9,10 @@
     "tombstone_days": 90,
     "excerpt_budget_chars": 1800,
     "suggested_keep": 4,
-    "min_full_transcript_share": 0
+    "min_full_transcript_share": 0,
+    "min_discussable_items": 0,
+    "only_discussable_items": false,
+    "phone_probe": false
   },
   "model": {
     "enabled": false,

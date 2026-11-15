@@ -406,7 +406,8 @@ class InThePipeline(unittest.TestCase):
 
     def test_a_source_whose_pages_stop_reading_is_paused_and_comes_back(self):
         def strict(raw):
-            raw["defaults"].update(min_full_transcript_share=0.6, transcript_check_items=2)
+            support.strict(raw)
+            raw["defaults"].update(min_full_transcript_share=0.6, transcript_check_items=2, phone_probe=False)
             raw["sources"] = [s for s in raw["sources"] if s["id"] == "lamp-room"]
         config = support.load_config(strict)
         out = os.path.join(self.base, "markup-changed")
@@ -427,7 +428,7 @@ class InThePipeline(unittest.TestCase):
             listing = support.listing(out, "lamp-room")
             self.assertEqual(health["sources"][0]["reason"]["code"], "format_changed")
             self.assertEqual(listing["state"], "paused" if n == 3 else "active")
-            self.assertEqual(listing["item_count"], 4, "the last good copy is kept")
+            self.assertEqual(listing["item_count"], 2, "the last good copy is kept (the two items of four that have a transcript page)")
         self.assertIn("no longer publishes full transcripts", listing["message"])
         support.run(out, support.T0 + support.datetime.timedelta(hours=30), changed)
         self.assertEqual(support.listing(out, "lamp-room")["state"], "active", "it returns by itself when the pages read again")

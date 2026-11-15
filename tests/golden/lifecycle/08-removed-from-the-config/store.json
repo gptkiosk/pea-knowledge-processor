@@ -4,18 +4,18 @@
   "generated_at": "2026-11-16T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "min_app_version": null,
   "sources": [
     {
       "attribution": "Tide Tables, a made-up source",
       "available": {
-        "digest": 6,
+        "digest": 4,
         "link_back": true,
         "transcript": 4
       },
-      "avg_bytes": 10910,
+      "avg_bytes": 14715,
       "cadence": "daily",
       "categories": [
         "harbour",
@@ -32,11 +32,11 @@
         "symbol": "waveform"
       },
       "id": "tide-tables",
-      "item_count": 6,
+      "item_count": 4,
       "items_file": {
-        "bytes": 7408,
+        "bytes": 5505,
         "path": "sources/tide-tables/items.json",
-        "sha256": "c82859081438fe37d445fc4476b19a74007772df141c602e74f18535e38919cb"
+        "sha256": "938a751b3194f18d549982308cde0afe4bb05aabc74751f881ac45c051a21d84"
       },
       "kind": "podcast",
       "language": "en",
@@ -160,12 +160,12 @@
     {
       "attribution": "The Lamp Room, a made-up source",
       "available": {
-        "digest": 4,
+        "digest": 2,
         "link_back": true,
         "transcript": 0
       },
-      "avg_bytes": 5276,
-      "cadence": "daily",
+      "avg_bytes": 9061,
+      "cadence": "unknown",
       "categories": [
         "harbour",
         "test"
@@ -181,19 +181,18 @@
         "symbol": "book"
       },
       "id": "lamp-room",
-      "item_count": 4,
+      "item_count": 2,
       "items_file": {
-        "bytes": 4415,
+        "bytes": 2686,
         "path": "sources/lamp-room/items.json",
-        "sha256": "655073ab23341b274d3685c520e5c9c4e08147a50e75501a4bf11f5ce1d64e91"
+        "sha256": "02cfea341384f1ac7a1333aaa03c8cd549b0f91bac4ee44d4b8bc2fe76074b5a"
       },
       "kind": "podcast",
       "language": "en",
       "latest_date": "2026-11-13",
       "latest_titles": [
         "The night the lamp went out",
-        "A page that hides its orders",
-        "The keeper's winter"
+        "A page that hides its orders"
       ],
       "message": null,
       "name": "The Lamp Room",
