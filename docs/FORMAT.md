@@ -1,6 +1,6 @@
 # The PEA knowledge format, version 1.1
 
-This is the one format the PEA knowledge processor writes and the PEA iPhone app reads. A curated list of sources goes in; a folder of static files comes out. The app never reads a publisher's own feed or transcript: it reads this, and it checks every file before it uses it.
+This is the one format the PEA knowledge processor writes and the PEA iPhone app reads. A curated list of sources goes in; a folder of static files comes out. The app never reads a publisher's feed: it reads this, and it checks every file before it uses it. The one thing it may fetch from a publisher is the transcript an item points to (`transcript_source`, section 6), when the owner wants the whole text.
 
 The format exists for one purpose: so that the assistant can hold a natural conversation about any item and suggest things to talk about, and always gets the data it expects in the shape it expects. It is not an archive format.
 
@@ -74,6 +74,7 @@ Each listing:
 | `bytes` | The size of the item's files together, for the storage choice. |
 | `digest` | Path, SHA-256, size, and what kind of digest it is (`basis`, `grade`, `method`), repeated from the file so a reader can choose without opening it. |
 | `transcript` | `available`: `yes`, `partial` or `no`; `reason`; `file` (path, SHA-256, size) or null. Since 1.1 also `read`: what the pipeline read at the publisher to make the digest (`full`, `partial`, `none`), whether or not the file is published. |
+| `transcript_source` | Since 1.1, optional. Where the publisher itself offers this item's transcript: `link`, `format`, `route`, `bytes`, and `extract` for an HTML page. Present only when the pipeline read a transcript there. Section 6 describes it. |
 
 Transcript reasons are typed:
 
@@ -81,10 +82,10 @@ Transcript reasons are typed:
 | --- | --- | --- |
 | `yes` | null | The whole transcript is in the output. |
 | `partial` | `cut` | Its first part is; the file says where it stops. |
-| `no` | `none_published` | The publisher lists no transcript. |
-| `no` | `fetch_failed` | One is listed but could not be fetched. |
-| `no` | `unreadable` | It arrived but is not a transcript the converter can read. |
-| `no` | `withheld_terms` | It was read and the digest was made from it, but the publisher's terms do not clearly allow republishing it. |
+| `no` | `none_published` | The publisher lists no transcript, or its page for the episode holds none. |
+| `no` | `fetch_failed` | One is listed but could not be fetched. It is asked for again on the next run. |
+| `no` | `unreadable` | It arrived but is not a transcript the converter can read: a file of another kind, or a web page with too little text or a sign-in, paywall, cookie or robot-check page. |
+| `no` | `withheld_terms` | Read by the pipeline, not republished: the digest was made from it, and the publisher's terms do not clearly allow republishing it. A reader that wants the whole text reads it from the publisher (`transcript_source`). |
 
 Every item has a digest. An item never depends on a second download to be talked about: the digest repeats the title, date, link and source name.
 
@@ -127,7 +128,7 @@ Every item has a digest. An item never depends on a second download to be talked
 
 ### What 1.1 adds
 
-Format 1.1 adds only optional members: `link_kind` and `transcript.read` in `items.json`, and `link_kind`, `guests`, `mentioned_resources`, `chapters`, `snippable_moments` and `recap_cards` in a digest. No member of 1.0 changed, no limit grew, no enumeration of 1.0 gained a value. A reader of 1.0 reads a 1.1 file by the rule of section 8: it ignores the members it does not know and still checks every text in the file against T1 to T4.
+Format 1.1 adds only optional members: `link_kind`, `transcript.read` and (since 2026-11-15) `transcript_source` in `items.json`, and `link_kind`, `guests`, `mentioned_resources`, `chapters`, `snippable_moments` and `recap_cards` in a digest. No member of 1.0 changed, no limit grew, no enumeration of 1.0 gained a value. A reader of 1.0 reads a 1.1 file by the rule of section 8: it ignores the members it does not know and still checks every text in the file against T1 to T4.
 
 Where each comes from, without a model: guests from the publisher's marks, title and notes; resources from the names the notes link to (with a transcript, only those that are also said, each with the time it is first said) and from what a speaker introduces as "a book called ..."; chapters from the publisher's marks, else from the timed transcript; moments from the quotes, the strongest claim and the talking points the digest already holds, so they take no further words from a transcript that may not be republished; recap cards from the digest. From the example below:
 
@@ -193,7 +194,7 @@ A source that is no longer in `store.json` at all is to be treated as withdrawn 
 How the pipeline sets it:
 
 - A manual `state` in `config/sources.json` always wins.
-- **Only sources with full transcripts are carried.** A source that reads without trouble but has a full transcript for fewer than 60 percent of its newest five items (`min_full_transcript_share`, `transcript_check_items`) is counted as a source that cannot be read, with reason `format_changed` and a detail that starts "full transcripts for". So it keeps its last good items, is paused after the usual number of runs, and is withdrawn (reason `quality`) after `withdraw_without_transcripts_days` (30) in that pause. It is still read every run and returns by itself when the transcripts do.
+- **Only sources with full transcripts are carried.** A source that reads without trouble but has a full transcript for fewer than 60 percent of its newest five items (`min_full_transcript_share`, `transcript_check_items`) is counted as a source that cannot be read, with reason `format_changed` and a detail that starts "full transcripts for". So it keeps its last good items, is paused after the usual number of runs, and is withdrawn (reason `quality`) after `withdraw_without_transcripts_days` (30) in that pause. It is still read every run and returns by itself when the transcripts do. A transcript that the pipeline itself cut at its size cap counts as a full one here: the publisher offers all of it. This is also how a source read from web pages is stopped when the site changes its markup: new episodes stop reading, the share falls, and the source is paused with its last good items.
 - A source that cannot be read (fetch failed, robots.txt forbids it, the feed is not the expected shape, or its new output does not validate) keeps its last good items and is marked stale. After `auto_pause_after_failed_runs` failures in a row (3 by default) it becomes `paused` with a typed reason. It is still tried every run, and returns to `active` by itself when it reads again.
 - A source whose new output does not validate is never published; its last good copy is. The other sources publish as usual.
 - A source set to `withdrawn`, or removed from the config, gets a withdrawn listing with no items for `tombstone_days`, then disappears.
@@ -205,6 +206,66 @@ How the pipeline sets it:
 A transcript in the output is a PEA transcript v1 file, exactly as specified in `spec/transcript-v1/SPEC.md` (a copy of the open specification with its schema, tools and fixtures). The processor adds nothing to that format. A reader validates the file by that specification's writer rules and treats its text as untrusted (its section 14).
 
 A transcript is published only for a source whose `publish` is `full`. The default is `digest_only`.
+
+### Where the publisher offers the transcript: `transcript_source`
+
+No source permits republishing its transcripts, so the output carries none of them. An item instead says where the publisher itself offers the transcript, so that a reader (the app) can fetch it there, normalize it on the device and keep it. Nothing is hosted here.
+
+```json
+"transcript_source": {
+  "link": "https://talkpython.fm/episodes/show/568/cloudflare-python-workers.vtt",
+  "format": "vtt",
+  "route": "feed_tag",
+  "bytes": 140451
+}
+```
+
+| Member | Meaning |
+| --- | --- |
+| `link` | The publisher's own public https address of the transcript, as its feed or site gives it. It is named `link` because `site` and `link` are the only members of the format that may hold an address (rule T3); it is checked like every `link`: https, port 443, a public host name, no credentials. |
+| `format` | `vtt`, `srt`, `json` (Podcasting 2.0), `text`, `markdown` or `html`. What the pipeline found there, not what the publisher declared. |
+| `route` | How the address was found: `feed_tag` (the publisher's feed or index lists it for this item), `notes_link` (the item's notes link to it), `page` (it is the item's page, or follows from it). |
+| `bytes` | The size of what the pipeline read, after decompression, or null. A hint for showing a size; never more than 1,500,000. |
+| `extract` | Only with `html`: which elements of the page hold the transcript (below). |
+
+- The member is present exactly when the pipeline read a transcript at that address in this run or an earlier one, without signing in (`transcript.read` is `full` or `partial`). It is absent when none is offered (`none_published`), when it could not be fetched or read, and for news.
+- It changes nothing else: `publish` stays `digest_only`, `transcript.available` stays `no` with `withheld_terms`, and the digest is complete without it.
+- **Privacy.** A reader that fetches `link` talks to the publisher directly: the publisher (or its file host) sees the device's network address and that it asked for this episode's transcript, as with any podcast app that downloads an episode. Nothing else is sent: no cookie, no account, no identifier, no referrer.
+- The address and what comes back are untrusted. A reader checks the address by the rules of `link`, follows redirects only to public https addresses, reads at most 1,500,000 bytes, and treats the text as quoted data (section 7). When anything fails it carries on with the digest.
+- The pipeline's own copy is cut at 150,000 characters of speech (`read: partial`); the publisher's file may be longer.
+
+### Reading an HTML transcript page
+
+Some publishers post the transcript as a web page. `extract` says which elements to read, as lists of simple selectors: `tag`, `.class`, `#id`, `tag.class` or `tag#id` (one tag name, one class or id, nothing else). It is data; it is never code, and a reader MUST NOT treat it as anything else.
+
+```json
+"transcript_source": {
+  "link": "https://lexfridman.com/preston-stewart-michael-kofman-transcript",
+  "format": "html",
+  "route": "notes_link",
+  "bytes": 343790,
+  "extract": {"row": [".ts-segment"], "speaker": [".ts-name"], "time": [".ts-timestamp"]}
+}
+```
+
+| Member of `extract` | Meaning |
+| --- | --- |
+| `within` | The elements that hold the transcript. Only text inside one of them is read. |
+| `row` | The element of one turn: one speaker, one time, their text. Without `within`, only text inside a row is read. |
+| `speaker` | Elements whose text is the speaker's name ("Mara", "Mara (00:01:23)"). The name holds for what follows until the next one, or until the row ends. |
+| `time` | Elements whose text holds a time ("(00:09:39)", "9:39"). It is the time of the text that follows. |
+| `drop` | Elements left out, beyond what is always left out. |
+
+The reference is `src/pea_knowledge/htmlpage.py`; `tests/test_htmlpage.py` and the pages under `tests/fixtures/web/lamp/` show each case. The steps:
+
+1. Nothing is executed and nothing more is fetched: no script, no style sheet, no frame, no image.
+2. One pass over the markup. Comments, declarations and the content of `script`, `style`, `template`, `noscript`, `iframe`, `svg`, `math`, `textarea`, `select`, `title`, `object`, `canvas`, `audio` and `video` are skipped. A `<` that starts no tag is a character. A tag that never ends takes the rest of the page with it.
+3. An element and everything in it is dropped when it is `head`, `nav`, `header`, `footer`, `aside`, `form`, `button`, `figure`, `figcaption`, a heading, `label`, `dialog`, `menu`, `summary`, `del`, `s` or `map`; when it is hidden (`hidden`, `aria-hidden="true"`, an inline style with `display:none`, `visibility:hidden`, `opacity:0`, `font-size:0`, a large negative offset, a zero clip or a transparent colour, or a class such as `hidden`, `sr-only`, `visually-hidden`, `screen-reader-text`, `d-none`); when a `drop` selector names it; or, unless `within` or `row` names it, when its class or id is one of the usual names for advertising, sharing, comments and tables of contents, or a style sheet in the page hides that class or id.
+4. Block elements (`p`, `div`, `li`, `dt`, `dd`, `tr`, `blockquote`, `section`, a row, and `br`) end a block of text. Inline elements add nothing. Entities are decoded once; `<` and `>` that remain are written as single guillemets, so the text can never be read as markup.
+5. With `extract`, the blocks inside `within` (or inside the rows) are the transcript; each takes the speaker and time its row or the marks before it state. Without `extract`, `cite` and `dt` are speakers and `time` is a time; the transcript is the innermost element whose id or class contains "transcript" and that still holds at least four fifths of such text, and failing that an `article`, `main` or the body, but then only when the text reads like a transcript (speaker labels or times throughout).
+6. Where the page marks no speakers, they are read from the text: a paragraph that starts "Lex Fridman: (00:01:23) ..." or "Lex Fridman (00:01:23) ...", or the label rule of PEA transcript v1 ("MARA: ..." on at least two lines), and times in brackets inside a line.
+7. From there on the page is treated like any other transcript: caption clean-up, segments of one speaker, the sponsor rule, the size cap with its cut mark. The file says `format: HTML page`.
+8. Refusals, never a part of a page: fewer than 1,500 characters of transcript text, or fewer than 150 per minute of the episode's stated length, is `unreadable`; so is a transcript inside an element whose class or id says paywall, and a short page that asks to sign in, subscribe, accept cookies or prove one is not a robot; a page where no transcript block is found is `none_published`. A page that takes more than ten seconds to read is `unreadable`.
 
 ## 7. Hostile input
 
@@ -250,7 +311,7 @@ In order, for each file:
 2. Strict JSON (`not_json`), `format_version` (`unsupported_version`), the schema (`schema`), the text rules (`text_rule`), the addresses (`address`).
 3. The cross-checks of that file:
    - `store.json`: ids unique; an items file is at `sources/<id>/items.json` (`path_invalid`); a withdrawn source lists nothing; a paused or withdrawn source has a message, a reason and a time; `purge` only with `withdrawn`; `item_count` and `items_file` agree; a paused source is stale (`inconsistent`).
-   - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; newest first (`inconsistent`).
+   - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; a `transcript_source` only on an item whose transcript was read, with `extract` exactly when its format is `html`; newest first (`inconsistent`). `transcript_source.link` is checked as an address (`address`).
    - a transcript: conforms to PEA transcript v1 (`transcript_invalid`); cut or not as the index says.
    - a digest: source, item, title, date, link, duration, basis, grade and method are those of the index (`identity_mismatch`); the brief form is within 900 characters (`brief_too_long`); no quotes and no moments without a transcript basis; chapters in order of time and not overlapping; `link_kind` as in the index; when the transcript is in the output, `transcript_sha256` is its hash, every pointer names a segment it has, and every `exact` quote and every moment is in the segment it points to (`inconsistent`).
 

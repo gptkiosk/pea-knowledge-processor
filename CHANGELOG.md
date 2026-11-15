@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-11-15)
+
+- **HTML transcript pages are read** (`src/pea_knowledge/htmlpage.py`), for publishers that post the full transcript openly on their own site. A source names how the page of an episode is found (`transcript_page`: the item's page, a link in its notes, a link on its page, or a template), the one host it may be on, and the elements to read as simple selectors. Nothing is executed; hidden text, menus, scripts and advertising are dropped; reading is bounded in time; a page with too little text, no transcript, or a sign-in, paywall, cookie or robot-check wall is `none_published` or `unreadable` with a detail, never a partial read. A `podcast:transcript` tag that points to an HTML page is read the same way.
+- **`transcript_source` on an item**, optional, within format 1.1: `link` (the publisher's own address of the transcript), `format`, `route`, `bytes`, and `extract` for an HTML page. An app can fetch the transcript from the publisher itself; nothing more is published here. The address is in a member named `link` so that readers of 1.0 and 1.1 accept it. `withheld_terms` now reads: read by the pipeline, not republished.
+- **Lex Fridman Podcast is added**, read from its transcript pages. 99% Invisible, Syntax, Freakonomics Radio and NPR were checked and are not carried: their terms forbid robots or scraping. Hidden Brain is not carried: its feed gives no page per episode.
+- A transcript that the pipeline cut at its own size cap counts as offered in full for the rule of the catalog. A transcript that failed to fetch is asked for again on the next run instead of being kept as failed.
+- Every item is made anew once after this change, so that all of them carry `transcript_source`.
+
 ## 0.2.0 (2026-11-15)
 
 - **Format 1.1**, additive: `link_kind` and `transcript.read` on an item; `guests`, `mentioned_resources` (names only), `chapters`, `snippable_moments` and `recap_cards` in a digest. A reader of 1.0 keeps working: it ignores what it does not know. No limit grew; the brief form is still at most 900 characters.

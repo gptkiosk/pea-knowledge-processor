@@ -4,7 +4,7 @@
   "generated_at": "2026-11-16T12:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "mode": "offline",
   "model": {

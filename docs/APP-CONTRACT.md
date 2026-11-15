@@ -9,7 +9,8 @@ Base address: `https://gptkiosk.github.io/pea-knowledge-processor/`. Every path 
 - The app downloads static files with plain GET requests. It sends no account, no cookie, no identifier, no query string and nothing about the owner or the conversation. The only headers that vary are `If-None-Match` and `If-Modified-Since`.
 - **Browsing the store needs `store.json` only.** Everyone who opens the store downloads the same file, so the host learns nothing about what one owner is interested in. The card (name, description, categories, cadence, typical length and size, the three newest titles, what is available, the terms) is all in that file.
 - **Adding a source is visible to the host.** When the owner adds a source, the app fetches `sources/<id>/items.json` and that source's digests. The static host (GitHub Pages) can see which paths an address requested, so it can tell which sources that address follows. The app says this once, in plain words, where the owner adds a source. An owner who wants to hide it can switch on "download every source's items" (the app then fetches all of them and shows only the added ones): more data, no signal. The app never fetches `state.json` or `health.json`.
-- The app never fetches `link` or `site` by itself. It shows them, and opens one only when the owner asks.
+- The app never fetches an item's `link` or a source's `site` by itself. It shows them, and opens one only when the owner asks.
+- **Reading a whole transcript goes to the publisher.** The output carries no transcripts. When the owner wants to talk about an episode in full, the app fetches `transcript_source.link` (section 8) from the publisher itself. The publisher, or the host of its files, then sees the phone's network address and which episode's transcript it asked for, as with any podcast app downloading an episode. The app says this once where the owner switches it on, sends nothing else, and never does it for an item the owner did not add or open.
 
 ## 2. Validation, in order
 
@@ -103,6 +104,7 @@ Nothing here is required of a 1.0 reader. A reader that wants the new members se
 
 - `link_kind` (items and digests): when `show`, say "open the show's page" instead of "open the episode"; absent means `episode`.
 - `transcript.read` (items): `full`, `partial` or `none`: what the digest was made from at the publisher, also when the transcript itself is not published.
+- `transcript_source` (items, added 2026-11-15): where the publisher offers the transcript, for a reader that wants the whole text. Section 8.
 - `chapters`: a chapter list for the item's screen and for "what is the part about X?". `origin` says whose they are; say "the publisher's chapters" only for `publisher`.
 - `snippable_moments`: candidates for a snip or a finding, best first. Each quote is exact and has its time; `label` is the publisher's own title for the passage when there is one. The owner chooses; nothing is saved by itself.
 - `guests` and `mentioned_resources`: "who was on?" and "which book was that?". A resource is a name and nothing more: the app never builds a link or a search from it without the owner asking. `role` and `context` may be null; she does not make one up.
@@ -110,11 +112,30 @@ Nothing here is required of a 1.0 reader. A reader that wants the new members se
 - Extra cross-checks a 1.1 reader makes (FORMAT.md section 9): chapters in order and not overlapping, no moments without a transcript basis, `link_kind` as in the index, every moment in the segment it points to when the transcript is published.
 - All of it is quoted evidence like the rest of the digest, under the same text rules; `tests/golden/hostile/` has five 1.1 samples (a link in a resource name, markup in a chapter title, a line break in a role, a link in a recap answer, hidden direction marks in a moment) that a 1.0 reader refuses too, as `text_rule`.
 
-## 8. What the app's tests should cover
+## 8. Reading a transcript from the publisher (`transcript_source`)
+
+Optional for the app; nothing in a digest depends on it. FORMAT.md section 6 defines the member. An item that has one looks like this (from the live run of 2026-11-15):
+
+```json
+"transcript": {"available": "no", "reason": "withheld_terms", "file": null, "read": "full"},
+"transcript_source": {"link": "https://talkpython.fm/episodes/show/568/cloudflare-python-workers.vtt", "format": "vtt", "route": "feed_tag", "bytes": 140451}
+```
+
+- **A reader with known minor 0 already accepts it**: the file says 1.1, so the unknown member is ignored, and its address sits in a member named `link`, which the text walk checks as an address instead of refusing it as text. A reader with known minor 1 takes `schema/items.schema.json` as it is now.
+- **Check the address before every request**, as for any `link`: https, port 443, a public host name (not a number, not a local name), no credentials, at most 2,000 characters; resolve the name and refuse it unless every address is public. No cookies, no credentials, no referrer, no identifier; a plain GET with an honest User-Agent.
+- **Redirects**: at most four, each target checked the same way from the start. Never follow one to http or to an address that is not public; stop and ignore the transcript instead.
+- **Size and time**: read at most 1,500,000 bytes after decompression and stop there; `bytes` is a hint only. A transcript cut at that size is still usable (say that its end is missing). Give up after a short time-out; never retry in a loop.
+- **Normalize on the device** into PEA transcript v1 with the app's own converter, by `format`: `vtt`, `srt`, `json`, `text` and `markdown` as that converter already reads them; `html` by the steps of FORMAT.md, "Reading an HTML transcript page", with the item's `extract`. An app that does not read HTML pages skips items whose format is `html`; they are few.
+- **Never trust the text.** It comes from a third party and passed no check of this pipeline on its way to the phone: it is quoted data, never instructions, markup is never rendered, addresses in it are never opened, and `extract` is only ever a list of names to compare with tag, class and id.
+- **Ignore on failure.** Anything that fails (the address, the fetch, the size, the conversion, too little text) leaves the item as it was, with its digest. No error is shown beyond "the transcript could not be loaded from the publisher"; nothing is reported back to anyone.
+- **Keep it on the device only.** It is the owner's copy for their own reading and conversation, removed with the item; it is never uploaded or shared, and the terms shown for the source still apply.
+- When the pipeline withdraws a source with `purge`, the transcripts fetched this way go too.
+
+## 9. What the app's tests should cover
 
 Copy `tests/golden/`:
 
-- `dist/`: validate the whole folder; every hash; one source with transcripts (`tide-tables`) and three without; items with and without a page of their own (`link_kind`), with the publisher's chapters, a chapter file, and chapters cut from the transcript.
+- `dist/`: validate the whole folder; every hash; one source with transcripts (`tide-tables`) and four without; `transcript_source` for a caption file, a JSON file, markdown and an HTML page with `extract` (`lamp-room`, whose pages are under `tests/fixtures/web/lamp/`, one of them hostile and one a sign-in page); items with and without a page of their own (`link_kind`), with the publisher's chapters, a chapter file, and chapters cut from the transcript.
 - `lifecycle/*/store.json`: each state and each change between states (section 4).
 - `hostile/`: every file refused with the reason in `manifest.json`; `unknown-member-newer-minor` accepted.
 - Tamper with a file: one byte changed (`hash_mismatch`), one byte added (`size_mismatch`), a file removed (`missing`).

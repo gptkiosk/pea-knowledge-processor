@@ -8,7 +8,7 @@ Why it exists: an assistant cannot talk well about a podcast episode if every pu
 - Python 3.11 or later, standard library only. Nothing to install.
 - Works with no API key. A model digest through OpenRouter is optional.
 
-**Status: 0.2.0, format 1.1.** Twelve sources. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
+**Status: 0.3.0, format 1.1.** Thirteen sources listed, eleven active. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
 
 ## What comes out
 
@@ -22,6 +22,7 @@ health.json                                  what the last run did
 
 - **The store listing** (`store.json`) is small and is all the app needs to show the catalog: name, description, topics, how often items come, how long and how large they are, the three newest titles, the terms.
 - **A digest** is built for conversation: a framing, five to eight talking points in story order (each with why it matters, a pointer into the transcript and a question worth asking), exact quotes with speaker and time, a glossary of the names that come up, the figures, what is disputed, links to earlier items, conversation starters and follow-up questions, and a compact brief form of at most 900 characters. Since format 1.1 also: the guests, the books, tools and sites that are named (names only, never a link), chapters (the publisher's own where it marks them), up to five exact passages worth snipping with their times, and three recap cards.
+- **Every item says where the publisher offers its transcript** (`transcript_source`: the address, the format, how it was found). Transcripts are not republished here; an app that wants the whole text fetches it from the publisher itself.
 - **Every item links to its own page** at the publisher. Where a feed gives no page per episode, the item links to the show and says so (`link_kind: show`).
 - **Every source has a lifecycle state** (`active`, `paused`, `withdrawn`), so a source can be switched off for every app with one commit.
 
@@ -52,7 +53,7 @@ PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use t
 | Stage | What it does |
 | --- | --- |
 | 1. Fetch (`fetch.py`) | https only; the host name is resolved, every address must be public, and the connection goes to the address that was checked; redirects are checked again; robots.txt is obeyed and crawl delays honoured; conditional requests; size and time caps; no cookies; a User-Agent that names this project and its repository. |
-| 2. Normalize (`adapters.py`, `transcript/`) | Reads an agent index (`agent.json`), RSS or Atom with `podcast:transcript`, or JSON Feed; a feed larger than 8 MB is read up to its newest whole entries. Finds each item's own page, and what the publisher marks up itself: people, chapters (`psc:chapter`, `podcast:chapters`, timed lines in the notes), soundbites, the names the notes link to. Converts WebVTT, SubRip, Podcasting 2.0 JSON, markdown and plain text into PEA transcript v1. A missing or unusable transcript gets a typed reason. |
+| 2. Normalize (`adapters.py`, `transcript/`) | Reads an agent index (`agent.json`), RSS or Atom with `podcast:transcript`, or JSON Feed; a feed larger than 8 MB is read up to its newest whole entries. Finds each item's own page, and what the publisher marks up itself: people, chapters (`psc:chapter`, `podcast:chapters`, timed lines in the notes), soundbites, the names the notes link to. Converts WebVTT, SubRip, Podcasting 2.0 JSON, markdown and plain text into PEA transcript v1. For a publisher whose transcript is a web page on its own site (`htmlpage.py`), finds the page of each episode and reads only the transcript from it: nothing is executed, hidden text and menus are dropped, and a page with too little text or a sign-in wall is a typed failure, never a partial read. A missing or unusable transcript gets a typed reason. |
 | 3. Digest (`digest.py`, `model_digest.py`) | An extractive digest, always: sentences picked from the transcript, the same result for the same input. Optionally a model digest; anything invalid in it falls back to the extractive one. |
 | 4. Build (`pipeline.py`, `validate.py`) | Writes the output with hashes, keeps the last good copy of what failed, sets each source's state (also: too few full transcripts), prunes old items, validates everything, and only then replaces the previous output. |
 
@@ -70,7 +71,7 @@ Off by default (`"model": {"enabled": false}` in `config/sources.json`). To use 
 
 ## Time, and what one failure costs
 
-Measured on 2026-11-15 against the twelve real sources, one process, no model: a first run with nothing published yet took **1 minute 58 seconds** (98 requests, 55 transcripts fetched and converted, 56 digests); the next run, with nothing new, took **17 seconds** (22 requests). In CI the three jobs add about a minute of setup each, so a scheduled run is two to five minutes on a standard runner, far under ten. What keeps it there: conditional requests (a feed that answers "not modified" costs one request), an item whose key did not change is not fetched or digested again, and the model is called for new items only. Requests go one host at a time with a pause, on purpose. A source that fails, times out, changes shape or loses its transcripts never stops the others: it keeps its last good items and the rest publish as usual (`tests/test_pipeline.py`).
+Measured on 2026-11-15 against the eleven active sources, one process, no model: a first run with nothing published yet took **1 minute 54 seconds** (89 requests, 53 transcripts fetched and converted, four of them web pages, 54 digests); the next run, with nothing new, took **17 seconds** (21 requests). In CI the three jobs add about a minute of setup each, so a scheduled run is two to five minutes on a standard runner, far under ten. What keeps it there: conditional requests (a feed that answers "not modified" costs one request), an item whose key did not change is not fetched or digested again, and the model is called for new items only. Requests go one host at a time with a pause, on purpose. A source that fails, times out, changes shape or loses its transcripts never stops the others: it keeps its last good items and the rest publish as usual (`tests/test_pipeline.py`).
 
 ## The schedule stays on
 
@@ -80,7 +81,7 @@ GitHub switches off a scheduled workflow after 60 days without activity in the r
 
 0. **Only sources with full transcripts are carried.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
 1. Go through the terms checklist in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md): robots.txt, licence, terms of use.
-2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the hosts, where the transcript is (`transcript_route`), why it is there (`chosen_because`), the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
+2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the hosts, where the transcript is (`transcript_route`; for a transcript that is a web page also `transcript_page`: how the page of an episode is found, its one host, and the elements to read), why it is there (`chosen_because`), the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
 3. `python3 -m pea_knowledge run --config config/sources.json --out dist`, read the summary, open a digest.
 4. Open a pull request. The tests run on it.
 
@@ -105,6 +106,8 @@ Edit the source in `config/sources.json`, commit to `main`, and run the workflow
 ## How the app consumes it, and privacy
 
 The app downloads static files and sends nothing about its owner: no account, no cookie, no identifier. It fetches `store.json` with `If-None-Match`, then only the files whose SHA-256 changed. Browsing the store needs `store.json` alone, which is the same for everyone. Fetching one source's items does show the static host which sources an address follows; the app says so and can fetch all sources' items instead. Details in [docs/APP-CONTRACT.md](docs/APP-CONTRACT.md).
+
+Transcripts are the one thing the app may fetch from a publisher: when the owner wants the whole text of an episode, the app downloads the address in `transcript_source` from the publisher itself, which then sees the phone's network address, as with any podcast app.
 
 This repository holds no personal data. The fixtures and golden samples are invented.
 
