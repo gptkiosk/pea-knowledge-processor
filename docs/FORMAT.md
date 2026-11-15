@@ -1,4 +1,4 @@
-# The PEA knowledge format, version 1.1
+# The PEA knowledge format, version 1.2
 
 This is the one format the PEA knowledge processor writes and the PEA iPhone app reads. A curated list of sources goes in; a folder of static files comes out. The app never reads a publisher's feed: it reads this, and it checks every file before it uses it. The one thing it may fetch from a publisher is the transcript an item points to (`transcript_source`, section 6), when the owner wants the whole text.
 
@@ -23,9 +23,9 @@ Published at `https://gptkiosk.github.io/pea-knowledge-processor/`, so the entry
 
 A reader starts at `store.json` and follows hashes: the listing names each source's items file with its SHA-256 and size; the items file names each digest and transcript with theirs. A file that does not match what named it is not used.
 
-Why the split: the store screen needs only `store.json` (about 28 KB for twelve sources). A source's items are loaded only after the owner adds that source. `items.json` carries no time of its own, so its hash changes only when an item changes; a run that finds nothing new changes only `generated_at` in `store.json` and the counters in `health.json`.
+Why the split: the store screen needs only `store.json` (about 43 KB for thirteen listings, 12 KB of it the vocabulary of topics). A source's items are loaded only after the owner adds that source. `items.json` carries no time of its own, so its hash changes only when an item changes; a run that finds nothing new changes only `generated_at` in `store.json` and the counters in `health.json`.
 
-JSON Schemas (draft 2020-12) are in `schema/`: `store`, `items`, `digest`, `health`, `state`, and `sources` for the curated list. The schemas, plus the rules of sections 7 to 9 that a schema cannot state, are the format. `python3 -m pea_knowledge validate <folder>` checks all of it and is the reference for the app's checks.
+JSON Schemas (draft 2020-12) are in `schema/`: `store`, `items`, `digest`, `health`, `state`, and `sources` for the curated list. The schemas, plus the rules of sections 7 to 9 and 11 that a schema cannot state, are the format. `python3 -m pea_knowledge validate <folder>` checks all of it and is the reference for the app's checks.
 
 All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, one line break at the end. The same data always gives the same bytes.
 
@@ -33,11 +33,12 @@ All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, 
 
 | Member | What it is for |
 | --- | --- |
-| `format`, `format_version` | `"pea-knowledge-store"`, `"1.1"`. See section 8. |
+| `format`, `format_version` | `"pea-knowledge-store"`, `"1.2"`. See section 8. |
 | `generated_at` | When this output was built (UTC, `YYYY-MM-DDTHH:MM:SSZ`). |
 | `generator` | The program and version that wrote it. |
 | `min_app_version` | The oldest app version that should read this output, or null. An older app keeps what it has and asks for an update. |
 | `sources` | One listing per source, in the curator's order. |
+| `topics` (1.2) | The controlled vocabulary of topics, the same for every source: at most 40 entries, each `id`, `label` (40), `synonyms` (12) and `description` (120). The only ids a `topics` member anywhere in the output may hold. Section 11. |
 
 Each listing:
 
@@ -46,7 +47,8 @@ Each listing:
 | `id`, `name` | The source. The id never changes and is safe in a path. |
 | `description` (200) | The store card: what the owner gets. |
 | `overview` (600) | For the assistant: what the source is, its beat and voice, and how an item is usually built, so she can talk about the source itself. |
-| `categories`, `language`, `kind` | Browsing and filtering. `kind` is `podcast` or `news`. |
+| `categories`, `language`, `kind` | Browsing and filtering. `kind` is `podcast` or `news`. `categories` are the curator's free words for one source; for anything across sources use `topics`. |
+| `topics` (1.2) | The source's overall beat: up to six ids of the vocabulary, most typical first. What an item without topics of its own falls back to. Section 11. |
 | `publisher`, `site` | Who makes it and where. `site` is one of the two kinds of address the format allows. |
 | `icon` | A symbol name and a colour name from fixed lists. The format carries no images, so nothing third-party is ever hosted. |
 | `cadence`, `typical_duration_seconds` | How often items come and how long they usually are, measured from the listed items. |
@@ -74,6 +76,7 @@ Each listing:
 | `bytes` | The size of the item's files together, for the storage choice. |
 | `digest` | Path, SHA-256, size, and what kind of digest it is (`basis`, `grade`, `method`), repeated from the file so a reader can choose without opening it. |
 | `transcript` | `available`: `yes`, `partial` or `no`; `reason`; `file` (path, SHA-256, size) or null. Since 1.1 also `read`: what the pipeline read at the publisher to make the digest (`full`, `partial`, `none`), whether or not the file is published. |
+| `topics`, `topics_by` (1.2) | What the item is about: up to four `{"id", "score"}`, best first, ids of the vocabulary in `store.json` only; and how they were made, `keywords` or `model`. Optional, always together. An empty list means no topic was confident enough. Section 11. |
 | `transcript_source` | Since 1.1, optional. Where the publisher itself offers this item's transcript: `link`, `format`, `route`, `bytes`, and `extract` for an HTML page. Present only when the pipeline read a transcript there. Section 6 describes it. |
 
 Transcript reasons are typed:
@@ -296,6 +299,7 @@ Everything a publisher wrote is untrusted data: titles, descriptions, show notes
 
 - **Within a major version, changes are additive only**: new optional members, new files. No member is removed or renamed, no type or meaning changes, no limit grows, no enumeration gains a value a reader must act on. A new enumeration value needs a new major version, because the enumerations are closed.
 - **1.1 (2026-11-15)** added the members listed under "What 1.1 adds". A reason a source is paused for want of transcripts uses the existing code `format_changed`: a code of its own would be a new enumeration value, which needs 2.0.
+- **1.2 (2026-11-15)** added topics (section 11): `topics` at the top of `store.json`, `topics` in a listing, and `topics` with `topics_by` on an item. All optional; nothing else changed. A digest is as in 1.1, except that it says 1.2. Why not within 1.1: a reader whose known minor is 1 holds a 1.1 file to the letter, so a new member in a file that still said 1.1 would have been refused as `schema`. A file that says 1.2 is read by that same reader with the new members ignored. A reader that wants topics raises its known minor to 2 and takes the 1.2 schemas.
 - **A reader accepts every file whose major it knows.** When the file's minor is newer than the reader's, the reader ignores members it does not know. When the minor is the reader's own or older, an unknown member is an error (`schema`): at the same version the writer is held to the letter.
 - **A reader refuses a major it does not know** with reason `unsupported_version`, keeps what it has, and tells the owner an update is needed.
 - `min_app_version` lets the curator say "this output needs at least this app" before a major change arrives.
@@ -310,8 +314,8 @@ In order, for each file:
 1. Size against the limit, then against the size its index entry states (`size_mismatch`), then SHA-256 against the entry (`hash_mismatch`). `store.json` has no entry: it is the root.
 2. Strict JSON (`not_json`), `format_version` (`unsupported_version`), the schema (`schema`), the text rules (`text_rule`), the addresses (`address`).
 3. The cross-checks of that file:
-   - `store.json`: ids unique; an items file is at `sources/<id>/items.json` (`path_invalid`); a withdrawn source lists nothing; a paused or withdrawn source has a message, a reason and a time; `purge` only with `withdrawn`; `item_count` and `items_file` agree; a paused source is stale (`inconsistent`).
-   - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; a `transcript_source` only on an item whose transcript was read, with `extract` exactly when its format is `html`; newest first (`inconsistent`). `transcript_source.link` is checked as an address (`address`).
+   - `store.json`: ids unique; topic ids unique, and every topic a source names is in the vocabulary of the same file (`inconsistent`); an items file is at `sources/<id>/items.json` (`path_invalid`); a withdrawn source lists nothing; a paused or withdrawn source has a message, a reason and a time; `purge` only with `withdrawn`; `item_count` and `items_file` agree; a paused source is stale (`inconsistent`).
+   - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; a `transcript_source` only on an item whose transcript was read, with `extract` exactly when its format is `html`; `topics` and `topics_by` together or not at all, every topic id in the vocabulary of the `store.json` that named the file, no id twice, scores with at most two decimals and best first; newest first (`inconsistent`). `transcript_source.link` is checked as an address (`address`).
    - a transcript: conforms to PEA transcript v1 (`transcript_invalid`); cut or not as the index says.
    - a digest: source, item, title, date, link, duration, basis, grade and method are those of the index (`identity_mismatch`); the brief form is within 900 characters (`brief_too_long`); no quotes and no moments without a transcript basis; chapters in order of time and not overlapping; `link_kind` as in the index; when the transcript is in the output, `transcript_sha256` is its hash, every pointer names a segment it has, and every `exact` quote and every moment is in the segment it points to (`inconsistent`).
 
@@ -320,3 +324,80 @@ A file with any problem is not used, and the typed reason is kept for the owner 
 ## 10. health.json
 
 For the curator. `mode` (`live` or `offline`), what the model cost (`calls`, `accepted`, `fell_back`, `skipped_for_budget`, tokens, `cost_usd`), and per source: what the run did (`ok`, `unchanged`, `failed`, `skipped`, `removed`), the state, the reason, how many items are new, reused, kept, stale and pruned, transcripts by outcome, digests by method, and plain notes (skipped entries, a feed that changed shape, a transcript that could not be refreshed).
+
+## 11. Topics
+
+Since 1.2. Every item is tagged with topics from one controlled vocabulary, the same for every source, so that a reader can answer "I want to talk tech" (or politics, religion, wellness, supplements, leadership) with items from all the sources its owner follows. The tags cost nothing to make: they need no model.
+
+### The vocabulary
+
+`topics` at the top of `store.json`, from `config/topics.json`: about thirty topics in the curator's order.
+
+```json
+{"id": "supplements-nutrition", "label": "Supplements and nutrition",
+ "synonyms": ["supplements", "vitamins", "nutrition", "diet", "food", "eating", "fasting", "protein", "healthy eating"],
+ "description": "What people eat and take: diet, nutrients, vitamins, supplements and fasting."}
+```
+
+| Member | Meaning |
+| --- | --- |
+| `id` | Lower-case words joined by hyphens, at most 32 characters. It never changes once published; a new topic is added at the end. A topic that is retired leaves the vocabulary, and no item keeps its id. |
+| `label` (40) | The name to show. |
+| `synonyms` (12) | Plain lower-case words and phrases a person might say for the topic. A word may stand under more than one topic, on purpose: `investing` is both economics and startups. |
+| `description` (120) | One line on what the topic covers. |
+
+An id is valid only when the vocabulary of the same `store.json` has it. No text of a publisher or a model can add one: the tagger chooses among the ids, it never makes one.
+
+The ids on 2026-11-15: `technology`, `ai`, `software-engineering`, `security-privacy`, `science`, `health`, `wellness`, `supplements-nutrition`, `fitness`, `mental-health`, `politics`, `policy-law`, `world-news`, `economics-finance`, `business`, `startups-investing`, `leadership-management`, `careers-work`, `religion-spirituality`, `philosophy`, `history`, `culture-media`, `education`, `relationships-family`, `creativity-writing`, `sports`, `environment-climate`, `crypto`, `self-improvement`, `podcasting-media`.
+
+### How a reader turns a spoken word into ids
+
+No model is needed. The reference is `resolve` in `src/pea_knowledge/topics.py`:
+
+1. Every topic has names: its `id` with the hyphens as spaces, its `label`, and each of its `synonyms`.
+2. Text is cut into words: lower case, a curly apostrophe read as a straight one, then every run of letters and digits (`[a-z0-9]+`, with one `'s`-like ending allowed). Each word loses its ending: everything from an apostrophe on; then `ies` becomes `y` (words longer than four letters); `sses`, `shes`, `ches`, `xes`, `zes` lose `es` (longer than four); otherwise a final `s` goes, unless the word ends in `ss`, `us` or `is` or has three letters or fewer. Nothing else is cut. Names and what was said are cut the same way, so "supplement" finds `supplements`.
+3. Go through the words of what was said. At each word take the longest name (up to eight words) that starts there, add every topic that carries it, and go on after it. So "mental health" gives `mental-health` and not `health` as well.
+4. The answer is those topics in the vocabulary's order. It may be several ("investing"), one ("tech" gives `technology`), or none: then the reader asks, or searches titles, and does not guess.
+
+"I want to talk tech" gives `technology`; "faith" gives `religion-spirituality`; "parenting" gives `relationships-family`; "money" gives `economics-finance`; "careers" gives `careers-work`; "AI" gives `ai`.
+
+### Topics on an item and on a source
+
+```json
+"topics": [{"id": "ai", "score": 0.85}, {"id": "economics-finance", "score": 0.81}],
+"topics_by": "keywords"
+```
+
+- At most four, best first; ties in the vocabulary's order. `score` is a number from 0 to 1 with at most two decimals.
+- **What a score means.** How strongly the item's own text points to the topic. It is a saturating count of evidence, not a probability: 0.5 is the least that is published and means "clearly there in the title or the notes"; around 0.7 the topic runs through the notes and the digest; 0.85 and more means the item is plainly about it. Scores of different items can be compared; a score never says how good an item is.
+- **An empty list is an answer**: nothing was confident enough. A wrong tag is worse than a missing one, so the tagger stays silent when in doubt. A reader then falls back to the `topics` of the source, and says that this is the show's usual ground, not what this item is known to be about.
+- `topics_by` says how the list was made, also when it is empty: `keywords` or `model` (below). A reader shows that honestly.
+- An item written before 1.2 has neither member. A reader treats that like an empty list.
+- A listing's `topics` are the curator's judgement of the source's beat, up to six ids. They are not computed from the items.
+
+### How the keyword tagger works (`topics_by: keywords`)
+
+Always on, deterministic, standard library only: the same item gives the same tags. `config/topic_lexicon.json` holds, per topic, words and phrases with a weight: 3 for a strong phrase ("clinical trial", "venture capital"), 2 for a clear word ("doctor", "investor"), 1 for a weak word that only counts beside others ("company", "story").
+
+1. Four texts of the item are read: the title, the publisher's description and notes (without sponsor lines: a sentence that names a sponsor and the two after it), the digest's talking points, quotes and glossary, and the first 30,000 characters of the transcript without sponsor reads.
+2. Each text is cut into words as above. At each word the longest phrase of the lexicon (up to four words) is taken, so "machine learning model" counts once, for AI. The lexicon also lists phrases that use a word in another sense ("in good faith", "role model", "third party", "to supplement", "price war", "version history"); they take their words with them and count for nothing. Bare words that mean too many things (model, party) are not counted at all.
+3. A phrase counts its weight times the weight of the text (title 3, notes 2, digest 2, transcript 1) times the square root of how often it occurs there, at most five times. A weak word counts only in the title and the notes. A clear word counts in the transcript only when it is said at least twice.
+4. A topic needs evidence: two different phrases, or one strong phrase (in the transcript: said three times). And it must show in the title, the notes or the digest, not only in passing talk.
+5. The source's own topics add a small fixed amount to a topic that already has evidence. They are never a reason by themselves.
+6. The sum becomes the score, sum / (sum + 18). A topic is kept when its score is at least 0.5 and either the title names it with a clear or strong phrase or its sum is at least 0.4 of the best topic's sum. The best four are published.
+
+What it cannot do: it reads words, not meaning. It misses an item that never uses the usual words for its subject, and it can be wrong when an item spends many words on a side subject (a guest who owns a basketball team in an interview about business). Measured on 94 real items of the eleven live sources, labelled by hand (`tests/data/topics_labelled.json`, `python3 tests/eval_topics.py <output folder>`): about 96 percent of the tags given were right and about 94 percent of the main topics were found; README.md has the numbers. Those sources are mostly about technology, AI, software, podcasting, security and health; topics they rarely touch (sports, religion, fitness, education) are tested with made-up texts only.
+
+### Topics from a model (`topics_by: model`)
+
+Optional and off by default (`"model": {"topics": true}` in `config/sources.json`, on top of the model digest). The model that writes the digest is then shown the ids and labels of the vocabulary and may answer with up to four `{"id", "score"}`. Its answer is checked before anything is made of it:
+
+- only an id of the vocabulary, each once; a score that is a number from 0.3 to 1;
+- only a topic for which the title, the notes and the checked digest hold the evidence a keyword tag needs (two different phrases of the lexicon, or one strong one). The model decides which of the topics that the text bears out the item is about, and how much; it cannot tag an item with a topic its own digest does not mention, and text in a transcript that addresses the model cannot add an id;
+- when nothing of the answer holds up, or there is no model digest, the keyword tagger decides and `topics_by` says `keywords`.
+
+It costs about 500 tokens more per call, inside the same limits. Like the model digest, it is tested against a local stand-in only and has not been run against the real service.
+
+### When the vocabulary or the lexicon changes
+
+Every item is made anew on the next run (its key holds a hash of both files), so no item keeps a tag from an older version. An item kept from an earlier run for another reason loses any id the vocabulary no longer has. `"topics": {"enabled": false}` in the config switches topics off: no vocabulary, no topics anywhere.

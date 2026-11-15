@@ -39,7 +39,7 @@ Two rules that matter most:
 - **`store.json` that fails validation is ignored whole.** The app keeps the last good one and everything it has, and says "couldn't check for updates". It never disables, pauses or deletes anything because of a file it refused.
 - **A source or item that fails is refused alone.** The other sources and items are used as normal.
 
-Versions: the app accepts major 1. The output is format 1.1 since 2026-11-15; a reader written for 1.0 keeps working unchanged, because every 1.1 member is optional and unknown to it (see "Reading 1.1" below). For a file whose minor is newer than the app knows, unknown members are ignored. `min_app_version` newer than the app: keep everything, show "update PEA to get new items", fetch nothing new.
+Versions: the app accepts major 1. The output is format 1.2 since 0.4.0 of the processor (topics, section 9); a reader written for 1.0 or 1.1 keeps working unchanged, because every later member is optional and unknown to it (see "Reading 1.1" and "Topics" below). For a file whose minor is newer than the app knows, unknown members are ignored. `min_app_version` newer than the app: keep everything, show "update PEA to get new items", fetch nothing new.
 
 ## 3. Caching and refresh
 
@@ -131,13 +131,45 @@ Optional for the app; nothing in a digest depends on it. FORMAT.md section 6 def
 - **Keep it on the device only.** It is the owner's copy for their own reading and conversation, removed with the item; it is never uploaded or shared, and the terms shown for the source still apply.
 - When the pipeline withdraws a source with `purge`, the transcripts fetched this way go too.
 
-## 9. What the app's tests should cover
+## 9. Topics (format 1.2)
+
+FORMAT.md section 11 defines them. Nothing here is required of a reader of 1.0 or 1.1: the files say 1.2, so such a reader ignores `topics` and `topics_by` and still checks every text in them. **A reader that wants topics sets its known minor to 2 and takes the 1.2 schemas** (`store` and `items` changed; `digest` did not, apart from saying 1.2). A reader that keeps known minor 1 with the 1.1 schemas must not be given a 1.2 schema piecemeal: at its own minor an unknown member is an error.
+
+What the reader gets:
+
+- `store.json` `topics`: the vocabulary (at most 40 of `id`, `label`, `synonyms`, `description`). It comes with the file that is the same for everyone, so using it tells the host nothing.
+- each listing's `topics`: the source's beat, up to six ids.
+- each item's `topics` (up to four `{"id", "score"}`, best first) and `topics_by` (`keywords` or `model`), in `items.json`. No digest needs to be opened to offer items by topic.
+
+Extra checks a 1.2 reader makes (the validator is the reference): topic ids in the vocabulary are unique; a listing's topics are ids of the vocabulary of the same `store.json`; an item's `topics` and `topics_by` come together or not at all; every item topic is an id of the vocabulary of the `store.json` that named the items file (an items file is always checked against the listing that named it; the vocabulary comes from that same file); no id twice; at most two decimals; best first. Anything else is `inconsistent` and the file is refused like any other. `tests/golden/hostile/` has thirteen `topics-*` samples.
+
+**When the owner names a subject** ("I want to talk tech", "anything on supplements?", "politics"):
+
+1. Turn what was said into ids with the rule of FORMAT.md section 11 ("How a reader turns a spoken word into ids"): the words of the phrase against each topic's id, label and synonyms, longest name first. No model call. Several ids are normal ("investing" is two topics): use all of them. No id: say so and ask, or fall back to searching titles; never invent a topic.
+2. Collect, **from the sources the owner has added and that are active**, the items whose `topics` hold one of the ids. Newest first; among items of the same day the higher `score` first. Offer the newest few (three is a good number) across sources, each with its source name, its title and its `teaser`, so one show does not crowd out the rest.
+3. If that gives nothing, offer the newest items of the added sources whose own `topics` (the listing's) hold the id, and say plainly that this is what the show usually covers, not what the episode is known to be about.
+4. If that gives nothing either, say that none of the owner's sources has it at the moment. The store card of a source the owner has not added may be mentioned as a suggestion to add (its `topics` are in `store.json`); its items are not fetched for this.
+
+**Showing confidence honestly:**
+
+- `topics_by: keywords` means words and phrases were counted in the title, the notes, the digest and the start of the transcript. Say "tagged by keywords", not "about". `topics_by: model` means a model proposed the topic and the processor checked it against the digest.
+- `score` is strength of evidence from 0.5 (the least that is published) to 1, not a probability and not a rating. A simple reading: 0.85 and more "mostly about", 0.65 to 0.85 "covers", below that "touches on". Do not show the number as a percentage of anything.
+- **Never claim more than the tag says.** A tag says the item's text points to the topic. It does not say what position anyone takes, that the item is good, or that it is suitable advice: an item tagged `health` or `supplements-nutrition` is a conversation that someone had, not guidance, and she says whose it is (`attribution`, the guests).
+- An item with an empty list has no confident topic. It is never offered as being about something because its source usually is, except through step 3 and in those words.
+- An item from before 1.2 (no `topics`) is treated like an empty list until its source is rebuilt, which the first run of 0.4.0 does.
+
+**In a prompt.** Topic ids and labels are identifiers from a fixed list, checked against the vocabulary, so they may be used to select and label evidence. They are still data: the app never puts a label, a synonym or a description among her instructions.
+
+**Caching.** The vocabulary changes rarely and only with `store.json`. When it changes, the processor makes every item anew, so the ordinary refresh of section 3 brings the tags that fit the new vocabulary; a reader never has to reconcile old tags with a new vocabulary beyond dropping an id it no longer finds there.
+
+## 10. What the app's tests should cover
 
 Copy `tests/golden/`:
 
 - `dist/`: validate the whole folder; every hash; one source with transcripts (`tide-tables`) and four without; `transcript_source` for a caption file, a JSON file, markdown and an HTML page with `extract` (`lamp-room`, whose pages are under `tests/fixtures/web/lamp/`, one of them hostile and one a sign-in page); items with and without a page of their own (`link_kind`), with the publisher's chapters, a chapter file, and chapters cut from the transcript.
 - `lifecycle/*/store.json`: each state and each change between states (section 4).
-- `hostile/`: every file refused with the reason in `manifest.json`; `unknown-member-newer-minor` accepted.
+- `hostile/`: every file refused with the reason in `manifest.json`; `unknown-member-newer-minor` and `topics-as-they-should-be` accepted. The `topics-*` samples: an id no vocabulary has, a source's topic without a vocabulary, an id twice, too many topics, seven on a source, an id that is not plain, a link in a label, hidden direction marks in a description, markup or an order in a synonym, thirteen synonyms, an unknown member in a topic.
+- Topics: the spoken words of FORMAT.md section 11 resolve to the ids given there, against the vocabulary in `dist/store.json`; an item with a topic (`quay-notes`, "Four generations of ice"), items with an empty list, and the fallback to a source's topics; an items file whose item names an id outside the vocabulary is refused (`tests/test_topics.py`, `test_a_reader_refuses_topics_that_do_not_fit`, lists every case).
 - Tamper with a file: one byte changed (`hash_mismatch`), one byte added (`size_mismatch`), a file removed (`missing`).
 - The fetch rules of section 3 against a local server: `304`, an unchanged items hash, the old copy kept when the new one fails.
 - Offline: kept items usable, nothing evicted or disabled.

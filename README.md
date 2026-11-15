@@ -8,7 +8,7 @@ Why it exists: an assistant cannot talk well about a podcast episode if every pu
 - Python 3.11 or later, standard library only. Nothing to install.
 - Works with no API key. A model digest through OpenRouter is optional.
 
-**Status: 0.3.0, format 1.1.** Thirteen sources listed, eleven active. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
+**Status: 0.4.0, format 1.2.** Thirteen sources listed, eleven active. **Only sources with full transcripts are carried; when a source stops publishing full transcripts it is paused and then withdrawn.**
 
 ## What comes out
 
@@ -22,6 +22,7 @@ health.json                                  what the last run did
 
 - **The store listing** (`store.json`) is small and is all the app needs to show the catalog: name, description, topics, how often items come, how long and how large they are, the three newest titles, the terms.
 - **A digest** is built for conversation: a framing, five to eight talking points in story order (each with why it matters, a pointer into the transcript and a question worth asking), exact quotes with speaker and time, a glossary of the names that come up, the figures, what is disputed, links to earlier items, conversation starters and follow-up questions, and a compact brief form of at most 900 characters. Since format 1.1 also: the guests, the books, tools and sites that are named (names only, never a link), chapters (the publisher's own where it marks them), up to five exact passages worth snipping with their times, and three recap cards.
+- **Every item is tagged with topics** from one vocabulary of thirty (`topics` in `store.json`: technology, AI, health, wellness, supplements, politics, religion, leadership and so on), so an app can answer "I want to talk tech" with items from every source its owner follows. The tags need no model. See "Topics" below.
 - **Every item says where the publisher offers its transcript** (`transcript_source`: the address, the format, how it was found). Transcripts are not republished here; an app that wants the whole text fetches it from the publisher itself.
 - **Every item links to its own page** at the publisher. Where a feed gives no page per episode, the item links to the show and says so (`link_kind: show`).
 - **Every source has a lifecycle state** (`active`, `paused`, `withdrawn`), so a source can be switched off for every app with one commit.
@@ -43,7 +44,7 @@ python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dis
 Tests:
 
 ```
-python3 -I -m unittest                               # 112 tests, no network, about 20 seconds
+python3 -I -m unittest                               # 161 tests, no network, about 30 seconds
 python3 -I spec/transcript-v1/test_conformance.py    # the transcript format's own 40 tests
 PEA_NETWORK_TESTS=1 python3 -I -m unittest           # also two tests that use the real network
 ```
@@ -69,9 +70,18 @@ Off by default (`"model": {"enabled": false}` in `config/sources.json`). To use 
 - Cost: an episode is at most about 21,000 tokens in and 2,800 out, so **at most about USD 0.0035 per episode**, usually less. Only new episodes are sent. The twelve sources publish about four episodes a day between them: **about one to one and a half cents a day, under fifty cents a month.** The very first run has 55 transcripts; 24 calls per run are allowed, so it takes three runs and about 15 cents in all. Limits: USD 0.02 per item and USD 0.25 per run (`max_cost_usd_per_item`, `max_cost_usd_per_run`). What was spent is in `health.json` and in the run summary.
 - No real key is used in the tests; they run against a small local server. The model path has not been run against the real service yet.
 
+## Topics
+
+- **The vocabulary** is `config/topics.json`: thirty topics, each with an id, a label, up to twelve words a person might say for it, and one line of description. It is published in `store.json`, and an app turns a spoken word into ids from it without a model ("tech" is `technology`, "faith" is `religion-spirituality`, "investing" is two topics on purpose). An id never changes once published; add a topic at the end.
+- **The tagger** (`src/pea_knowledge/topics.py`) counts the words and phrases of `config/topic_lexicon.json` in an item's title, the publisher's notes, the digest and the first 30,000 characters of the transcript. Phrases have a weight of 1, 2 or 3; the longest phrase wins; phrases that use a word in another sense ("in good faith", "role model", "to supplement") are listed and count for nothing. A topic needs two different phrases or one strong one, must show in the title, notes or digest, and gets a score from 0.5 to 1. At most four topics; an item with no confident topic gets an empty list and an app falls back to the topics of the source (`topics` on each source in `config/sources.json`). The same input always gives the same tags.
+- **How good it is.** 94 real items of the eleven live sources were labelled by hand on 2026-11-15 (`tests/data/topics_labelled.json`: ids and titles only). The lexicon was tuned on the 54 that were live that day; 40 older ones were labelled before the tagger saw them. On those 40, at the first try: 68 tags, 65 right (**95.6 percent**), 45 of 48 main topics found (93.8 percent). With the lexicon as shipped, on all 94: 181 tags, 173 right (**95.6 percent**), 107 of 114 main topics found (93.9 percent), two items without any tag. These sources are mostly technology, AI, software, podcasting, security and health: sports, religion, fitness, education and the environment hardly occur in them and are tested with made-up texts only (`tests/data/topics_cases.json`), so expect less there. Measure again with `python3 tests/eval_topics.py <output folder>` while the labelled items are still in the feeds.
+- **To change it**: edit the lexicon or the vocabulary, run the tests (every topic has a text that must get it and one that must not), run the measurement, commit. The next run makes every item anew, about two minutes.
+- **A model may tag instead**, off by default: `"model": {"enabled": true, "topics": true}`. It may only name ids of the vocabulary that the checked digest bears out; anything else falls back to the keywords. About 500 tokens more per call. Each item says which it was (`topics_by`).
+- **Off switch**: `"topics": {"enabled": false}` at the top of `config/sources.json`.
+
 ## Time, and what one failure costs
 
-Measured on 2026-11-15 against the eleven active sources, one process, no model: a first run with nothing published yet took **1 minute 54 seconds** (89 requests, 53 transcripts fetched and converted, four of them web pages, 54 digests); the next run, with nothing new, took **17 seconds** (21 requests). In CI the three jobs add about a minute of setup each, so a scheduled run is two to five minutes on a standard runner, far under ten. What keeps it there: conditional requests (a feed that answers "not modified" costs one request), an item whose key did not change is not fetched or digested again, and the model is called for new items only. Requests go one host at a time with a pause, on purpose. A source that fails, times out, changes shape or loses its transcripts never stops the others: it keeps its last good items and the rest publish as usual (`tests/test_pipeline.py`).
+Measured on 2026-11-15 against the eleven active sources, one process, no model (with topic tagging, measured again the same day: 1 minute 53 seconds and 18 seconds, tagging itself takes well under a second per run): a first run with nothing published yet took **1 minute 54 seconds** (89 requests, 53 transcripts fetched and converted, four of them web pages, 54 digests); the next run, with nothing new, took **17 seconds** (21 requests). In CI the three jobs add about a minute of setup each, so a scheduled run is two to five minutes on a standard runner, far under ten. What keeps it there: conditional requests (a feed that answers "not modified" costs one request), an item whose key did not change is not fetched or digested again, and the model is called for new items only. Requests go one host at a time with a pause, on purpose. A source that fails, times out, changes shape or loses its transcripts never stops the others: it keeps its last good items and the rest publish as usual (`tests/test_pipeline.py`).
 
 ## The schedule stays on
 
@@ -128,6 +138,7 @@ Good to know: the first scheduled run finds nothing published yet, which is expe
 
 ```
 config/sources.json      the curated list
+config/topics.json       the vocabulary of topics; config/topic_lexicon.json: what the tagger looks for
 schema/                  JSON Schemas (draft 2020-12)
 spec/transcript-v1/      the PEA transcript v1 specification, tools and fixtures (a copy)
 src/pea_knowledge/       the pipeline

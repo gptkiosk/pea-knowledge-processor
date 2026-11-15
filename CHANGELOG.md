@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2026-11-15)
+
+- **Format 1.2: topics.** `store.json` carries a controlled vocabulary of thirty topics (`topics`: id, label, the words a person might say, a description). Every source lists its beat (`topics`, up to six ids) and every item what it is about (`topics`: up to four `{"id", "score"}`, best first, and `topics_by`: `keywords` or `model`). All optional and additive.
+- **Why 1.2 and not 1.1**: a reader whose known minor is 1 refuses an unknown member in a file that says 1.1. A file that says 1.2 it reads, ignoring what it does not know. An app that wants topics raises its known minor to 2 and takes the new `store` and `items` schemas. Digests did not change beyond saying 1.2.
+- **A keyword tagger**, always on, deterministic, standard library only (`src/pea_knowledge/topics.py`, `config/topic_lexicon.json`). A wrong tag is worse than a missing one: an item with no confident topic gets an empty list. Measured on 94 hand-labelled real items: about 96 percent of tags right, about 94 percent of main topics found (README, "Topics").
+- **A model may propose topics**, off by default (`model.topics`), from the vocabulary only and only where the checked digest bears them out; otherwise the keywords decide. Tested against the local stand-in only.
+- The validator refuses a topic id that is not in the vocabulary of the same `store.json`, an id twice, unsorted scores, more than two decimals, and `topics` without `topics_by`. Thirteen new hostile samples (`tests/golden/hostile/topics-*`).
+- Every item is made anew once after this change, and again whenever the vocabulary or the lexicon changes.
+
 ## 0.3.0 (2026-11-15)
 
 - **HTML transcript pages are read** (`src/pea_knowledge/htmlpage.py`), for publishers that post the full transcript openly on their own site. A source names how the page of an episode is found (`transcript_page`: the item's page, a link in its notes, a link on its page, or a template), the one host it may be on, and the elements to read as simple selectors. Nothing is executed; hidden text, menus, scripts and advertising are dropped; reading is bounded in time; a page with too little text, no transcript, or a sign-in, paywall, cookie or robot-check wall is `none_published` or `unreadable` with a detail, never a partial read. A `podcast:transcript` tag that points to an HTML page is read the same way.
