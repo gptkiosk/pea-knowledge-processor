@@ -1,0 +1,19 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/two-voices.vtt
+duration: 1:02:10
+language: en
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: Mara Lind, Henrik
+segments: 6
+---
+[00:00:00] Mara Lind: Harbor Voices is on the pilot boat this morning.
+[00:00:00] Henrik: And it is, I should say, extremely early.
+[00:00:06] Mara Lind: Henrik has brought in ships for twenty-six years & has never <once> been late.
+[00:00:16] Mara Lind: Harbor Voices is presented by the Grey Point Chandlery. Visit greypoint.com for rope, paint and advice.
+[00:00:24] Henrik: We meet the ship three miles out. I climb a rope ladder up the side, which is the part people ask about.
+[01:02:03] Henrik: An hour later we are alongside, and I have a second breakfast.

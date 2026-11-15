@@ -1,0 +1,15 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/overlap.srt
+duration: 01:58
+language: en
+format: SubRip (SRT)
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 2
+---
+[00:00:01] The crane on the east quay was built in Hamburg in 1931 and it still lifts twelve tonnes on a good day. The driver, Aino, says the cab is colder than the water.
+[00:01:50] She has a kettle up there. She has had one since her first week, and nobody has dared to ask about the wiring.

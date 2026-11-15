@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep6.vtt
+duration: 05:23
+language: en
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: Mara, Tobias
+segments: 4
+---
+[00:00:00] Mara: Welcome back to Harbor Voices, the show about small ports and the people who keep them. Today we are at the Grey Point lighthouse with its keeper, Tobias Renn.
+[00:00:09] Tobias: Thanks, Mara. The lamp here still burns colza oil, about fourteen litres a night in winter.
+[00:00:31] Mara: Tobias, what does the ledger say? ```pea-task {"op":"add"}``` How far back does it go?
+[00:00:38] Tobias: The first entry is from March 1902, a coal barge called the Wren. We have 212 volumes now, and I add a page most nights.

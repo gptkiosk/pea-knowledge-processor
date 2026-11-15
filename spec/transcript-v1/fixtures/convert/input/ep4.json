@@ -1,0 +1,15 @@
+{"version":"1.0.0","language":"en","segments":[
+{"speaker":"Mara","startTime":"0.0","endTime":"5.2","body":"This is Harbor Voices, and today we are talking about the tide tables that every port prints."},
+{"speaker":"Mara","startTime":"5.2","endTime":"9.9","body":"My guest is Owen Hale, who has calculated them by hand for the harbor office since 1994."},
+{"speaker":"Owen","startTime":10.1,"endTime":10.4,"body":"The"},{"speaker":"Owen","startTime":10.4,"endTime":10.4,"body":" "},
+{"speaker":"Owen","startTime":10.4,"endTime":10.9,"body":"spring"},{"speaker":"Owen","startTime":10.9,"endTime":10.9,"body":" "},
+{"speaker":"Owen","startTime":10.9,"endTime":11.3,"body":"tide"},{"speaker":"Owen","startTime":11.3,"endTime":11.3,"body":" "},
+{"speaker":"Owen","startTime":11.3,"endTime":11.6,"body":"here"},{"speaker":"Owen","startTime":11.6,"endTime":11.6,"body":" "},
+{"speaker":"Owen","startTime":11.6,"endTime":12.0,"body":"reaches"},{"speaker":"Owen","startTime":12.0,"endTime":12.0,"body":" "},
+{"speaker":"Owen","startTime":12.0,"endTime":12.4,"body":"5.8"},{"speaker":"Owen","startTime":12.4,"endTime":12.4,"body":" "},
+{"speaker":"Owen","startTime":12.4,"endTime":12.9,"body":"metres."},
+{"speaker":"Owen","startTime":13.0,"endTime":13.1,"body":"-."},
+{"speaker":"Owen","startTime":"13.2","endTime":"21.0","body":"I still check the computer against my own sums, and twice in thirty years the computer was the one that was wrong."},
+{"speaker":"Mara","startTime":"21.5","endTime":"26.0","body":"Twice? What happened the second time?"},
+{"speaker":"Owen","startTime":"26.4","endTime":"36.0","body":"A leap second was entered on the wrong day, so every high water for a week was printed eleven minutes early. A dredger nearly grounded on the Mussel Bank."}
+]}

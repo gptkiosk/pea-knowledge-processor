@@ -1,0 +1,15 @@
+PEA-TRANSCRIPT v1
+show: Głosy Portu
+title: Latarnik i jego księga — odcinek 6
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep6.vtt
+duration: 05:23
+language: pl
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: María José, 港の声
+segments: 2
+---
+[00:00:00] María José: Witamy w „Głosach Portu”. Dziś jesteśmy w latarni Grey Point — pali się tu jeszcze olej rzepakowy.
+[00:00:09] 港の声: この灯台は今も菜種油を燃やしています。冬は一晩に約14リットルです。

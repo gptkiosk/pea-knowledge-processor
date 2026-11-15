@@ -1,0 +1,19 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The net menders
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep3.json
+duration: 06:10
+language: en
+format: Podcasting 2.0 JSON
+provenance: publisher transcript
+quality: full
+speakers: Mara Lind, Signe, Dr. Aalto, SPEAKER_4
+segments: 6
+---
+[00:00:00] Mara Lind: We are in the loft above the fish market, where four people still mend nets by hand.
+[00:00:13] Signe: A netting needle carved from boxwood. My grandmother made it, and it has mended nets for three boats.
+[00:00:21] Dr. Aalto: A torn trawl takes two of us about six hours. A new one costs more than a small car, so they always mend & never replace.
+[00:06:02] Mara Lind: How many knots are in one net?
+[00:06:05] SPEAKER_4: Nobody counts, but we guess around forty thousand in a herring net.
+[00:06:09] Signe: You stop thinking about it after the first thousand.

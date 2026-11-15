@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/whole-text.json
+duration: unknown
+language: en-GB
+format: Podcasting 2.0 JSON
+provenance: publisher transcript
+quality: full
+speakers: Mara, Keld
+segments: 4
+---
+[--:--:--] Mara: Harbor Voices comes to you from the slipway, where the lifeboat is hauled out for its winter paint.
+[--:--:--] Keld: Four coats below the waterline and two above. The orange is mixed for us and no other station has quite the same shade.
+[--:--:--] Mara: How long is she out of the water?
+[--:--:--] Keld: Nine days. A relief boat from down the coast covers for us, and its crew complain about our tea.

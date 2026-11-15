@@ -1,0 +1,16 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The tide gauge
+date: 2026-11-13
+source: https://sim.example.org/harbor/otter.txt
+duration: 01:04
+language: en
+format: text with times
+provenance: publisher transcript
+quality: full
+speakers: Mara Lind, Owen Hale
+segments: 3
+---
+[--:--:--] Harbor Voices, episode 12: The tide gauge
+[00:00:03] Mara Lind: Welcome to Harbor Voices. Today we are standing next to the oldest tide gauge on this coast.
+[00:00:11] Owen Hale: It was installed in 1911, and it still writes on a paper drum that I change every Monday.

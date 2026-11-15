@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-transcript:v1:header",
+  "title": "PEA transcript v1 header",
+  "description": "The header of a PEA transcript v1 file as a JSON object, for tools that pass transcripts around as JSON (a tool server's answer, an index). The file itself is plain text (SPEC.md section 4): line 1 gives `version`, lines 2 to 12 give the other eleven members in this order as `key: value`. Two members change shape: `speakers` is the list of names (the file writes them joined by \", \", or the word \"none\" for an empty list), and `segments` is a number. Rules that need the segment lines (H13, S1 to S6) cannot be stated here; validate.py checks them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "show", "title", "date", "source", "duration", "language", "format", "provenance", "quality", "speakers", "segments"],
+  "properties": {
+    "version": {
+      "description": "Line 1 of the file, \"PEA-TRANSCRIPT v1\". Rule H1.",
+      "const": 1
+    },
+    "show": {
+      "description": "The show's name, on one line. May be empty when not known. Rules H4, H14.",
+      "type": "string",
+      "maxLength": 200,
+      "pattern": "^(?!.* {2})(\\S(.*\\S)?)?$",
+      "examples": ["Harbor Voices"]
+    },
+    "title": {
+      "description": "The episode's title, on one line. May be empty when not known. Rules H4, H14.",
+      "type": "string",
+      "maxLength": 200,
+      "pattern": "^(?!.* {2})(\\S(.*\\S)?)?$",
+      "examples": ["The lighthouse keeper's ledger"]
+    },
+    "date": {
+      "description": "The episode's date, or \"unknown\". SHOULD be a calendar date written YYYY-MM-DD (W1). Rules H5, H14.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^(?!.* {2})\\S(.*\\S)?$",
+      "examples": ["2026-11-13", "unknown"]
+    },
+    "source": {
+      "description": "The public address the transcript was read from, or \"unknown\". Rules H6, H14.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^(?!.* {2})\\S(.*\\S)?$",
+      "examples": ["https://sim.example.org/harbor/ep6.vtt", "unknown"]
+    },
+    "duration": {
+      "description": "The episode's length: MM:SS under an hour (two digits each), H:MM:SS from one hour on (hours not padded), or \"unknown\". Rule H7.",
+      "type": "string",
+      "pattern": "^(unknown|\\d{2}:[0-5]\\d|[1-9]\\d*:[0-5]\\d:[0-5]\\d)$",
+      "examples": ["05:23", "1:02:10", "unknown"]
+    },
+    "language": {
+      "description": "The language of the text, or \"unknown\": 1 to 12 ASCII letters, digits, \"-\" and \"_\". SHOULD be a BCP 47 tag (W2). Rule H8.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,12}$",
+      "examples": ["en", "en-GB", "zh-Hans", "unknown"]
+    },
+    "format": {
+      "description": "What the transcript was written in before it was normalized. Rule H9.",
+      "type": "string",
+      "enum": ["WebVTT", "SubRip (SRT)", "Podcasting 2.0 JSON", "HTML page", "text with times", "plain text"]
+    },
+    "provenance": {
+      "description": "Who made the text, in a few words. PEA writes \"publisher transcript\" (it never transcribes audio). Rules H10, H14.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^(?!.* {2})\\S(.*\\S)?$",
+      "examples": ["publisher transcript"]
+    },
+    "quality": {
+      "description": "\"full\" when the whole transcript is in the file, otherwise \"partial (reason)\" with a reason of 1 to 120 characters; the file then ends with the cut mark \" (cut)\" (S4). Rules H11, H14.",
+      "type": "string",
+      "pattern": "^(?!.* {2})(full|partial \\(\\S(.{0,118}\\S)?\\))$",
+      "examples": ["full", "partial (cut at 150,000 chars; 481 of 680 segments kept, up to 40:00 of 56:40)", "partial (the file was over 1.5 MB; end missing, kept up to 38:12)"]
+    },
+    "speakers": {
+      "description": "The speakers' names in the order they first speak. Empty when the transcript names nobody (the file then says \"none\"). Rules H12, S3.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 40,
+        "pattern": "^(?!none$)(?!.*: )(?!.*, )\\S(.*\\S)?$"
+      },
+      "examples": [["Mara", "Tobias"], []]
+    },
+    "segments": {
+      "description": "The number of segment lines after the header. Rule H13.",
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

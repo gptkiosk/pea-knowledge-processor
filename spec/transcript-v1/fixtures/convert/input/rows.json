@@ -1,0 +1,8 @@
+[
+ {"name": " Mara ", "start": 0, "end": 6.5, "text": "Harbor Voices is at the weighbridge today, where every lorry of fish is weighed &amp; logged."},
+ {"name": "Mara", "start": 6.5, "end": 9, "text": "Jonas runs it."},
+ {"name": "Jonas", "start": "00:00:09", "end": "00:00:20", "text": "The bridge is accurate to twenty kilos.\nThat sounds like a lot until you see a full lorry, which is about eighteen tonnes."},
+ {"name": "", "start": 20, "end": 26, "text": "We recalibrate it every March with test weights from the city."},
+ {"name": "Mara", "start": 26, "text": "Has anyone ever tried to cheat it?"},
+ {"name": "Jonas", "start": 31, "end": 40, "content": "Once. He parked with two wheels off the plate. The bridge cannot tell, but I can see out of the window."}
+]

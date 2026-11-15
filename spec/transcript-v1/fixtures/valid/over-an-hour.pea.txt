@@ -1,0 +1,16 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep6.vtt
+duration: 1:02:10
+language: en
+format: SubRip (SRT)
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 3
+---
+[00:00:00] Harbor Voices is on the pilot boat this morning, and it is, I should say, extremely early.
+[00:59:58] We meet the ship three miles out. I climb a rope ladder up the side, which is the part people ask about.
+[01:02:03] An hour later we are alongside, and I have a second breakfast.

@@ -1,0 +1,33 @@
+1
+00:00:00,400 --> 00:00:05,100
+Mara: This week on Harbor Voices we ride
+the first ferry of the morning.
+
+2
+00:00:05,100 --> 00:00:10,900
+{\an8}Mara: The timetable changed in October, so the
+first crossing now leaves at 6:40 instead of 7:15.
+
+3
+00:00:10,900 --> 00:00:17,300
+Ines: I have captained the <i>Petrel</i> for eleven
+years, and the early boat is mostly bakers and nurses.
+
+4
+00:00:17,300 --> 00:00:24,000
+Ines: We carry about ninety people and six
+bicycles on a normal Tuesday.
+
+5
+00:00:24,000 --> 00:00:30,200
+Mara: What happens when the fog comes in?
+
+6
+00:00:30,200 --> 00:00:39,500
+Ines: We slow to four knots and sound the horn every two
+minutes. The crossing takes twenty-five minutes instead of twelve.
+
+7
+00:00:39,500 --> 00:00:45,000
+Ines: Nobody complains. They would rather be
+late than swim.

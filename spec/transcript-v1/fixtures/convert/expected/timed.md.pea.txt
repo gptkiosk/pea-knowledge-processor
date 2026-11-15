@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/timed.md
+duration: 02:00
+language: en
+format: text with times
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 4
+---
+[00:00:00] The fog bell at Grey Point is back on its post After forty years in a museum crate the harbor board paid to have it recast, and yet nobody has rung it once. Today we are going to look at why
+[00:00:00] Harbor Voices is a weekly show about small ports. All right, friends, a quick word before we start. First of all, thank you to this week's sponsors, Saltline Rope and Gull Coffee. To get an ad-free version of the show, go to patreon.com/harborvoices
+[00:00:00] The bell weighs three hundred and ten kilos and the new mechanism needs a licence that the board forgot to renew the licence office says the form takes six weeks, which means the first ring will be in January at the earliest Meanwhile the old keeper
+[00:02:00] rings a hand bell from the gallery when the fog is thick, because he says a harbor without a bell is just a car park for boats. And And that is where things stand tonight.

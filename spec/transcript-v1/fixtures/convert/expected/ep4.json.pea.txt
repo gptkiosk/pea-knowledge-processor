@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep4.json
+duration: 00:36
+language: en
+format: Podcasting 2.0 JSON
+provenance: publisher transcript
+quality: full
+speakers: Mara, Owen
+segments: 4
+---
+[00:00:00] Mara: This is Harbor Voices, and today we are talking about the tide tables that every port prints. My guest is Owen Hale, who has calculated them by hand for the harbor office since 1994.
+[00:00:10] Owen: The spring tide here reaches 5.8 metres. I still check the computer against my own sums, and twice in thirty years the computer was the one that was wrong.
+[00:00:21] Mara: Twice? What happened the second time?
+[00:00:26] Owen: A leap second was entered on the wrong day, so every high water for a week was printed eleven minutes early. A dredger nearly grounded on the Mussel Bank.

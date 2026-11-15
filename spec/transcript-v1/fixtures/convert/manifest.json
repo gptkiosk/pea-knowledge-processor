@@ -1,0 +1,156 @@
+{
+ "about": "Converter cases. Each expected file is what the reference normalizer (the implementation the format comes from, as fixed on 2026-11-14) wrote for the same input; convert.py must write the same bytes. Synthetic text only.",
+ "info": {
+  "show": "Harbor Voices",
+  "title": "The lighthouse keeper's ledger",
+  "date": "2026-11-13"
+ },
+ "fields": {
+  "language_recognized_by_reference": "the input names no language; the reference implementation recognized this one on the device. convert.py writes \"unknown\" unless told, so the test supplies this value (SPEC.md, Known gaps, G-11)",
+  "unreadable": "the reason the converter must give instead of a file",
+  "truncated": "the input is treated as cut off at a size limit"
+ },
+ "cases": [
+  {
+   "input": "input/broken-chapters.json",
+   "about": "A chapters file, not a transcript.",
+   "source": "https://sim.example.org/harbor/broken-chapters.json",
+   "unreadable": "JSON without transcript segments (chapters, version)"
+  },
+  {
+   "input": "input/broken-empty.vtt",
+   "about": "A WebVTT header and nothing else.",
+   "source": "https://sim.example.org/harbor/broken-empty.vtt",
+   "unreadable": "no speech text in the WebVTT file"
+  },
+  {
+   "input": "input/broken-truncated.json",
+   "about": "JSON cut off mid-file.",
+   "source": "https://sim.example.org/harbor/broken-truncated.json",
+   "unreadable": "JSON that does not parse"
+  },
+  {
+   "input": "input/broken-truncated.json",
+   "about": "JSON cut off mid-file.",
+   "source": "https://sim.example.org/harbor/broken-truncated.json",
+   "truncated": true,
+   "unreadable": "a JSON file over 1.5 MB, cut off before its end"
+  },
+  {
+   "input": "input/ep2.txt",
+   "about": "Plain text, \"Name:\" labels, no times.",
+   "source": "https://sim.example.org/harbor/ep2.txt",
+   "expected": "expected/ep2.txt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/ep4.json",
+   "about": "Podcasting 2.0 JSON: times as numbers and strings, word-by-word rows, a punctuation-only row.",
+   "source": "https://sim.example.org/harbor/ep4.json",
+   "expected": "expected/ep4.json.pea.txt"
+  },
+  {
+   "input": "input/ep5.srt",
+   "about": "SubRip: comma times, a position code, italics, \"Name:\" labels.",
+   "source": "https://sim.example.org/harbor/ep5.srt",
+   "expected": "expected/ep5.srt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/ep6.vtt",
+   "about": "WebVTT: header, NOTE and STYLE blocks, cue numbers and settings, <v> speakers, a sound note, a sponsor read, a five-minute gap.",
+   "source": "https://sim.example.org/harbor/ep6.vtt",
+   "expected": "expected/ep6.vtt.pea.txt"
+  },
+  {
+   "input": "input/ep6.vtt",
+   "about": "WebVTT: header, NOTE and STYLE blocks, cue numbers and settings, <v> speakers, a sound note, a sponsor read, a five-minute gap.",
+   "source": "https://sim.example.org/harbor/ep6.vtt",
+   "truncated": true,
+   "expected": "expected/ep6.vtt.truncated.pea.txt"
+  },
+  {
+   "input": "input/hostile-times.json",
+   "about": "Podcasting 2.0 JSON whose times are not times: \"nan\", \"inf\", 1e300, negative numbers, 100 hours and more, \"1e308:00\". Each such row keeps its text and gets [--:--:--]; 359999 is the last time that can be written.",
+   "source": "https://sim.example.org/harbor/hostile-times.json",
+   "expected": "expected/hostile-times.json.pea.txt"
+  },
+  {
+   "input": "input/leading-times.txt",
+   "about": "Lines that start with a time, one written \"0:31:\". The title line before the first time stays a segment of its own and the timed lines keep their times.",
+   "source": "https://sim.example.org/harbor/leading-times.txt",
+   "expected": "expected/leading-times.txt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/notes-are-not-speakers.txt",
+   "about": "\"Note:\" is not a speaker; \"Dr. Aalto:\" is. An unlabelled line after a blank line has no stated speaker.",
+   "source": "https://sim.example.org/harbor/notes-are-not-speakers.txt",
+   "expected": "expected/notes-are-not-speakers.txt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/numbered-speakers.txt",
+   "about": "\"Speaker 1 (00:02):\" lines give the speaker and the time.",
+   "source": "https://sim.example.org/harbor/numbered-speakers.txt",
+   "expected": "expected/numbered-speakers.txt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/otter.txt",
+   "about": "\"Name 0:12\" lines.",
+   "source": "https://sim.example.org/harbor/otter.txt",
+   "expected": "expected/otter.txt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/overlap.srt",
+   "about": "Captions that repeat the line before, \">>\" marks, font tags, a sentence said twice.",
+   "source": "https://sim.example.org/harbor/overlap.srt",
+   "expected": "expected/overlap.srt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/rolling.vtt",
+   "about": "Rolling captions with karaoke times: every line arrives two or three times.",
+   "source": "https://sim.example.org/harbor/rolling.vtt",
+   "expected": "expected/rolling.vtt.pea.txt"
+  },
+  {
+   "input": "input/rows.json",
+   "about": "A bare list of rows with name, start and text; a clock string as a time; an empty name.",
+   "source": "https://sim.example.org/harbor/rows.json",
+   "expected": "expected/rows.json.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/timed.md",
+   "about": "Markdown with times inside the lines, a title, an address line, a rule, a sponsor read and a phrase said twice.",
+   "source": "https://sim.example.org/harbor/timed.md",
+   "expected": "expected/timed.md.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/two-voices.vtt",
+   "about": "Two <v> voices in one cue, a cue name, a sound note, a sponsor read, hours. Escaped text (&lt;once&gt;) stays as <once>; a cue an hour later starts a new segment.",
+   "source": "https://sim.example.org/harbor/two-voices.vtt",
+   "expected": "expected/two-voices.vtt.pea.txt",
+   "language_recognized_by_reference": "en"
+  },
+  {
+   "input": "input/whole-text.json",
+   "about": "One \"transcript\" string, read as plain text; language from \"lang\".",
+   "source": "https://sim.example.org/harbor/whole-text.json",
+   "expected": "expected/whole-text.json.pea.txt"
+  },
+  {
+   "input": "generated:long.vtt",
+   "about": "Not stored: 3,400 one-second WebVTT cues, built by test_conformance.py. Over the size cap, so the result is cut.",
+   "source": "https://sim.example.org/harbor/long.vtt",
+   "language": "en",
+   "expected_sha256": "0a97ee43f963e714f425a87896f85e317a5f7ed20b2d4fd80b1a15420a6cdf55",
+   "expected_quality": "partial (cut at 150,000 chars; 481 of 680 segments kept, up to 40:00 of 56:40)",
+   "expected_segments": 481
+  }
+ ]
+}

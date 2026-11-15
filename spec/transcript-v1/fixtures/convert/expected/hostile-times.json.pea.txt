@@ -1,0 +1,23 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/hostile-times.json
+duration: 99:59:59
+language: en
+format: Podcasting 2.0 JSON
+provenance: publisher transcript
+quality: full
+speakers: Mara, Owen
+segments: 10
+---
+[--:--:--] Mara: Welcome to Harbor Voices. Today we look at the clock on the harbor office wall, which has been wrong since 1962.
+[--:--:--] Owen: It stopped during a storm, and the council voted to leave it, so every ferry timetable carries a small note about it.
+[--:--:--] Mara: Is it true that visitors set their watches by it anyway?
+[--:--:--] Owen: Every summer. We find them on the quay an hour early, or eleven hours late, depending on how you count.
+[--:--:--] Mara: And the harbor master has never asked for it to be repaired?
+[--:--:--] Owen: Never. She says a clock that is right twice a day is more than most committees manage.
+[00:00:42] Mara: Does the mechanism still work at all?
+[00:00:51] Owen: It is fine. I wound it myself in March, and it ran for a week before anyone noticed and complained.
+[99:59:59] Mara: So the wrong time is now the official time.
+[--:--:--] Owen: Only on the quay. Out past the breakwater we use the tide, which has not been wrong yet.

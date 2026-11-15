@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep5.srt
+duration: 00:45
+language: en
+format: SubRip (SRT)
+provenance: publisher transcript
+quality: full
+speakers: Mara, Ines
+segments: 4
+---
+[00:00:00] Mara: This week on Harbor Voices we ride the first ferry of the morning. The timetable changed in October, so the first crossing now leaves at 6:40 instead of 7:15.
+[00:00:10] Ines: I have captained the Petrel for eleven years, and the early boat is mostly bakers and nurses. We carry about ninety people and six bicycles on a normal Tuesday.
+[00:00:24] Mara: What happens when the fog comes in?
+[00:00:30] Ines: We slow to four knots and sound the horn every two minutes. The crossing takes twenty-five minutes instead of twelve. Nobody complains. They would rather be late than swim.

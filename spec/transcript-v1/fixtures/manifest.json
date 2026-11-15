@@ -1,0 +1,1329 @@
+{
+ "specification": "PEA transcript v1, specification 1.0.0-draft.2",
+ "about": "Expected results for the conformance fixtures. Synthetic text only (a made-up show, Harbor Voices).",
+ "fields": {
+  "conforms": "true when the file meets every MUST of the writer level (SPEC.md section 13.2)",
+  "fails": "the MUST rules a validator reports as failed, exactly",
+  "warnings": "the SHOULD rules a validator reports, exactly",
+  "reader": "what a conforming reader (section 13.1) returns: accepted or not, and what it found"
+ },
+ "files": [
+  {
+   "file": "valid/ads.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Two sponsor or housekeeping segments, each a segment of its own (section 8). A reader that follows section 12 finds 2.",
+   "reader": {
+    "accepted": true,
+    "segments": 6,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 648,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 2
+   }
+  },
+  {
+   "file": "valid/cut-truncated-input.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "The input was cut off before its end: the second partial reason.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "the file was over 1.5 MB; end missing, kept up to 00:38",
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/cut.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Cut at the size cap: quality partial with the writer's reason, and the cut mark at the end.",
+   "reader": {
+    "accepted": true,
+    "segments": 2,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "cut at 150,000 chars; 2 of 680 segments kept, up to 00:09 of 56:40",
+    "chars": 250,
+    "duration": 3400,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/empty-names.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Empty show and title: the lines keep the space after the colon.",
+   "reader": {
+    "accepted": true,
+    "segments": 1,
+    "speakers": [],
+    "timed": true,
+    "partial": null,
+    "chars": 113,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/full.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Every header value known, two speakers, times.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/html-source.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "format \"HTML page\" (written by PEA; convert.py does not read HTML).",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "HTML page",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/long-segment.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [
+    "W7"
+   ],
+   "note": "Conforms, with one warning: a segment of 644 characters. The reference writer never writes more than 560; a reader must not rely on that.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 971,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/minimal.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Every optional value unknown, no speakers, no times, one segment.",
+   "reader": {
+    "accepted": true,
+    "segments": 1,
+    "speakers": [],
+    "timed": false,
+    "partial": null,
+    "chars": 136,
+    "duration": null,
+    "language": null,
+    "format": "plain text",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/mixed-times.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "A line before the first time is untimed; the rest carry times.",
+   "reader": {
+    "accepted": true,
+    "segments": 3,
+    "speakers": [
+     "Mara Lind",
+     "Owen Hale"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 222,
+    "duration": 64,
+    "language": "en",
+    "format": "text with times",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/multi-speaker.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Four speakers; names with a space, a full stop and an underscore.",
+   "reader": {
+    "accepted": true,
+    "segments": 6,
+    "speakers": [
+     "Mara Lind",
+     "Signe",
+     "Dr. Aalto",
+     "SPEAKER_4"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 455,
+    "duration": 370,
+    "language": "en",
+    "format": "Podcasting 2.0 JSON",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/over-an-hour.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "duration written H:MM:SS, stamps past the first hour.",
+   "reader": {
+    "accepted": true,
+    "segments": 3,
+    "speakers": [],
+    "timed": true,
+    "partial": null,
+    "chars": 256,
+    "duration": 3730,
+    "language": "en",
+    "format": "SubRip (SRT)",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/speech-ending-in-cut.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "A whole transcript whose last spoken words are \"(cut)\": the writer adds a full stop, so the file does not end with the cut mark and is not read as partial.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 419,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/unicode.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "Text, show, title and speaker names outside ASCII.",
+   "reader": {
+    "accepted": true,
+    "segments": 2,
+    "speakers": [
+     "María José",
+     "港の声"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 132,
+    "duration": 323,
+    "language": "pl",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/unknown-time.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "A segment whose time the publisher gave as something that cannot be written (negative, not a number, 100 hours or more): the stamp is [--:--:--] and the text is kept.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/untimed.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [],
+   "note": "No times at all: every stamp is [--:--:--], duration unknown.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Pieter"
+    ],
+    "timed": false,
+    "partial": null,
+    "chars": 391,
+    "duration": null,
+    "language": "en",
+    "format": "plain text",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "valid/warnings.pea.txt",
+   "conforms": true,
+   "fails": [],
+   "warnings": [
+    "W1",
+    "W2",
+    "W3",
+    "W6"
+   ],
+   "note": "Conforms, with four SHOULD-level warnings: date not YYYY-MM-DD, language not a tag, a time that goes backwards, duration before the last time.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 20,
+    "language": "english",
+    "format": "WebVTT",
+    "sponsor_segments": 0
+   }
+  },
+  {
+   "file": "invalid/f1-byte-order-mark.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F1"
+   ],
+   "warnings": [],
+   "note": "Starts with U+FEFF.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/f1-not-utf8.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F1"
+   ],
+   "warnings": [],
+   "note": "One Latin-1 byte (0xE9).",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/f1-nul.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F1"
+   ],
+   "warnings": [],
+   "note": "A NUL character in a segment.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 448,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/f2-crlf.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F2"
+   ],
+   "warnings": [],
+   "note": "CRLF line ends.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/f3-final-line-break-after-cut-mark.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F3"
+   ],
+   "warnings": [],
+   "note": "A partial file that ends with LF after the cut mark. A reader accepts the line break, finds the mark and does not keep it as speech.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "the file was over 1.5 MB; end missing, kept up to 00:38",
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/f3-final-line-break.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F3"
+   ],
+   "warnings": [],
+   "note": "Ends with LF.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/f4-code-fence.pea.txt",
+   "conforms": false,
+   "fails": [
+    "F4"
+   ],
+   "warnings": [],
+   "note": "Three backticks in a segment.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 456,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h1-marker-lower-case.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H1"
+   ],
+   "warnings": [],
+   "note": "The marker in lower case.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/h1-version-10.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H1"
+   ],
+   "warnings": [],
+   "note": "\"v10\" is not v1: line 1 is compared whole, by readers too.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/h1-version-2.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H1"
+   ],
+   "warnings": [],
+   "note": "Another major version.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/h10-provenance-empty.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H10"
+   ],
+   "warnings": [],
+   "note": "provenance with no value.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h11-partial-without-reason.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H11"
+   ],
+   "warnings": [],
+   "note": "\"partial\" with no reason in parentheses.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "end missing",
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h11-quality-unknown-word.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H11"
+   ],
+   "warnings": [],
+   "note": "\"good\".",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h12-speaker-twice.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H12"
+   ],
+   "warnings": [],
+   "note": "Mara listed twice.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h12-speakers-empty.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H12"
+   ],
+   "warnings": [],
+   "note": "speakers with no value (\"none\" is the word).",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h13-segment-count-not-a-number.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H13"
+   ],
+   "warnings": [],
+   "note": "\"four\".",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h13-segment-count-wrong.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H13"
+   ],
+   "warnings": [],
+   "note": "The header says 5; there are 4.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h14-doubled-space.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H14"
+   ],
+   "warnings": [],
+   "note": "Two spaces inside the title.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h2-key-missing.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H2"
+   ],
+   "warnings": [],
+   "note": "No language line.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": null,
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h2-key-twice.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H2"
+   ],
+   "warnings": [],
+   "note": "The title key twice. A reader takes the first of a repeated key.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h2-keys-out-of-order.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H2"
+   ],
+   "warnings": [],
+   "note": "title before show.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h2-no-space-after-colon.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H2"
+   ],
+   "warnings": [],
+   "note": "\"date:2026-11-13\".",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h3-extra-key.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H3"
+   ],
+   "warnings": [],
+   "note": "A twelfth key (\"episode\") where the header should end.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h3-no-header-end.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H3"
+   ],
+   "warnings": [],
+   "note": "No \"---\" line.",
+   "reader": {
+    "accepted": false
+   }
+  },
+  {
+   "file": "invalid/h4-title-too-long.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H4"
+   ],
+   "warnings": [],
+   "note": "title of 216 characters.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h5-date-empty.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H5"
+   ],
+   "warnings": [],
+   "note": "date with no value.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h6-source-too-long.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H6"
+   ],
+   "warnings": [],
+   "note": "source of 411 characters.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h7-duration-padded-hours.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H7"
+   ],
+   "warnings": [],
+   "note": "\"00:05:23\" (under an hour is MM:SS).",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h7-duration-seconds.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H7"
+   ],
+   "warnings": [],
+   "note": "\"323\".",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": null,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h8-language-other-characters.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H8"
+   ],
+   "warnings": [],
+   "note": "A language value with characters other than ASCII letters, digits, \"-\" and \"_\".",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en/US!",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h8-language-too-long.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H8"
+   ],
+   "warnings": [],
+   "note": "14 characters.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en-US-x-harbor",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/h9-format-unregistered.pea.txt",
+   "conforms": false,
+   "fails": [
+    "H9"
+   ],
+   "warnings": [],
+   "note": "\"VTT\" is not one of the six values.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "plain text"
+   }
+  },
+  {
+   "file": "invalid/s1-blank-line.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S1"
+   ],
+   "warnings": [],
+   "note": "An empty line between segments.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s1-continuation-line.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S1"
+   ],
+   "warnings": [],
+   "note": "A line with no stamp.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s1-no-text.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S1"
+   ],
+   "warnings": [],
+   "note": "A stamp with nothing after it.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s1-speaker-without-text.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S1"
+   ],
+   "warnings": [],
+   "note": "A stamp and a speaker label with nothing after them.",
+   "reader": {
+    "accepted": true,
+    "segments": 5,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s2-fractional-seconds.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S2"
+   ],
+   "warnings": [],
+   "note": "[00:00:38.400].",
+   "reader": {
+    "accepted": true,
+    "segments": 3,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 327,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s2-minutes-over-59.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S2"
+   ],
+   "warnings": [],
+   "note": "[00:75:00].",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 392,
+    "duration": null,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s2-short-stamp.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S2"
+   ],
+   "warnings": [],
+   "note": "[0:38]. A reader keeps the segment's text and reads the stamp as no time.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 392,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s2-three-digit-hours.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S2"
+   ],
+   "warnings": [],
+   "note": "[111:06:40]. A reader keeps the segment's text and reads the stamp as no time.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 392,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s3-speaker-never-used.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S3"
+   ],
+   "warnings": [],
+   "note": "Ines is listed and never speaks.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s3-speakers-out-of-order.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S3"
+   ],
+   "warnings": [],
+   "note": "Tobias listed first; Mara speaks first.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": null,
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s4-cut-mark-but-full.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S4"
+   ],
+   "warnings": [],
+   "note": "quality full, the file ends with the cut mark.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "end missing",
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s4-partial-without-cut-mark.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S4"
+   ],
+   "warnings": [],
+   "note": "quality partial, no cut mark.",
+   "reader": {
+    "accepted": true,
+    "segments": 4,
+    "speakers": [
+     "Mara",
+     "Tobias"
+    ],
+    "timed": true,
+    "partial": "cut at 150,000 chars; 4 of 680 segments kept, up to 00:38 of 56:40",
+    "chars": 447,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "invalid/s6-no-segments.pea.txt",
+   "conforms": false,
+   "fails": [
+    "S6"
+   ],
+   "warnings": [],
+   "note": "A header and nothing after it.",
+   "reader": {
+    "accepted": true,
+    "segments": 0,
+    "speakers": [],
+    "timed": false,
+    "partial": null,
+    "chars": 0,
+    "duration": 323,
+    "language": "en",
+    "format": "WebVTT"
+   }
+  },
+  {
+   "file": "generated:s5-over-the-size-cap",
+   "conforms": false,
+   "fails": [
+    "S5"
+   ],
+   "warnings": [],
+   "note": "Not stored: test_conformance.py builds it (1,501 segments of 100 characters, 150,100 in all).",
+   "reader": {
+    "accepted": true,
+    "segments": 1501
+   }
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The harbor cat
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep2.txt
+duration: unknown
+language: en
+format: plain text
+provenance: publisher transcript
+quality: full
+speakers: Mara, Pieter
+segments: 4
+---
+[--:--:--] Mara: This is Harbor Voices. Today is a short one about the harbor cat. Her name is Bosun and she has lived on the fuel dock for nine years.
+[--:--:--] Pieter: She was a stray. Now she has a bed in the dock office and a monthly allowance of sardines from the cooperative.
+[--:--:--] Mara: Does she go aboard the boats?
+[--:--:--] Pieter: Only the Kestrel. The skipper says she can tell bad weather a day ahead, because she refuses to leave the wheelhouse.

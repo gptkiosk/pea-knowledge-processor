@@ -1,0 +1,13 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep6.vtt
+duration: 05:23
+language: en
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 0
+---

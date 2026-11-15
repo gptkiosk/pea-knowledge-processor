@@ -1,0 +1,12 @@
+{"version":"1.0.0","language":"en","segments":[
+{"speaker":"Mara","startTime":"nan","endTime":"inf","body":"Welcome to Harbor Voices. Today we look at the clock on the harbor office wall, which has been wrong since 1962."},
+{"speaker":"Owen","startTime":1e300,"endTime":-1e300,"body":"It stopped during a storm, and the council voted to leave it, so every ferry timetable carries a small note about it."},
+{"speaker":"Mara","startTime":-5,"endTime":-1,"body":"Is it true that visitors set their watches by it anyway?"},
+{"speaker":"Owen","startTime":"-inf","endTime":"1e308:00","body":"Every summer. We find them on the quay an hour early, or eleven hours late, depending on how you count."},
+{"speaker":"Mara","startTime":400000,"endTime":999999999999,"body":"And the harbor master has never asked for it to be repaired?"},
+{"speaker":"Owen","startTime":"999999999999:00:00","endTime":"0x1p900","body":"Never. She says a clock that is right twice a day is more than most committees manage."},
+{"speaker":"Mara","startTime":42,"endTime":30,"body":"Does the mechanism still work at all?"},
+{"speaker":"Owen","startTime":"00:00:51","endTime":58.5,"body":"It is fine. I wound it myself in March, and it ran for a week before anyone noticed and complained."},
+{"speaker":"Mara","startTime":359999,"endTime":360000,"body":"So the wrong time is now the official time."},
+{"speaker":"Owen","startTime":360000,"endTime":9223372036854775807,"body":"Only on the quay. Out past the breakwater we use the tide, which has not been wrong yet."}
+]}

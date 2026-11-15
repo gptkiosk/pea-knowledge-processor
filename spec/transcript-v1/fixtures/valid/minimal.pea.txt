@@ -1,0 +1,14 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The harbor cat
+date: unknown
+source: unknown
+duration: unknown
+language: unknown
+format: plain text
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 1
+---
+[--:--:--] This is Harbor Voices. Today is a short one about the harbor cat, whose name is Bosun and who has lived on the fuel dock for nine years.

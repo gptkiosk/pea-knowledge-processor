@@ -1,0 +1,14 @@
+PEA-TRANSCRIPT v1
+show: 
+title: 
+date: 2026-11-13
+source: https://sim.example.org/harbor/ep6.vtt
+duration: 05:23
+language: en
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 1
+---
+[00:00:00] A transcript whose show and title are not known still has both lines, each ending with the space after the colon.

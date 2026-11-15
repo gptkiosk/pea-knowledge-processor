@@ -1,0 +1,14 @@
+PEA-TRANSCRIPT v1
+show: Harbor Voices
+title: The lighthouse keeper's ledger
+date: 2026-11-13
+source: https://sim.example.org/harbor/rolling.vtt
+duration: 00:18
+language: en
+format: WebVTT
+provenance: publisher transcript
+quality: full
+speakers: none
+segments: 1
+---
+[00:00:00] the harbor wall was built in eighteen ninety one from granite blocks that came by barge each block weighs about two tons and the masons cut them on the quay and set forty of them a day when the weather allowed it which was not often
