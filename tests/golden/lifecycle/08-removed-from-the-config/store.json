@@ -34,9 +34,9 @@
       "id": "tide-tables",
       "item_count": 6,
       "items_file": {
-        "bytes": 6566,
+        "bytes": 6710,
         "path": "sources/tide-tables/items.json",
-        "sha256": "9c1e64208b74ba1204a91e292324701d0cbb877f96b8e48303cc3feedc8665a9"
+        "sha256": "727fe9d7b16c42629431168aca1751102876d3156075ff5d180a339089ffea7e"
       },
       "kind": "podcast",
       "language": "en",

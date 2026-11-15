@@ -8,7 +8,8 @@
     "auto_pause_after_failed_runs": 3,
     "tombstone_days": 90,
     "excerpt_budget_chars": 1800,
-    "suggested_keep": 4
+    "suggested_keep": 4,
+    "min_full_transcript_share": 0
   },
   "model": {
     "enabled": false,

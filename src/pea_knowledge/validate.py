@@ -185,6 +185,8 @@ def check_items(data, listing):
             problems.append(Problem("inconsistent", at, "transcript.available, reason and file disagree"))
         if t["file"] is not None and listing["publish"] != "full":
             problems.append(Problem("inconsistent", at, "a transcript file in a source that publishes digests only"))
+        if "read" in t and t["read"] != {"yes": "full", "partial": "partial"}.get(t["available"], t["read"]):
+            problems.append(Problem("inconsistent", at, "transcript.read and transcript.available disagree"))
         if item["stale"] != (item["stale_reason"] is not None):
             problems.append(Problem("inconsistent", at, "stale and stale_reason disagree"))
     dates = [(i["date"], i["id"]) for i in items["items"]]

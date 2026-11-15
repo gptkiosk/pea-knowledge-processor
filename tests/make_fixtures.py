@@ -213,7 +213,8 @@ def config():
         s.update(more)
         return s
     return {"format": "pea-knowledge-sources", "format_version": "1.0", "min_app_version": None,
-            "defaults": {"max_items": 8, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90, "excerpt_budget_chars": 1800, "suggested_keep": 4},
+            "defaults": {"max_items": 8, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90, "excerpt_budget_chars": 1800, "suggested_keep": 4,
+                         "min_full_transcript_share": 0},   # the made-up sources include ones without transcripts, on purpose; the rule has its own tests
             "model": {"enabled": False, "model": "test/model-small", "max_cost_usd_per_run": 0.05},
             "sources": [
                 source("harbor-voices", "Harbor Voices", "podcast", "agent_index", "https://harbor.example.org/agent.json", "https://harbor.example.org/", "digest_only", "microphone", "blue"),

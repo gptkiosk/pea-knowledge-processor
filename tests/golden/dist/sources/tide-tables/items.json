@@ -31,6 +31,7 @@
           "path": "sources/tide-tables/2026-11-12-49be7f43a2.transcript.pea.txt",
           "sha256": "fa717b43bfafb3c047ecd1b189bbbd6a7863dbed96bb890bd757220fc43a994c"
         },
+        "read": "full",
         "reason": null
       }
     },
@@ -63,6 +64,7 @@
           "path": "sources/tide-tables/2026-11-11-90db1628c6.transcript.pea.txt",
           "sha256": "c5302d74a8f99a6b49e5259647dce2e572b7f4bb457fc4407ff333e63e174899"
         },
+        "read": "full",
         "reason": null
       }
     },
@@ -95,6 +97,7 @@
           "path": "sources/tide-tables/2026-11-10-bbf6b9d195.transcript.pea.txt",
           "sha256": "d6f92f42ae60dacb24411eea74bb9588f0b206340bb89e89931f4ba48380473d"
         },
+        "read": "full",
         "reason": null
       }
     },
@@ -123,6 +126,7 @@
       "transcript": {
         "available": "no",
         "file": null,
+        "read": "none",
         "reason": "none_published"
       }
     },
@@ -151,6 +155,7 @@
       "transcript": {
         "available": "no",
         "file": null,
+        "read": "none",
         "reason": "fetch_failed"
       }
     },
@@ -183,6 +188,7 @@
           "path": "sources/tide-tables/2026-11-07-420826b378.transcript.pea.txt",
           "sha256": "58cc1dfc230d91177aa1548a9adc4c1255deaae179baa465488dddb245e6db89"
         },
+        "read": "full",
         "reason": null
       }
     }

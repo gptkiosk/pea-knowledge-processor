@@ -163,6 +163,16 @@ class Feeds(unittest.TestCase):
         adapters.parse_feed(rss(ITEM % ("T", "g", "1", slow)))
         self.assertLess(time.monotonic() - started, 5, "no input makes reading the marks slow")
 
+    def test_a_feed_cut_at_the_size_cap_keeps_its_whole_entries(self):
+        whole = saved("tide/feed.xml")
+        cut = whole[:whole.index(b"<item>", whole.index(b"tide-3"))+ 40]
+        with self.assertRaises(adapters.AdapterError):
+            adapters.parse_feed(cut)
+        head = adapters.head_of_feed(cut)
+        self.assertEqual([e.date for e in adapters.parse_feed(head).entries], ["2026-11-12", "2026-11-11", "2026-11-10", "2026-11-09"])
+        for data in (b"", b"<rss><channel><item>never closed", b"<html><item></item></html>", b'{"items": []}'):
+            self.assertIsNone(adapters.head_of_feed(data))
+
     def test_a_chapter_file(self):
         marks = adapters.chapters_file(saved("tide/ep4-chapters.json"))
         self.assertEqual(marks, [(0, "Opening"), (140, "The ledger"), (300, "Out of order, after sorting it is in order"), (400, "The visitor centre")])

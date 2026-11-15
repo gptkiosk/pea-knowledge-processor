@@ -243,6 +243,15 @@
                     }
                   }
                 ]
+              },
+              "read": {
+                "description": "Since 1.1. What the pipeline read at the publisher to make the digest, whether or not the file is published: a full transcript, a cut one, or none.",
+                "type": "string",
+                "enum": [
+                  "full",
+                  "partial",
+                  "none"
+                ]
               }
             }
           }

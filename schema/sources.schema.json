@@ -70,6 +70,24 @@
           "type": "integer",
           "minimum": 100000,
           "maximum": 900000000
+        },
+        "min_full_transcript_share": {
+          "description": "The rule of the catalog: only sources with full transcripts are carried. A source is counted as failed (and so paused, then withdrawn) when fewer than this share of its newest items have a full transcript. 0 switches the check off.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "transcript_check_items": {
+          "description": "How many of the newest items the transcript rule looks at.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "withdraw_without_transcripts_days": {
+          "description": "A source paused for want of full transcripts is withdrawn after this many days.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650
         }
       }
     },
@@ -308,6 +326,18 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 3650
+          },
+          "min_full_transcript_share": {
+            "description": "Overrides the default share of newest items that must have a full transcript.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "transcript_check_items": {
+            "description": "Overrides the default.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
           },
           "state": {
             "description": "A manual lifecycle state. It always wins over what the pipeline would decide. Leave it out for automatic.",

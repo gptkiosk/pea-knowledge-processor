@@ -21,7 +21,10 @@ from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as d
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
-            "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000}
+            "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000,
+            # The rule of the catalog: only sources with full transcripts are carried (docs/SOURCES-TERMS.md).
+            "min_full_transcript_share": 0.6, "transcript_check_items": 5, "withdraw_without_transcripts_days": 30}
+NO_TRANSCRIPTS = "full transcripts for"   # how the detail of that failure starts; the reason code is format_changed
 TRANSCRIPT_TRIES = 3
 CHAPTERS_BYTES = 300_000
 NEWS_SUMMARY_CHARS = 280
@@ -229,9 +232,14 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
                 record.update(outcome="unchanged", etag=before.get("etag", ""), last_modified=before.get("last_modified", ""), fingerprint=before.get("fingerprint", ""))
                 log("%s: not modified" % sid)
                 continue
-            if answer.truncated:
-                raise fetch.FetchError("http_error", "the feed is larger than %d bytes" % fetch.FEED_BYTES)
-            listing = adapters.ADAPTERS[source["adapter"]](answer.body)
+            body, cut = answer.body, False
+            if answer.truncated:   # a very long feed: the whole entries at its head are read, the rest is not needed
+                body, cut = (adapters.head_of_feed(body) if source["adapter"] == "feed" else None), True
+                if body is None:
+                    raise fetch.FetchError("http_error", "the feed is larger than %d bytes" % fetch.FEED_BYTES)
+            listing = adapters.ADAPTERS[source["adapter"]](body)
+            if cut:
+                listing.notes.append("the feed is larger than %d bytes: its newest %d entries were read" % (fetch.FEED_BYTES, len(listing.entries)))
         except fetch.FetchError as e:
             record.update(outcome="failed", reason=reason("robots_disallowed" if e.code == "robots_disallowed" else "fetch_failed", e.detail))
             log("%s: %s" % (sid, e))
@@ -362,13 +370,14 @@ def _new_item(config, source, work, item):
     path = "sources/%s/%s.digest.json" % (sid, iid)
     files[path] = digest_bytes
     t = item["transcript"]
-    transcript = {"available": "no", "reason": t["reason"], "file": None}
+    read_at_publisher = {"yes": "full", "partial": "partial"}.get(t["status"], "none")
+    transcript = {"available": "no", "reason": t["reason"], "file": None, "read": read_at_publisher}
     if t["file"]:
         if source["publish"] == "full":
             data = read(os.path.join(work, *t["file"].split("/")))
             tpath = "sources/%s/%s.transcript.pea.txt" % (sid, iid)
             files[tpath] = data
-            transcript = {"available": t["status"], "reason": t["reason"], "file": {"path": tpath, "sha256": sha256(data), "bytes": len(data)}}
+            transcript = {"available": t["status"], "reason": t["reason"], "file": {"path": tpath, "sha256": sha256(data), "bytes": len(data)}, "read": read_at_publisher}
         else:
             transcript["reason"] = "withheld_terms"
     entry = {"id": iid, "title": item["title"], "date": item["date"], "link": item["link"], "link_kind": item.get("link_kind", "episode"),
@@ -379,6 +388,30 @@ def _new_item(config, source, work, item):
                         "method": d["provenance"]["method"]},
              "transcript": transcript}
     return entry, files
+
+
+def transcript_read(entry):
+    """What was read at the publisher for an index entry: "full", "partial" or "none". An entry written before 1.1
+    does not say; then a transcript in the output, or a digest made from one, counts as it stands."""
+    t = entry["transcript"]
+    if "read" in t:
+        return t["read"]
+    if t["available"] != "no":
+        return "full" if t["available"] == "yes" else "partial"
+    return "full" if t["reason"] == "withheld_terms" and entry["digest"]["basis"] == "transcript" and entry["digest"]["grade"] != "partial" else "none"
+
+
+def too_few_transcripts(config, source, record, old_items):
+    """None when the source keeps the rule of the catalog, otherwise one sentence: of its newest items, too few have
+    a full transcript. An item reused from the last run counts as it was read then."""
+    share, count = setting(config, source, "min_full_transcript_share"), setting(config, source, "transcript_check_items")
+    newest = record["items"][:count]
+    if not share or not newest:
+        return None
+    full = sum(1 for i in newest if (transcript_read(old_items[i["id"]]) == "full" if i["reuse"] and i["id"] in old_items else i["transcript"]["status"] == "yes"))
+    if full >= share * len(newest):
+        return None
+    return "%s %d of the newest %d items; the catalog carries a source only when at least %d percent have one" % (NO_TRANSCRIPTS, full, len(newest), round(share * 100))
 
 
 def _old_files(previous, entry):
@@ -425,6 +458,11 @@ def build_stage(config, work, previous, out, now, log=print):
             else:
                 listings.append(entry)
             continue
+        short = too_few_transcripts(config, source, record, old_items) if record["outcome"] == "ok" else None
+        if short:   # read without trouble, but not what the catalog carries: counted like a failed read
+            record = dict(record, outcome="failed", reason=reason("format_changed", short))
+            report.update(outcome="failed", reason=record["reason"])
+            report["notes"].append(note("the source does not publish full transcripts for most of its newest items"))
         entries, files = {}, {}
         if record["outcome"] == "ok":
             for item in record["items"]:
@@ -474,6 +512,8 @@ def build_stage(config, work, previous, out, now, log=print):
         elif record["outcome"] == "failed" and failed >= pause_after and manual != "active":
             lifecycle, why = "paused", record["reason"]
             message = "This source could not be read %d times in a row. What is shown is the last good copy." % failed
+            if short:
+                message = "This source no longer publishes full transcripts for most new episodes, so it is paused. What is shown is the last good copy."
         else:
             lifecycle, why, message = "active", record["reason"] if record["outcome"] == "failed" else None, None
         since = None if lifecycle == "active" else (old["state_since"] if old and old["state"] == lifecycle else stamp)
@@ -482,6 +522,16 @@ def build_stage(config, work, previous, out, now, log=print):
             if record["outcome"] != "failed" and old:
                 last_ok = old["freshness"]["last_ok"] if old["freshness"]["status"] == "stale" else last_run
         freshness = {"status": status, "last_ok": last_ok, "failed_runs": failed}
+        gone = old is not None and old["state"] == "withdrawn" and (old["state_reason"] or {}).get("detail", "").startswith(NO_TRANSCRIPTS)
+        if short and manual is None and (gone or (lifecycle == "paused" and (now - parse_timestamp(since)).days >= config["defaults"]["withdraw_without_transcripts_days"])):
+            # Paused long enough for want of transcripts: withdrawn. It is still read every run and comes back by itself.
+            entry = tombstone(source, old, reason("quality", short), "This source stopped publishing full transcripts and was removed from the catalog.", False)
+            report.update(state="withdrawn", kept=0, pruned=len(old_items))
+            report["notes"].append("withdrawn: no full transcripts for %d days" % config["defaults"]["withdraw_without_transcripts_days"] if entry else "withdrawn long enough ago: no longer listed; it can be removed from the config")
+            if entry is not None:
+                entry["freshness"]["failed_runs"] = failed
+                listings.append(entry)
+            continue
 
         items_ref = None
         if kept:
@@ -517,8 +567,8 @@ def build_stage(config, work, previous, out, now, log=print):
         else:
             fresh = {i["id"]: i for i in record["items"]} if record["outcome"] == "ok" else {}
             before = previous.state.get(sid, {})
-            memory[sid] = {"config": source_key(config, source), "etag": record.get("etag", "") if record["outcome"] in ("ok", "unchanged") else before.get("etag", ""),
-                           "last_modified": record.get("last_modified", "") if record["outcome"] in ("ok", "unchanged") else before.get("last_modified", ""),
+            memory[sid] = {"config": source_key(config, source), "etag": record.get("etag", "") if record["outcome"] in ("ok", "unchanged") else "" if short else before.get("etag", ""),
+                           "last_modified": record.get("last_modified", "") if record["outcome"] in ("ok", "unchanged") else "" if short else before.get("last_modified", ""),
                            "fingerprint": record.get("fingerprint", "") or before.get("fingerprint", ""),
                            "items": {i["id"]: {"key": fresh[i["id"]]["key"] if i["id"] in fresh else before.get("items", {}).get(i["id"], {}).get("key", "0" * 64),
                                                "method": i["digest"]["method"]} for i in kept}}

@@ -451,6 +451,93 @@ class Lifecycle(Base):
         self.assertEqual(self.codes(), [])
 
 
+class OnlyFullTranscripts(Base):
+    """The rule of the catalog: only sources with full transcripts are carried. A source whose newest items mostly
+    have none is counted as failed, so it is paused like any source that cannot be read, and later withdrawn."""
+
+    def strict(self, **more):
+        return support.load_config(lambda c: c["defaults"].update(dict(min_full_transcript_share=0.6, transcript_check_items=5, **more)))
+
+    def test_a_source_without_transcripts_is_never_published_and_the_others_are(self):
+        health = support.run(self.out, config=self.strict())
+        self.assertEqual(self.codes(), [])
+        states = {s["id"]: (s["state"], s["freshness"]["status"], s["item_count"]) for s in support.store(self.out)["sources"]}
+        self.assertEqual(states, {"harbor-voices": ("active", "fresh", 4), "tide-tables": ("active", "fresh", 6), "quay-notes": ("active", "stale", 0), "port-gazette": ("active", "stale", 0)},
+                         "three of four and three of five are enough; show notes alone and headlines alone are not")
+        quay = self.health_of(health, "quay-notes")
+        self.assertEqual((quay["outcome"], quay["reason"]["code"]), ("failed", "format_changed"))
+        self.assertIn("full transcripts for 0 of the newest 2 items", quay["reason"]["detail"])
+        self.assertFalse(os.path.exists(os.path.join(self.out, "sources", "quay-notes")))
+        self.assertEqual({i["transcript"]["read"] for i in support.items(self.out, "harbor-voices")}, {"full", "none"}, "what was read is said even when it is not published")
+
+    def test_it_is_paused_after_the_usual_number_of_runs_and_then_withdrawn(self):
+        config = self.strict(withdraw_without_transcripts_days=30)
+        for n in range(3):
+            support.run(self.out, support.T0 + datetime.timedelta(hours=6 * n), config)
+        quay = support.listing(self.out, "quay-notes")
+        self.assertEqual((quay["state"], quay["state_reason"]["code"], quay["freshness"]["failed_runs"]), ("paused", "format_changed", 3))
+        self.assertIn("no longer publishes full transcripts", quay["message"])
+        self.assertIsNone(textrules.check(quay["message"]))
+        self.assertEqual(self.codes(), [])
+        support.run(self.out, support.T0 + datetime.timedelta(days=29), config)
+        self.assertEqual(support.listing(self.out, "quay-notes")["state"], "paused")
+        health = support.run(self.out, support.T0 + datetime.timedelta(days=31), config)
+        quay = support.listing(self.out, "quay-notes")
+        self.assertEqual((quay["state"], quay["state_reason"]["code"], quay["purge"], quay["item_count"]), ("withdrawn", "quality", False, 0))
+        self.assertIn("stopped publishing full transcripts", quay["message"])
+        self.assertEqual(self.health_of(health, "quay-notes")["state"], "withdrawn")
+        self.assertEqual(self.codes(), [])
+        support.run(self.out, support.T0 + datetime.timedelta(days=32), config)
+        self.assertEqual(support.listing(self.out, "quay-notes")["state"], "withdrawn", "it stays withdrawn while nothing changes")
+        self.assertEqual(support.listing(self.out, "tide-tables")["state"], "active")
+
+    def test_a_source_that_stops_publishing_transcripts_keeps_its_last_good_items_and_comes_back(self):
+        config = self.strict()
+        support.run(self.out, config=config)
+        before = support.tree(self.out)
+
+        def none_published(responses):   # the same feed, but no entry lists a transcript any more
+            with open(os.path.join(support.WEB, "tide", "feed.xml"), encoding="utf-8") as f:
+                feed = re.sub(r"<podcast:transcript [^>]*/>", "", f.read())
+            with open(os.path.join(self.base, "web", "tide", "feed.xml"), "w", encoding="utf-8") as f:
+                f.write(feed)
+            responses["https://tide.example.org/feed.xml"]["etag"] = '"tide-2"'
+        web = self.web(lambda r: None)
+        support.web_copy(os.path.join(self.base, "web2"), None)
+        with open(os.path.join(web, "manifest.json"), encoding="utf-8") as f:
+            manifest = json.load(f)
+        none_published(manifest["responses"])
+        with open(os.path.join(web, "manifest.json"), "w", encoding="utf-8") as f:
+            json.dump(manifest, f)
+        for n in range(1, 4):
+            health = support.run(self.out, support.T0 + datetime.timedelta(hours=6 * n), config, web)
+            self.assertEqual(self.codes(), [])
+        tide = support.listing(self.out, "tide-tables")
+        self.assertEqual((tide["state"], tide["state_reason"]["code"], tide["item_count"]), ("paused", "format_changed", 6))
+        self.assertEqual({p: d for p, d in support.tree(self.out).items() if p.startswith("sources/tide-tables/")},
+                         {p: d for p, d in before.items() if p.startswith("sources/tide-tables/")}, "the last good items are kept exactly as they were")
+        self.assertEqual(support.listing(self.out, "harbor-voices")["state"], "active", "one source never holds up another")
+        support.run(self.out, support.T0 + datetime.timedelta(hours=30), config)
+        tide = support.listing(self.out, "tide-tables")
+        self.assertEqual((tide["state"], tide["freshness"]["status"]), ("active", "fresh"), "the transcripts are back, and so is the source")
+
+    def test_what_counts_as_a_full_transcript(self):
+        config = self.strict()
+        source = config["sources"][0]
+        def item(status, reuse=False, iid="a"):
+            return {"id": iid, "reuse": reuse, "transcript": {"status": status}}
+        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("yes")] * 3 + [item("no")] * 2}, {}))
+        self.assertIn("2 of the newest 5", pipeline.too_few_transcripts(config, source, {"items": [item("yes")] * 2 + [item("no"), item("partial"), item("no")] + [item("yes")] * 9}, {}))
+        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": []}, {}), "nothing new to judge")
+        old = {"a": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None}, "digest": {"basis": "transcript", "grade": "full"}},
+               "b": {"transcript": {"available": "no", "reason": "withheld_terms", "file": None, "read": "partial"}, "digest": {"basis": "transcript", "grade": "partial"}}}
+        self.assertEqual((pipeline.transcript_read(old["a"]), pipeline.transcript_read(old["b"])), ("full", "partial"))
+        self.assertIsNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "a")]}, old))
+        self.assertIsNotNone(pipeline.too_few_transcripts(config, source, {"items": [item("no", True, "b")]}, old), "a cut transcript is not a full one")
+        off = support.load_config(lambda c: c["defaults"].update(min_full_transcript_share=0))
+        self.assertIsNone(pipeline.too_few_transcripts(off, off["sources"][0], {"items": [item("no")] * 5}, {}))
+
+
 class Restore(Base):
     def published(self, change=None):
         shutil.rmtree(self.out, ignore_errors=True)

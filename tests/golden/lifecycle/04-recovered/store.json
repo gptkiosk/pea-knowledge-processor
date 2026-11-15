@@ -34,9 +34,9 @@
       "id": "harbor-voices",
       "item_count": 4,
       "items_file": {
-        "bytes": 3747,
+        "bytes": 3843,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "04041be95a2e7054a40baf70fdd56c84416610ce022f495f4c62cbd265c74b87"
+        "sha256": "e25edf61f8311f32fb1f86e725c091535d159d1ade52726143b826c05b16bb8c"
       },
       "kind": "podcast",
       "language": "en",
@@ -87,9 +87,9 @@
       "id": "tide-tables",
       "item_count": 6,
       "items_file": {
-        "bytes": 6566,
+        "bytes": 6710,
         "path": "sources/tide-tables/items.json",
-        "sha256": "9c1e64208b74ba1204a91e292324701d0cbb877f96b8e48303cc3feedc8665a9"
+        "sha256": "727fe9d7b16c42629431168aca1751102876d3156075ff5d180a339089ffea7e"
       },
       "kind": "podcast",
       "language": "en",
@@ -140,9 +140,9 @@
       "id": "quay-notes",
       "item_count": 2,
       "items_file": {
-        "bytes": 1964,
+        "bytes": 2012,
         "path": "sources/quay-notes/items.json",
-        "sha256": "763d0293e03c67a2520446de20fdfaab134d357abc97f5a8ae24af8d679c6a09"
+        "sha256": "9b0be878c7b03cc2f0c22a3552fa50d4cb76924efb7736ce53c4956f7e9ab932"
       },
       "kind": "podcast",
       "language": "en",
@@ -192,9 +192,9 @@
       "id": "port-gazette",
       "item_count": 4,
       "items_file": {
-        "bytes": 3518,
+        "bytes": 3614,
         "path": "sources/port-gazette/items.json",
-        "sha256": "20d9766562296e6ec9c349dc367615399efd6fd2ad7af69388bf80529a577a69"
+        "sha256": "bf2572cf3242f3a84040004af34eda2f250ef4ddb1199a87e123b23f578ed0da"
       },
       "kind": "news",
       "language": "en",

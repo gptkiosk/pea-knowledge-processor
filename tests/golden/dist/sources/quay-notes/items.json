@@ -28,6 +28,7 @@
       "transcript": {
         "available": "no",
         "file": null,
+        "read": "none",
         "reason": "none_published"
       }
     },
@@ -57,6 +58,7 @@
       "transcript": {
         "available": "no",
         "file": null,
+        "read": "none",
         "reason": "none_published"
       }
     }

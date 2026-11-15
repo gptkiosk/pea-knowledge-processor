@@ -452,6 +452,16 @@ def parse_feed(data):
     return _finish(listing, skipped, "entries")
 
 
+def head_of_feed(data):
+    """The whole entries at the head of an RSS feed that was cut off at the size cap, closed so that it parses; None
+    when there is no whole entry to keep. A long-running show's feed can be many megabytes; the newest entries come
+    first, and those are the ones a run needs."""
+    end = data.rfind(b"</item>")
+    if end < 0 or b"<channel" not in data[:200_000] or b"<rss" not in data[:20_000]:
+        return None
+    return data[:end + len(b"</item>")] + b"</channel></rss>"
+
+
 # --- JSON Feed -------------------------------------------------------------------------------------------------------
 def parse_json_feed(data):
     try:
