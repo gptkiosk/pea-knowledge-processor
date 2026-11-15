@@ -174,7 +174,10 @@
       "hosts": [
         "Justin Jackson",
         "Jon Buda"
-      ]
+      ],
+      "state": "withdrawn",
+      "state_reason": "quality",
+      "message": "This show has had no new episodes since April 2026, so the curator removed it."
     },
     {
       "id": "buzzcast",
