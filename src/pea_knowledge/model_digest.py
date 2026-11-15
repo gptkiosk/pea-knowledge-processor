@@ -222,7 +222,7 @@ def shape(answer, source, item, transcript):
         d["talking_points"].append({"point": point, "why": _line(r.get("why"), dg.WHY_CHARS), "at": at, "ask": _line(r.get("ask"), dg.ASK_CHARS)})
     for r in rows("quotes", dg.QUOTES):
         quote = r.get("text") if isinstance(r, dict) else None
-        if _line(quote, dg.QUOTE_CHARS) != quote or len(quote) < 12:
+        if not isinstance(quote, str) or _line(quote, dg.QUOTE_CHARS) != quote or len(quote) < 12:
             continue  # only text that needs no repair can be an exact quote
         for number, s in enumerate(segments):
             if quote in s.text and not pt.is_ad(s.text):

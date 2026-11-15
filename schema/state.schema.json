@@ -65,6 +65,11 @@
                 }
               }
             }
+          },
+          "config": {
+            "description": "A hash of the source's settings: when they change, the feed is read again in full.",
+            "type": "string",
+            "maxLength": 64
           }
         }
       }

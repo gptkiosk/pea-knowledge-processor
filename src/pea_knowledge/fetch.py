@@ -239,6 +239,8 @@ class Fetcher:
             try:
                 answer = self._follow(address, ROBOTS_BYTES, {}, robots=False)
             except FetchError as e:
+                if e.code == "not_public":
+                    raise
                 # RFC 9309: a robots.txt that says "not here" (4xx) restricts nothing; one that cannot be reached
                 # (5xx, no answer) must be read as "stay away".
                 self._robots[host] = None if e.code == "not_found" or (e.code == "http_error" and e.detail.startswith("4")) else False

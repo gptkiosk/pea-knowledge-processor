@@ -200,6 +200,12 @@ def item_key(entry, source):
     return sha256("\x1f".join(parts).encode("utf-8", "replace"))
 
 
+def source_key(config, source):
+    """What a source's item list depends on in the config. When it changes, an unchanged feed is still read again."""
+    parts = [source["url"], source["adapter"], source["publish"], source["kind"]] + [str(setting(config, source, n)) for n in ("max_items", "retention_days", "excerpt_budget_chars")]
+    return sha256("\x1f".join(parts).encode("utf-8"))
+
+
 def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
     """Reads every source that is not manually switched off and writes the work folder."""
     wanted = "model" if model_digest.Settings(config.get("model")).enabled else "extractive"
@@ -212,7 +218,7 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
             record["outcome"] = "skipped"
             continue
         before, before_items = previous.state.get(sid, {}), previous.items.get(sid, {})
-        settled = bool(before_items) and not any(i["stale"] or i["transcript"]["reason"] == "fetch_failed" for i in before_items.values()) \
+        settled = bool(before_items) and before.get("config") == source_key(config, source) and not any(i["stale"] or i["transcript"]["reason"] == "fetch_failed" for i in before_items.values()) \
             and all(m["method"] == wanted or before_items.get(i, {}).get("digest", {}).get("basis") != "transcript" for i, m in before.get("items", {}).items())
         try:
             answer = fetcher.get(source["url"], fetch.FEED_BYTES, before.get("etag", "") if settled else "", before.get("last_modified", "") if settled else "")
@@ -435,7 +441,7 @@ def build_stage(config, work, previous, out, now, log=print):
                 report["kept"] += 1
         oldest = (now - datetime.timedelta(days=setting(config, source, "retention_days"))).date().isoformat()
         ordered = sorted(entries.values(), key=lambda i: (i["date"], i["id"]), reverse=True)
-        frozen = record["outcome"] != "ok"    # a source that was not read keeps exactly what it had
+        frozen = record["outcome"] in ("failed", "skipped")    # a source that could not be read keeps exactly what it had
         kept = ordered if frozen else [i for i in ordered if i["date"] >= oldest][:setting(config, source, "max_items")]
         report["pruned"] = len(ordered) - len(kept)
         wanted = {i["digest"]["path"] for i in kept} | {i["transcript"]["file"]["path"] for i in kept if i["transcript"]["file"]}
@@ -499,7 +505,7 @@ def build_stage(config, work, previous, out, now, log=print):
         else:
             fresh = {i["id"]: i for i in record["items"]} if record["outcome"] == "ok" else {}
             before = previous.state.get(sid, {})
-            memory[sid] = {"etag": record.get("etag", "") if record["outcome"] in ("ok", "unchanged") else before.get("etag", ""),
+            memory[sid] = {"config": source_key(config, source), "etag": record.get("etag", "") if record["outcome"] in ("ok", "unchanged") else before.get("etag", ""),
                            "last_modified": record.get("last_modified", "") if record["outcome"] in ("ok", "unchanged") else before.get("last_modified", ""),
                            "fingerprint": record.get("fingerprint", "") or before.get("fingerprint", ""),
                            "items": {i["id"]: {"key": fresh[i["id"]]["key"] if i["id"] in fresh else before.get("items", {}).get(i["id"], {}).get("key", "0" * 64),
