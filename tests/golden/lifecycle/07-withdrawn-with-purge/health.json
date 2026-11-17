@@ -1,10 +1,36 @@
 {
+  "briefs": {
+    "cached": 0,
+    "calls": 0,
+    "completion_tokens": 0,
+    "fell_back": 0,
+    "flags": 0,
+    "key": false,
+    "listed": {
+      "extractive": 9,
+      "model": 0
+    },
+    "model": null,
+    "month": "2026-11",
+    "month_cents": 0.0,
+    "monthly_cap_cents": 200.0,
+    "note": "no key was given, so every brief is extractive",
+    "prompt_tokens": 0,
+    "requested": true,
+    "retried": 0,
+    "run_cap_cents": 100.0,
+    "run_cents": 0.0,
+    "skipped_by_terms": 0,
+    "skipped_for_budget": 0,
+    "used": false,
+    "written": 0
+  },
   "format": "pea-knowledge-health",
-  "format_version": "1.2",
+  "format_version": "1.3",
   "generated_at": "2026-11-16T06:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "mode": "offline",
   "model": {
@@ -194,7 +220,7 @@
     }
   ],
   "totals": {
-    "bytes": 127178,
+    "bytes": 149893,
     "items": 9,
     "requests": 4,
     "sources": 5

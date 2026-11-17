@@ -1,5 +1,5 @@
 {
- "about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json or a digest.",
+ "about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest or a brief.",
  "files": {
   "a-web-page.store.json": {
    "expect": "not_json",
@@ -8,6 +8,34 @@
   "an-array.store.json": {
    "expect": "schema",
    "kind": "store"
+  },
+  "brief-as-it-should-be.brief.json": {
+   "expect": "ok",
+   "kind": "brief"
+  },
+  "brief-claim-with-markup.brief.json": {
+   "expect": "text_rule",
+   "kind": "brief"
+  },
+  "brief-headline-with-a-link.brief.json": {
+   "expect": "text_rule",
+   "kind": "brief"
+  },
+  "brief-over-its-limit.brief.json": {
+   "expect": "brief_too_long",
+   "kind": "brief"
+  },
+  "brief-ref-that-is-no-time.brief.json": {
+   "expect": "schema",
+   "kind": "brief"
+  },
+  "brief-three-quotes.brief.json": {
+   "expect": "schema",
+   "kind": "brief"
+  },
+  "brief-unknown-kind.brief.json": {
+   "expect": "schema",
+   "kind": "brief"
   },
   "digest-brief-over-its-limit.digest.json": {
    "expect": "brief_too_long",

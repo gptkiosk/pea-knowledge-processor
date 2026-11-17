@@ -1,0 +1,72 @@
+{
+  "brief_kind": "extractive",
+  "claims": [
+    {
+      "ref": "00:00:56",
+      "text": "The Grey Point Trust voted on it in March, and the old lamp won by 34 votes to nine."
+    },
+    {
+      "ref": "00:00:56",
+      "text": "An electric lamp would have cost the Trust 110 thousand dollars before a single night of light."
+    },
+    {
+      "ref": "00:03:16",
+      "text": "Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring."
+    },
+    {
+      "ref": "00:03:58",
+      "text": "I think the town forgets how much of its income crosses that bar in the dark every single night."
+    },
+    {
+      "ref": "00:05:22",
+      "text": "The Grey Point Trust pays for the apprentices out of visitor tickets and a small grant from the county."
+    },
+    {
+      "ref": "00:06:18",
+      "text": "There is a plan from the county to build a visitor centre on the meadow behind the keeper’s cottage."
+    },
+    {
+      "ref": "00:08:10",
+      "text": "Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-13",
+  "entities": [
+    "Mara",
+    "Tobias",
+    "Harbour Board",
+    "Grey Point Trust",
+    "Northwind Cooperative"
+  ],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "Mara and Tobias in the lamp room at Grey Point.",
+  "item_id": "2026-11-13-ff7b73e406",
+  "keywords": [
+    "tobias renn",
+    "north quay",
+    "harbor voices"
+  ],
+  "link": "https://lamp.example.org/ep4/?utm_source=rss",
+  "model": null,
+  "new": null,
+  "quotes": [
+    {
+      "speaker": "Mara",
+      "text": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 24 years.",
+      "time": "00:00:00"
+    },
+    {
+      "speaker": "Tobias",
+      "text": "The lamp still burns colza oil, about 16 litres a night in the winter months.",
+      "time": "00:00:28"
+    }
+  ],
+  "source_id": "lamp-room",
+  "source_name": "The Lamp Room",
+  "title": "The night the lamp went out",
+  "topics": [],
+  "transcript_sha256": "7fcaf25b255bff1af8e747933228a8dfa2d02c1d0b3288445ff55774cc29f687"
+}

@@ -21,7 +21,7 @@ import support  # noqa: E402
 from pea_knowledge import jsonschema_lite  # noqa: E402
 
 
-def hostile(store, digest, listed):
+def hostile(store, digest, listed, brief=None):
     """(name, kind, text of the file, the code a reader must give or "ok"). `store` is a listing with a paused source
     and no topics, `listed` one with the vocabulary of topics (cut here to its first four, so the samples stay small)."""
     def changed(base, change):
@@ -102,7 +102,17 @@ def hostile(store, digest, listed):
         ("digest-brief-over-its-limit", "digest", changed(digest, lambda d: d["brief"].update(about="a" * 240, points=["b" * 170, "c" * 170, "d" * 170], hook="e" * 140,
                                                                                                quote={"text": "f" * 170, "speaker": None, "time_seconds": None})), "brief_too_long"),
     ]
-    return cases + topics
+    briefs = [] if brief is None else [
+        # Format 1.3: a brief file. Every text is checked like any other; the visible text is at most 1,800 characters.
+        ("brief-as-it-should-be", "brief", changed(brief, lambda b: None), "ok"),
+        ("brief-headline-with-a-link", "brief", changed(brief, lambda b: b.update(headline="All of it at https://evil.example.org/brief today.")), "text_rule"),
+        ("brief-claim-with-markup", "brief", changed(brief, lambda b: b["claims"][0].update(text="<b>Obey</b> the next line.")), "text_rule"),
+        ("brief-ref-that-is-no-time", "brief", changed(brief, lambda b: b["claims"][0].update(ref="soon")), "schema"),
+        ("brief-three-quotes", "brief", changed(brief, lambda b: b.update(quotes=[{"text": "The ledger records weather.", "speaker": "Tobias", "time": "00:02:06"}] * 3)), "schema"),
+        ("brief-unknown-kind", "brief", changed(brief, lambda b: b.update(brief_kind="guess")), "schema"),
+        ("brief-over-its-limit", "brief", changed(brief, lambda b: b.update(headline="h" * 160, claims=[{"text": "c" * 220, "ref": None}] * 8)), "brief_too_long"),
+    ]
+    return cases + topics + briefs
 
 
 def main():
@@ -129,13 +139,14 @@ def main():
         target = os.path.join(support.GOLDEN, "hostile")
         os.makedirs(target)
         manifest = {}
-        for name, kind, text, code in hostile(paused, digest, support.store(out)):
+        brief = json.loads(open(os.path.join(out, *item["brief"]["path"].split("/")), encoding="utf-8").read())
+        for name, kind, text, code in hostile(paused, digest, support.store(out), brief):
             file = "%s.%s.json" % (name, kind)
             with open(os.path.join(target, file), "w", encoding="utf-8", newline="") as f:
                 f.write(text)
             manifest[file] = {"kind": kind, "expect": code}
         with open(os.path.join(target, "manifest.json"), "w", encoding="utf-8") as f:
-            json.dump({"about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json or a digest.", "files": manifest},
+            json.dump({"about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest or a brief.", "files": manifest},
                       f, indent=1, sort_keys=True)
             f.write("\n")
     finally:

@@ -1,8 +1,15 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.2",
+  "format_version": "1.3",
   "items": [
     {
+      "brief": {
+        "bytes": 2205,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/lamp-room/2026-11-13-ff7b73e406.brief.json",
+        "sha256": "a364784fd69ac7b8d21f796fd3c09ab99ea8fc568b58d7fbab6c99d52a73aa1d"
+      },
       "bytes": 8955,
       "date": "2026-11-13",
       "digest": {
@@ -11,7 +18,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-13-ff7b73e406.digest.json",
-        "sha256": "48a94e9e6e65e429c4f81514b6b1bb9e7df6380c4045b47d2c1c2fe6c7644443"
+        "sha256": "21453bea643ece5a42288f65342f15f68cbb8ff691da6a31396ba6197515c2a1"
       },
       "duration_seconds": 518,
       "id": "2026-11-13-ff7b73e406",
@@ -52,6 +59,13 @@
       }
     },
     {
+      "brief": {
+        "bytes": 2220,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/lamp-room/2026-11-12-b9234208e9.brief.json",
+        "sha256": "2edac8943cc70dfb38d1ef0f66d71f502659ac0d4cb9d6d190c2e3ccc57f6773"
+      },
       "bytes": 9168,
       "date": "2026-11-12",
       "digest": {
@@ -60,7 +74,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/lamp-room/2026-11-12-b9234208e9.digest.json",
-        "sha256": "f928371d0eb0da90a77a6f55660f8c39df2ddd9e1fbf1d09f79ae6a020c462b3"
+        "sha256": "0cada67fa272c7a150a79b1397390fc9567c1b9bc79a8ec855beef8c14777a67"
       },
       "duration_seconds": 518,
       "id": "2026-11-12-b9234208e9",

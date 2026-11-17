@@ -1,5 +1,7 @@
 # Briefs spike (phase 1 of the briefs plan)
 
+Phase 2 moved the useful parts into the package: the prompt of `WRITER-PROMPT-v3.md` (with its ten extra rules) and the checks of `validate_brief.py` are in `src/pea_knowledge/brief.py`, and the pipeline writes briefs as format 1.3 (docs/FORMAT.md section 12). This folder is kept as the record of the spike.
+
 Data and a validator for trying out model-written briefs. No brief is written here and no API key is used or needed.
 
 ## Files

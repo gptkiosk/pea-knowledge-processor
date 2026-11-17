@@ -1,9 +1,15 @@
 {
+  "briefs": {
+    "calls": 0,
+    "key": false,
+    "month": "2026-11",
+    "spent_cents": 0.0
+  },
   "format": "pea-knowledge-state",
-  "format_version": "1.2",
+  "format_version": "1.3",
   "sources": {
     "harbor-voices": {
-      "config": "e1525e59f9d1d14ec2f4179755d8affb16c60e3e9fc1a0ac318421083b3feff3",
+      "config": "27ed658ecfd96b34997d418b2b983ffd56447a17b4b0869b8834dc340f0c6b7b",
       "etag": "\"harbor-1\"",
       "fingerprint": "date,editions,page,show.title,title,transcript",
       "items": {
@@ -42,7 +48,7 @@
       }
     },
     "lamp-room": {
-      "config": "1dcc99b98950220924d0ae9df4710cc0ef10fad0b4a13a967753aaef6aeb255c",
+      "config": "be5f6402898cac3d36da1134aba35383cdd8e7999f486f21a1848b10cfc6e657",
       "etag": "\"lamp-1\"",
       "fingerprint": "link,title",
       "items": {
@@ -82,7 +88,7 @@
       }
     },
     "port-gazette": {
-      "config": "6a5e2a8b34cdd6158a811386e0705ca75137e52708df33804a8bed11a856df7a",
+      "config": "d194e49befe7c0d11f89fe720768c028596accdc275aa64aab5b54d5cb2cfbb6",
       "etag": "\"gazette-1\"",
       "fingerprint": "link,title",
       "items": {
@@ -117,7 +123,7 @@
       }
     },
     "quay-notes": {
-      "config": "2355f74bfab58ee8237cefb6294e962ef09670f34307620a1fdc7f16646df04b",
+      "config": "74fe8f734c3cc58d43dc7c77faf0d3e64e5b367ca469b5ce8f49846eea60f6af",
       "etag": "",
       "fingerprint": "items,title,url,version",
       "items": {
@@ -142,7 +148,7 @@
       }
     },
     "tide-tables": {
-      "config": "db42ef3035e519a39d0e0d988705a999c76f83903cd4001b41d8945b844df7dd",
+      "config": "688d3f66153186ddb5f7aa1ae7932a28ab85d7fe24e3a31ce0e6032ce0694c83",
       "etag": "\"tide-1\"",
       "fingerprint": "link,podcast:transcript,title",
       "items": {

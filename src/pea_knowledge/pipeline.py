@@ -7,6 +7,8 @@ The three parts talk through a work folder, so they can run as three jobs with d
     work/work.json                         what was read from each source, and what each item needs
     work/transcripts/<source>/<item>.pea.txt   normalized transcripts (all of them, also those that may not be published)
     work/digests/<source>/<item>.json      digests, after stage 3
+    work/briefs/<source>/<item>.brief.json model briefs (format 1.3), after the brief step; build makes an extractive
+                                           brief for every listed item that has none
 
 `build` then writes the output folder from the work folder and the previous output. It never edits the previous
 output in place: the new folder is written beside it, checked as a whole, and only then put in its place.
@@ -20,7 +22,7 @@ import statistics
 import types
 from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
@@ -166,6 +168,7 @@ class Previous:
 
     def __init__(self, folder):
         self.folder, self.store, self.listings, self.items, self.state = folder, None, {}, {}, {}
+        self.briefs = None   # the month's brief cost ledger (state.json, `briefs`)
         if not folder or not os.path.isfile(os.path.join(folder, "store.json")):
             return
         store, problems = validate.check_store(read(os.path.join(folder, "store.json")))
@@ -181,6 +184,7 @@ class Previous:
         if os.path.isfile(path):
             state, problems = validate.read_json(read(path), "state", "state.json", validate.HEALTH_BYTES)
             self.state = state["sources"] if state else {}
+            self.briefs = state.get("briefs") if state else None
 
 
 # --- Stages 1 and 2: fetch and normalize ---------------------------------------------------------------------------------
@@ -422,9 +426,29 @@ def run_probe(config, source, record, fetcher, now, before):
     return dict(result, item=item["id"], link=origin["link"], key=item["key"])
 
 
-def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
+def wants_model_brief(config, source, entry, before_item=None, settings=None, key=True):
+    """True when a listed entry has no model brief yet but could get one: model briefs are on, a key is expected (`key`), the
+    source allows them, the entry was digested from a transcript, and no model brief failed for it before."""
+    settings = settings or br.Settings(config)
+    return bool(key and settings.enabled and source.get("brief_writer", "model") == "model" and entry["digest"]["basis"] == "transcript"
+                and (entry.get("brief") or {}).get("kind") != "model" and (before_item or {}).get("brief") != "fell_back")
+
+
+def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print, environment=None):
     """Reads every source that is not manually switched off and writes the work folder."""
     wanted = "model" if model_digest.Settings(config.get("model")).enabled else "extractive"
+    # Format 1.3: a listed item whose brief is extractive is fetched again (a few per run) when a model brief can be written for it.
+    # The fetch job has no key; it goes by the last run's ledger, which says whether that run's brief step had one (never the key).
+    briefs = br.Settings(config, environment)
+    ledger = br.ledger_from({"briefs": previous.briefs}, timestamp(now)[:7])
+    key = bool(briefs.key) or ledger["key"]
+    upgrades = [briefs.upgrade_per_run if key and ledger["spent_cents"] < briefs.monthly_cap_cents else 0]
+
+    def upgrade(source, old, known):
+        if upgrades[0] > 0 and wants_model_brief(config, source, old, known, briefs, key):
+            upgrades[0] -= 1
+            return True
+        return False
     out = {"now": timestamp(now), "mode": mode, "sources": {}}
     for source in config["sources"]:
         sid = source["id"]
@@ -435,7 +459,8 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
             continue
         before, before_items = previous.state.get(sid, {}), previous.items.get(sid, {})
         settled = bool(before_items) and before.get("config") == source_key(config, source) and not any(i["stale"] or i["transcript"]["reason"] == "fetch_failed" for i in before_items.values()) \
-            and all(m["method"] == wanted or before_items.get(i, {}).get("digest", {}).get("basis") != "transcript" for i, m in before.get("items", {}).items())
+            and all(m["method"] == wanted or before_items.get(i, {}).get("digest", {}).get("basis") != "transcript" for i, m in before.get("items", {}).items()) \
+            and not (upgrades[0] and any(wants_model_brief(config, source, o, before.get("items", {}).get(i), briefs, key) for i, o in before_items.items()))
         try:
             answer = fetcher.get(source["url"], fetch.FEED_BYTES, before.get("etag", "") if settled else "", before.get("last_modified", "") if settled else "")
             if answer.not_modified:
@@ -488,7 +513,8 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print):
             if why_out:   # judged before and nothing changed: not fetched again
                 item["reuse"], item["dropped"] = True, why_out
             elif known and old and known["key"] == item["key"] and not old["stale"] and old["transcript"]["reason"] != "fetch_failed" \
-                    and (known["method"] == wanted or old["digest"]["basis"] != "transcript") and (discussable(old) or e.date < recent or not setting(config, source, "only_discussable_items")):
+                    and (known["method"] == wanted or old["digest"]["basis"] != "transcript") and (discussable(old) or e.date < recent or not setting(config, source, "only_discussable_items")) \
+                    and not upgrade(source, old, known):
                 item["reuse"] = True
                 if discussable(old):
                     item["origin"] = old["transcript_source"]
@@ -570,6 +596,139 @@ def digest_stage(config, work, environment=None, log=print):
     return report
 
 
+# --- Stage 3b: briefs (format 1.3) ---------------------------------------------------------------------------------------
+def brief_candidates(config, work_state, previous, settings):
+    """The items of the work folder that need a brief made here, newest first: [(source, item, cached brief bytes or
+    None)]. Items whose source says `brief_writer: extractive` are left to the extractive brief of the build."""
+    by_id = {s["id"]: s for s in config["sources"]}
+    out, by_terms = [], 0
+    for sid, record in work_state["sources"].items():
+        source = by_id.get(sid)
+        if source is None:
+            continue
+        for item in record["items"]:
+            if item["reuse"] or item.get("dropped") or not item["transcript"]["file"]:
+                continue
+            if source.get("brief_writer", "model") != "model":
+                by_terms += 1
+                item["brief_outcome"] = "terms"
+                continue
+            cached = None
+            old = previous.items.get(sid, {}).get(item["id"]) if previous else None
+            if old and (old.get("brief") or {}).get("kind") == "model":
+                try:
+                    data = read(os.path.join(previous.folder, *old["brief"]["path"].split("/")))
+                    cached = (data, jsonschema_lite.loads(data))
+                except (OSError, jsonschema_lite.NotJSON):
+                    cached = None
+            out.append((source, item, cached))
+    out.sort(key=lambda x: (x[1]["date"], x[0]["id"], x[1]["id"]), reverse=True)
+    return out, by_terms
+
+
+def brief_stage(config, work, previous=None, environment=None, log=print, limit=None):
+    """Writes a model brief for every new item of the work folder that can have one, within the caps. Without a key it
+    writes nothing (the build then makes an extractive brief for every item). Returns the report it also puts in work.json."""
+    state = jsonschema_lite.loads(read(os.path.join(work, "work.json")))
+    settings = br.Settings(config, environment)
+    month = state["now"][:7]
+    ledger = br.ledger_from({"briefs": previous.briefs if previous else None}, month)
+    spend, report = br.Spend(settings, ledger), br.Report()
+    tags = tagger(config)
+    vocabulary = tags.ids if tags else None
+    use_model = settings.enabled and bool(settings.key)
+    candidates, report.skipped_by_terms = brief_candidates(config, state, previous, settings)
+    note = None
+    for source, item, cached in candidates:
+        transcript = pt.parse(read(os.path.join(work, *item["transcript"]["file"].split("/"))).decode("utf-8"))
+        sha = dg.transcript_sha256(transcript.render())
+        target = os.path.join(work, "briefs", source["id"], item["id"] + ".brief.json")
+        if cached and cached[1].get("transcript_sha256") == sha and cached[1].get("model") == settings.model[:80] \
+                and (cached[1].get("title"), cached[1].get("date"), cached[1].get("link")) == (item["title"], item["date"], item["link"]):
+            write(target, cached[0])          # the same transcript and the same model: nothing to pay for again
+            report.cached += 1
+            item["brief_outcome"] = "cached"
+            continue
+        if not use_model:
+            item["brief_outcome"] = "no_key"
+            continue
+        if limit is not None and report.written + report.fell_back >= limit:
+            break
+        if spend.stopped:
+            report.skipped_for_budget += 1
+            item["brief_outcome"] = "budget"
+            continue
+        try:
+            made = br.write_model(settings, spend, report, source, item, transcript, vocabulary, log)
+        except br.OutOfBudget as e:
+            note = "model briefs stopped: %s; the rest are extractive" % e
+            log("briefs: " + note)
+            report.skipped_for_budget += 1
+            item["brief_outcome"] = "budget"
+            continue
+        if made is None:
+            report.fell_back += 1
+            item["brief_outcome"] = "fell_back"
+            continue
+        fields, covers, cover_note = made
+        write(target, jsonschema_lite.dumps(br.document(source, item, fields, "model", settings.model, covers, cover_note, sha)))
+        report.written += 1
+        item["brief_outcome"] = "model"
+    if not use_model:
+        note = "no key was given, so every brief is extractive" if settings.enabled else "model briefs are switched off, so every brief is extractive"
+    state["briefs"] = {"requested": settings.enabled, "key": bool(settings.key), "used": report.written > 0, "model": settings.model[:80] if use_model else None,
+                       "calls": spend.calls, "written": report.written, "cached": report.cached, "retried": report.retried, "fell_back": report.fell_back,
+                       "skipped_for_budget": report.skipped_for_budget, "skipped_by_terms": report.skipped_by_terms,
+                       "prompt_tokens": spend.prompt_tokens, "completion_tokens": spend.completion_tokens, "run_cents": round(spend.cents, 4),
+                       "month": month, "month_cents": round(ledger["spent_cents"] + spend.cents, 4), "monthly_cap_cents": settings.monthly_cap_cents,
+                       "run_cap_cents": settings.run_cap_cents, "listed": {"model": 0, "extractive": 0}, "flags": report.flags,
+                       "note": textrules.clean(note, 240) if note else None}
+    write(os.path.join(work, "work.json"), jsonschema_lite.dumps(state))
+    if use_model:
+        log("briefs: %(calls)d calls, %(written)d written, %(cached)d cached, %(retried)d retried, %(fell_back)d fell back, "
+            "%(skipped_for_budget)d over the cap, %(run_cents).4f US cents (month %(month_cents).4f)" % state["briefs"])
+    return state["briefs"]
+
+
+def brief_estimate(config, work, previous=None, environment=None, limit=None):
+    """For a dry run: which items would get a model brief and what it would cost at most, with no model call.
+    Returns (rows, totals). Each row: source, item, title, chunks, calls, prompt tokens, output tokens, cents, what happens."""
+    state = jsonschema_lite.loads(read(os.path.join(work, "work.json")))
+    settings = br.Settings(config, environment)
+    ledger = br.ledger_from({"briefs": previous.briefs if previous else None}, state["now"][:7])
+    tags = tagger(config)
+    vocab = tags.ids if tags else []
+    rows, total_cents, total_calls = [], 0.0, 0
+    candidates, by_terms = brief_candidates(config, state, previous, settings)
+    for source, item, cached in candidates:
+        if limit is not None and len(rows) >= limit:
+            break
+        transcript = pt.parse(read(os.path.join(work, *item["transcript"]["file"].split("/"))).decode("utf-8"))
+        sha = dg.transcript_sha256(transcript.render())
+        if cached and cached[1].get("transcript_sha256") == sha and cached[1].get("model") == settings.model[:80]:
+            rows.append((source["id"], item["id"], item["title"], 0, 0, 0, 0, 0.0, "cached, no call"))
+            continue
+        lines = br.lines_of(transcript)
+        parts, complete = br.chunks(lines, settings.chunk_chars, settings.max_chunks)
+        system = len(br.system_prompt(vocab))
+        prompt = sum(system + len(br.user_prompt(source, item, p, (n, len(parts)) if len(parts) > 1 else None)) for n, p in enumerate(parts, 1))
+        calls = len(parts) + (1 if len(parts) > 1 else 0)
+        prompt += (system + 1_500 * len(parts)) if len(parts) > 1 else 0
+        tokens_in, tokens_out = int(prompt / br.CHARS_PER_TOKEN), br.EXPECTED_OUTPUT_TOKENS * calls
+        cents = settings.cents(tokens_in, tokens_out)
+        over = total_cents + cents > settings.run_cap_cents or ledger["spent_cents"] + total_cents + cents > settings.monthly_cap_cents
+        what = "extractive (over the cap)" if over else ("model, %d parts%s" % (len(parts), "" if complete else ", cut") if len(parts) > 1 else "model")
+        if not over:
+            total_cents += cents
+            total_calls += calls
+        rows.append((source["id"], item["id"], item["title"], len(parts), calls, tokens_in, tokens_out, cents, what))
+    totals = {"items": len(rows), "calls": total_calls, "cents": round(total_cents, 4), "by_terms": by_terms, "model": settings.model,
+              "key": bool(settings.key), "enabled": settings.enabled, "month": ledger["month"], "month_spent_cents": ledger["spent_cents"],
+              "monthly_cap_cents": settings.monthly_cap_cents, "run_cap_cents": settings.run_cap_cents,
+              "price": (settings.price_input, settings.price_output)}
+    return rows, totals
+
+
 # --- Stage 4: build ------------------------------------------------------------------------------------------------------
 def _cadence(dates):
     days = sorted({datetime.date.fromisoformat(d) for d in dates}, reverse=True)[:10]
@@ -642,7 +801,28 @@ def _new_item(config, source, work, item):
         entry["transcript_source"] = t["source"]
     if tagger(config) is not None and "topics" in item:
         entry["topics"], entry["topics_by"] = item["topics"], item["topics_by"]
+    made = os.path.join(work, "briefs", sid, iid + ".brief.json")
+    data = read(made) if os.path.isfile(made) else br.extractive_file(source, item, d, [x["id"] for x in entry.get("topics", [])])
+    _attach_brief(entry, data, files)
     return entry, files
+
+
+def _attach_brief(entry, data, files):
+    """Puts a brief file beside an index entry (format 1.3). Its size is not added to `bytes` (see docs/FORMAT.md)."""
+    b = jsonschema_lite.loads(data)
+    path = "sources/%s/%s.brief.json" % (b["source_id"], entry["id"])
+    files[path] = data
+    entry["brief"] = {"path": path, "sha256": sha256(data), "bytes": len(data), "kind": b["brief_kind"], "covers": b["covers"]}
+
+
+def _with_brief(source, entry, files):
+    """An index entry kept from an earlier output, with a brief: its own when it has one, else an extractive one made from its digest."""
+    if "brief" in entry:
+        return entry
+    entry = dict(entry)
+    d = jsonschema_lite.loads(files[entry["digest"]["path"]])
+    _attach_brief(entry, br.extractive_file(source, entry, d, [x["id"] for x in entry.get("topics", [])]), files)
+    return entry
 
 
 def _fit_topics(config, entry):
@@ -671,6 +851,8 @@ def transcript_read(entry):
 
 def _old_files(previous, entry):
     files = {entry["digest"]["path"]: read(os.path.join(previous.folder, *entry["digest"]["path"].split("/")))}
+    if entry.get("brief"):
+        files[entry["brief"]["path"]] = read(os.path.join(previous.folder, *entry["brief"]["path"].split("/")))
     if entry["transcript"]["file"]:
         p = entry["transcript"]["file"]["path"]
         files[p] = read(os.path.join(previous.folder, *p.split("/")))
@@ -696,6 +878,7 @@ def build_stage(config, work, previous, out, now, log=print):
     pause_after = config["defaults"]["auto_pause_after_failed_runs"]
     last_run = previous.store["generated_at"] if previous.store else None
     vocabulary = {"topics": tagger(config).topics} if tagger(config) else {}
+    listed_briefs = {"model": 0, "extractive": 0}
 
     def tombstone(source, old, why, message, purge):
         since = old["state_since"] if old and old["state"] == "withdrawn" else stamp
@@ -774,7 +957,8 @@ def build_stage(config, work, previous, out, now, log=print):
         frozen = record["outcome"] in ("failed", "skipped")    # a source that could not be read keeps exactly what it had
         kept = ordered if frozen else [i for i in ordered if i["date"] >= oldest][:setting(config, source, "max_items")]
         report["pruned"] = len(ordered) - len(kept)
-        wanted = {i["digest"]["path"] for i in kept} | {i["transcript"]["file"]["path"] for i in kept if i["transcript"]["file"]}
+        kept = [_with_brief(source, i, files) for i in kept]
+        wanted = {i["digest"]["path"] for i in kept} | {i["transcript"]["file"]["path"] for i in kept if i["transcript"]["file"]} | {i["brief"]["path"] for i in kept}
         files = {p: b for p, b in files.items() if p in wanted}
 
         # The lifecycle state: a manual one always wins; otherwise a run of failures pauses the source.
@@ -859,6 +1043,10 @@ def build_stage(config, work, previous, out, now, log=print):
                            "fingerprint": record.get("fingerprint", "") or before.get("fingerprint", ""),
                            "items": {i["id"]: {"key": fresh[i["id"]]["key"] if i["id"] in fresh else before.get("items", {}).get(i["id"], {}).get("key", "0" * 64),
                                                "method": i["digest"]["method"]} for i in kept}}
+            for i in kept:   # a model brief that failed its checks is not asked for again until the item changes
+                if fresh.get(i["id"], {}).get("brief_outcome") == "fell_back" or (i["id"] not in fresh and before.get("items", {}).get(i["id"], {}).get("brief") == "fell_back"
+                                                                                  and i["brief"]["kind"] != "model"):
+                    memory[sid]["items"][i["id"]]["brief"] = "fell_back"
             for i in (record["items"] if sid in state["sources"] else []):   # what was judged not discussable is remembered, so it is not fetched again
                 if i.get("dropped") and i["id"] not in memory[sid]["items"] and record["outcome"] in ("ok", "failed"):
                     memory[sid]["items"][i["id"]] = {"key": i["key"], "method": "extractive", "dropped": i["dropped"]}
@@ -871,6 +1059,8 @@ def build_stage(config, work, previous, out, now, log=print):
         report["state"], report["items"] = lifecycle, len(kept)
         report["stale"] = sum(1 for i in kept if i["stale"])
         for i in kept:
+            if i.get("brief"):
+                listed_briefs[i["brief"]["kind"]] += 1
             report["transcripts"][i["transcript"]["reason"] if i["transcript"]["available"] == "no" else i["transcript"]["available"]] += 1
             report["digests"][i["digest"]["method"]] += 1
         total_items += len(kept)
@@ -891,11 +1081,16 @@ def build_stage(config, work, previous, out, now, log=print):
     store = {"format": "pea-knowledge-store", "format_version": FORMAT_VERSION, "generated_at": stamp, "generator": generator,
              "min_app_version": config.get("min_app_version"), "sources": listings, **vocabulary}
     write(os.path.join(staging, "store.json"), jsonschema_lite.dumps(store))
-    write(os.path.join(staging, "state.json"), jsonschema_lite.dumps({"format": "pea-knowledge-state", "format_version": FORMAT_VERSION, "sources": memory}))
+    month = stamp[:7]
+    ledger = br.ledger_from({"briefs": previous.briefs}, month)
+    briefs = state.get("briefs") or brief_report_without_step(config, month, ledger)
+    ledger = {"month": month, "spent_cents": round(ledger["spent_cents"] + briefs["run_cents"], 4), "calls": ledger["calls"] + briefs["calls"], "key": briefs["key"]}
+    briefs = dict(briefs, listed=listed_briefs, month=month, month_cents=ledger["spent_cents"])
+    write(os.path.join(staging, "state.json"), jsonschema_lite.dumps({"format": "pea-knowledge-state", "format_version": FORMAT_VERSION, "sources": memory, "briefs": ledger}))
     total = sum(os.path.getsize(os.path.join(d, f)) for d, _, names in os.walk(staging) for f in names)
     model = state.get("model") or dict(model_digest.Budget(model_digest.Settings({})).report(), requested=False, used=False, model=None, note=None)
     health = {"format": "pea-knowledge-health", "format_version": FORMAT_VERSION, "generated_at": stamp, "generator": generator, "mode": state["mode"],
-              "model": model, "sources": health_sources,
+              "model": model, "briefs": briefs, "sources": health_sources,
               "totals": {"sources": len(listings), "items": total_items, "bytes": total, "requests": state.get("requests", 0)}}
     write(os.path.join(staging, "health.json"), jsonschema_lite.dumps(health))
     write(os.path.join(staging, ".nojekyll"), b"")
@@ -914,6 +1109,15 @@ def build_stage(config, work, previous, out, now, log=print):
     return health
 
 
+def brief_report_without_step(config, month, ledger):
+    """The briefs part of health.json when no brief step ran (every brief is then extractive)."""
+    s = br.Settings(config, {})
+    return {"requested": s.enabled, "key": False, "used": False, "model": None, "calls": 0, "written": 0, "cached": 0, "retried": 0, "fell_back": 0,
+            "skipped_for_budget": 0, "skipped_by_terms": 0, "prompt_tokens": 0, "completion_tokens": 0, "run_cents": 0, "month": month,
+            "month_cents": ledger["spent_cents"], "monthly_cap_cents": s.monthly_cap_cents, "run_cap_cents": s.run_cap_cents,
+            "listed": {"model": 0, "extractive": 0}, "flags": 0, "note": "no brief step ran, so every brief is extractive"}
+
+
 def health_summary(health):
     """The health report as a few lines of Markdown, for a job summary."""
     lines = ["## PEA knowledge run, %s" % health["generated_at"], "",
@@ -929,4 +1133,11 @@ def health_summary(health):
     lines += ["", "Model: %s. %d calls, %d accepted, %d fell back, %d skipped for budget, %d + %d tokens, USD %.4f." % (
         m["model"] or ("requested, no key" if m["requested"] else "off"), m["calls"], m["accepted"], m["fell_back"], m["skipped_for_budget"],
         m["prompt_tokens"], m["completion_tokens"], m["cost_usd"])]
+    b = health.get("briefs")
+    if b:
+        lines += ["", "Briefs: %d model, %d extractive listed. This run: %s, %d calls, %d written, %d cached, %d retried, %d fell back, %d over the cap, "
+                  "%d by terms; %s US cents (cap %s). Month %s: %s of %s US cents.%s" % (
+                      b["listed"]["model"], b["listed"]["extractive"], b["model"] or ("on, no key" if b["requested"] else "off"), b["calls"], b["written"],
+                      b["cached"], b["retried"], b["fell_back"], b["skipped_for_budget"], b["skipped_by_terms"], br._num(b["run_cents"]), br._num(b["run_cap_cents"]),
+                      b["month"], br._num(b["month_cents"]), br._num(b["monthly_cap_cents"]), (" " + b["note"]) if b["note"] else "")]
     return "\n".join(lines) + "\n"

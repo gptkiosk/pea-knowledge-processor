@@ -1,0 +1,73 @@
+{
+  "brief_kind": "extractive",
+  "claims": [
+    {
+      "ref": "00:00:00",
+      "text": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 21 years."
+    },
+    {
+      "ref": "00:00:56",
+      "text": "An electric lamp would have cost the Trust 95 thousand dollars before a single night of light."
+    },
+    {
+      "ref": "00:03:16",
+      "text": "Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring."
+    },
+    {
+      "ref": "00:03:58",
+      "text": "I think the town forgets how much of its income crosses that bar in the dark every single night."
+    },
+    {
+      "ref": "00:05:22",
+      "text": "The Grey Point Trust pays for the apprentices out of visitor tickets and a small grant from the county."
+    },
+    {
+      "ref": "00:07:28",
+      "text": "I would ask them to publish the radar logs, so that the town can compare them with the ledger."
+    },
+    {
+      "ref": "00:08:10",
+      "text": "Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-07",
+  "entities": [
+    "Mara",
+    "Tobias",
+    "Harbour Board",
+    "Grey Point Trust",
+    "Northwind Cooperative"
+  ],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "Today we are at Grey Point with Tobias Renn, who has kept the lighthouse there for 21 years.",
+  "item_id": "2026-11-07-420826b378",
+  "keywords": [
+    "tobias renn",
+    "north quay",
+    "harbor voices",
+    "the harbour board"
+  ],
+  "link": "https://tide.example.org/episodes/1",
+  "model": null,
+  "new": null,
+  "quotes": [
+    {
+      "speaker": "Tobias",
+      "text": "The Grey Point Trust voted on it in March, and the old lamp won by 31 votes to nine.",
+      "time": "00:00:56"
+    },
+    {
+      "speaker": "Mara",
+      "text": "Tobias Renn keeps a ledger of every ship that passes, and the ledger is the reason we came.",
+      "time": "00:01:24"
+    }
+  ],
+  "source_id": "tide-tables",
+  "source_name": "Tide Tables",
+  "title": "A transcript that shouts orders & links",
+  "topics": [],
+  "transcript_sha256": "58cc1dfc230d91177aa1548a9adc4c1255deaae179baa465488dddb245e6db89"
+}

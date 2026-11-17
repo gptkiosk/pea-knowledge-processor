@@ -4,7 +4,7 @@
   "generated_at": "2026-11-15T18:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "min_app_version": null,
   "sources": [
@@ -34,9 +34,9 @@
       "id": "harbor-voices",
       "item_count": 3,
       "items_file": {
-        "bytes": 3610,
+        "bytes": 4405,
         "path": "sources/harbor-voices/items.json",
-        "sha256": "91f812e9dd21b149f6a1a6a579c9a47f8e3787d207bc32a0c5fbf25701561475"
+        "sha256": "29ae5bf58f936a1b807f9e1858eb5a3473f72d3fe8b86c4eeea7ee897c540e89"
       },
       "kind": "podcast",
       "language": "en",
@@ -90,9 +90,9 @@
       "id": "tide-tables",
       "item_count": 4,
       "items_file": {
-        "bytes": 5505,
+        "bytes": 6557,
         "path": "sources/tide-tables/items.json",
-        "sha256": "938a751b3194f18d549982308cde0afe4bb05aabc74751f881ac45c051a21d84"
+        "sha256": "cba9114ea5f16fd84da38592a0c9fbaac4ee00c5f2fc126b46f4faa60bc21aa6"
       },
       "kind": "podcast",
       "language": "en",
@@ -233,9 +233,9 @@
       "id": "lamp-room",
       "item_count": 2,
       "items_file": {
-        "bytes": 2686,
+        "bytes": 3208,
         "path": "sources/lamp-room/items.json",
-        "sha256": "02cfea341384f1ac7a1333aaa03c8cd549b0f91bac4ee44d4b8bc2fe76074b5a"
+        "sha256": "799cd407f4f323689c4272706d2c583b255d9379609e52ce6fa697a8d508a6dc"
       },
       "kind": "podcast",
       "language": "en",
