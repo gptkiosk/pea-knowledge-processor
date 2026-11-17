@@ -1,0 +1,3 @@
+# Publisher transcripts are withheld by the sources' terms: never commit them. Re-create them with fetch_data.py.
+data/*.transcript.txt
+briefs/
