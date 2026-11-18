@@ -71,6 +71,17 @@ Off by default (`"model": {"enabled": false}` in `config/sources.json`). To use 
 - Cost: an episode is at most about 21,000 tokens in and 2,800 out, so **at most about USD 0.0035 per episode**, usually less. Only new episodes are sent. The twelve sources publish about four episodes a day between them: **about one to one and a half cents a day, under fifty cents a month.** The very first run has 55 transcripts; 24 calls per run are allowed, so it takes three runs and about 15 cents in all. Limits: USD 0.02 per item and USD 0.25 per run (`max_cost_usd_per_item`, `max_cost_usd_per_run`). What was spent is in `health.json` and in the run summary.
 - No real key is used in the tests; they run against a small local server. The model path has not been run against the real service yet.
 
+## Briefs (format 1.3)
+
+Every listed item has a brief: a short summary of fixed shape (a headline, 4 to 8 claims with a pointer into the transcript, what is new, at most two exact quotes, topics, keywords and names; at most 1,800 characters of text) that the app searches on the phone and talks from. docs/FORMAT.md section 12 has the format and docs/APP-CONTRACT.md section 10 what the app may rely on.
+
+- **Model briefs** are written in the digest job by `python3 -m pea_knowledge briefs` when the secret `OPENROUTER_API_KEY` is set and `briefs.enabled` is true (the default). Model `anthropic/claude-haiku-5.5` by default (`briefs.model`; the id has not been checked against OpenRouter's list yet), priced in the config at USD 0.10 and 0.50 per million tokens in and out. Every brief is checked against the transcript (quotes word for word, every claim pointing to a real line, speakers, caps, vocabulary); one retry sends the errors back; anything that still fails falls back. Long transcripts are written in up to four parts of 60,000 characters and merged.
+- **Extractive briefs** are made by the build for every other item, with no model and no key.
+- **Cost caps**: `brief_budget` in `config/sources.json`, in US cents: `per_run_cents` (100) and `monthly_cents` (200). The run stops calling the model at either cap and the rest are extractive. The month's spend is in `state.json` of the published output and carries over between scheduled runs; each run's spend and the month's are in `health.json` and in the run summary. A brief is reused without a call when the transcript and model are unchanged, so an unchanged item costs nothing.
+- **Before spending**: `python3 -m pea_knowledge briefs --dry-run --limit 10` prints which items would get a model brief and the estimated tokens and cost. It calls no model.
+- **Terms**: `"brief_writer": "extractive"` on a source keeps it away from any model (for a source whose terms forbid quotes or derived summaries).
+- No real key is used in the tests; they run against a local stand-in server. The brief path has not been run against the real service yet.
+
 ## Topics
 
 - **The vocabulary** is `config/topics.json`: thirty topics, each with an id, a label, up to twelve words a person might say for it, and one line of description. It is published in `store.json`, and an app turns a spoken word into ids from it without a model ("tech" is `technology`, "faith" is `religion-spirituality`, "investing" is two topics on purpose). An id never changes once published; add a topic at the end.
@@ -130,7 +141,7 @@ The owner has to:
 1. Fill in the copyright holder in `LICENSE` (the line that says so).
 2. Create the public repository `gptkiosk/pea-knowledge-processor` and push `main`.
 3. In the repository settings, Pages: set the source to **GitHub Actions**.
-4. Optional: add the secret `OPENROUTER_API_KEY` (Settings, Secrets and variables, Actions) and set `model.enabled` to true.
+4. Optional: add the secret `OPENROUTER_API_KEY` (Settings, Secrets and variables, Actions). With it, model briefs are written within `brief_budget`; set `model.enabled` to true as well for model digests.
 5. Run "Process sources" once by hand and read the run summary. The files appear at `https://gptkiosk.github.io/pea-knowledge-processor/store.json`.
 6. Read [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md), "What is uncertain overall", and decide.
 

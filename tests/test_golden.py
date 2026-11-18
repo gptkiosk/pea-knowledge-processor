@@ -9,7 +9,7 @@ import tempfile
 import unittest
 
 from . import support, make_golden
-from pea_knowledge import digest as dg, validate
+from pea_knowledge import brief as br, digest as dg, validate
 
 DIST = os.path.join(support.GOLDEN, "dist")
 REMAKE = "run python3 tests/make_golden.py, read the diff, and commit it if the change is meant"
@@ -66,6 +66,10 @@ class Golden(unittest.TestCase):
                 data = f.read()
             if case["kind"] == "store":
                 value, problems = validate.check_store(data)
+            elif case["kind"] == "brief":
+                value, problems = validate.read_json(data, "brief", name, validate.BRIEF_BYTES)
+                if value is not None and br.visible_chars(value) > br.VISIBLE_CHARS:
+                    value, problems = None, [validate.Problem("brief_too_long", name, "over the limit")]
             else:
                 value, problems = validate.read_json(data, "digest", name, validate.DIGEST_BYTES)
                 if value is not None and dg.brief_chars(value["brief"]) > dg.BRIEF_CHARS:
@@ -82,7 +86,9 @@ class Golden(unittest.TestCase):
     def test_the_hostile_samples_are_the_ones_the_generator_writes(self):
         paused = json.loads(self.states["05-paused-by-the-curator"]["store.json"])
         item = support.items(self.out, "tide-tables")[0]
-        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"]), support.store(self.out)):
+        with open(os.path.join(self.out, *item["brief"]["path"].split("/")), encoding="utf-8") as f:
+            brief = json.load(f)
+        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"]), support.store(self.out), brief):
             with open(os.path.join(support.GOLDEN, "hostile", "%s.%s.json" % (name, kind)), encoding="utf-8", newline="") as f:
                 self.assertEqual(f.read(), text, "%s: %s" % (name, REMAKE))
 

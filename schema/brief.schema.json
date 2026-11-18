@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:brief",
+  "title": "PEA knowledge brief (sources/<source>/<item>.brief.json), format 1.3",
+  "description": "One short, fixed-shape summary of one item, for search and talk on the phone. All of its visible text together (headline, claims, new, quote texts and speakers, topics, keywords, entities) is at most 1,800 characters; the reader checks that (brief_too_long).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "source_id",
+    "source_name",
+    "item_id",
+    "title",
+    "date",
+    "link",
+    "brief_kind",
+    "model",
+    "covers",
+    "covers_note",
+    "headline",
+    "claims",
+    "new",
+    "quotes",
+    "topics",
+    "keywords",
+    "entities",
+    "transcript_sha256"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-brief"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "source_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "link": {
+      "type": "string",
+      "pattern": "^https://[a-z0-9.-]{4,253}/[\\x21-\\x7e]*$",
+      "maxLength": 2000
+    },
+    "brief_kind": {
+      "description": "model: written by a model from the transcript and checked against it. extractive: built from the digest, no model.",
+      "type": "string",
+      "enum": [
+        "model",
+        "extractive"
+      ]
+    },
+    "model": {
+      "description": "The model id for a model brief; null for an extractive one.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "covers": {
+      "description": "whole: the brief covers the whole episode. partial: only part of it (a cut transcript, notes only, or the first parts of a very long one); covers_note says which.",
+      "type": "string",
+      "enum": [
+        "whole",
+        "partial"
+      ]
+    },
+    "covers_note": {
+      "description": "One plain sentence on what is covered, or null for whole.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "headline": {
+      "description": "One sentence: what this item is about.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "claims": {
+      "description": "Specific statements, each one sentence, in the order of the episode. A model brief has 4 to 8, each with a ref; an extractive one may have fewer and a null ref.",
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "ref"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 220
+          },
+          "ref": {
+            "description": "Where in the transcript: its time HH:MM:SS, or L<n> for the n-th line (from 1) when the line has no time; null when there is nothing to point at.",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^([0-9]{2,3}:[0-5][0-9]:[0-5][0-9]|L[1-9][0-9]{0,5})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "new": {
+      "description": "What is new or changed, as far as the item itself says, or null (an extractive brief does not say).",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "quotes": {
+      "description": "At most two short quotes, each word for word in the transcript (checked by the processor).",
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "speaker",
+          "time"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "speaker": {
+            "description": "The speaker, or unknown.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "time": {
+            "type": "string",
+            "pattern": "^([0-9]{2,3}:[0-5][0-9]:[0-5][0-9]|L[1-9][0-9]{0,5})$"
+          }
+        }
+      }
+    },
+    "topics": {
+      "description": "Up to four ids of the vocabulary in store.json.",
+      "type": "array",
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+      }
+    },
+    "keywords": {
+      "description": "Up to five short search words or phrases.",
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 40
+      }
+    },
+    "entities": {
+      "description": "Up to twelve names: people, companies, organisations, products, places.",
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      }
+    },
+    "transcript_sha256": {
+      "description": "SHA-256 of the normalized transcript the brief was made from, or null.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

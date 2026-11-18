@@ -67,8 +67,10 @@ def run(out, now=T0, config=None, web=WEB, environment=None, work=None):
     os.makedirs(work)
     previous = pipeline.Previous(out)
     fetcher = fetch.fixture_fetcher(web, log=QUIET)
-    pipeline.fetch_stage(config, work, fetcher, previous, now, "offline", QUIET)
-    pipeline.digest_stage(config, work, environment if environment is not None else {}, QUIET)
+    environment = environment if environment is not None else {}
+    pipeline.fetch_stage(config, work, fetcher, previous, now, "offline", QUIET, environment)
+    pipeline.digest_stage(config, work, environment, QUIET)
+    pipeline.brief_stage(config, work, previous, environment, QUIET)
     health = pipeline.build_stage(config, work, previous, out, now, QUIET)
     shutil.rmtree(work, ignore_errors=True)
     return health

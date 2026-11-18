@@ -5,8 +5,9 @@
     python3 -m pea_knowledge run --config config/sources.json --out dist
     python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dist --offline-fixtures tests/fixtures/web
     python3 -m pea_knowledge validate dist
+    python3 -m pea_knowledge briefs --dry-run --limit 5     # which items would get a model brief, and the cost; no model call
 
-`run` does everything. `fetch`, `digest` and `build` are its three parts, for running them as separate jobs;
+`run` does everything. `fetch`, `digest`, `briefs` and `build` are its parts, for running them as separate jobs;
 `restore` brings back the last published output, which is the pipeline's memory between runs.
 """
 import argparse
@@ -50,6 +51,36 @@ def cmd_fetch(args):
     return 0
 
 
+def cmd_briefs(args):
+    """Stage 3b, or with --dry-run a list of what it would do and cost. A dry run never calls a model; when the work
+    folder is not there it first fetches into a temporary one (from the publishers, or from --offline-fixtures)."""
+    config = pipeline.load_config(args.config)
+    previous = pipeline.Previous(args.previous)
+    if not args.dry_run:
+        pipeline.brief_stage(config, args.work, previous, log=_log, limit=args.limit)
+        return 0
+    work, temporary = args.work, None
+    if not os.path.isfile(os.path.join(work, "work.json")):
+        temporary = work = tempfile.mkdtemp(prefix="pea-knowledge-dry-")
+        fetcher, mode = _fetcher(args)
+        _log("no work folder at %s: fetching into a temporary one first (no model is called)" % args.work)
+        pipeline.fetch_stage(config, work, fetcher, previous, _now(args.now), mode, _log)
+    try:
+        rows, t = pipeline.brief_estimate(config, work, previous, limit=args.limit)
+    finally:
+        if temporary:
+            shutil.rmtree(temporary, ignore_errors=True)
+    print("Dry run: no model was called. Model %s, %s; prices USD %s / %s per million tokens in / out." % (
+        t["model"], ("on" if t["enabled"] else "off") + (", a key is set" if t["key"] else ", no key is set (a real run would write extractive briefs only)"),
+        t["price"][0], t["price"][1]))
+    print("Caps: %s US cents per run, %s per month; spent in %s so far: %s." % (t["run_cap_cents"], t["monthly_cap_cents"], t["month"], round(t["month_spent_cents"], 4)))
+    for sid, iid, title, parts, calls, tin, tout, cents, what in rows:
+        print("  %s/%s  %s  [%s]  calls %d, about %d + %d tokens, about %.4f US cents" % (sid, iid, title[:60], what, calls, tin, tout, cents))
+    print("%d items listed (limit %s), %d by terms extractive; about %d calls and %.4f US cents in all (an estimate: the real count comes from the provider)." % (
+        t["items"], args.limit if args.limit is not None else "none", t["by_terms"], t["calls"], t["cents"]))
+    return 0
+
+
 def cmd_digest(args):
     pipeline.digest_stage(pipeline.load_config(args.config), args.work, log=_log)
     return 0
@@ -76,6 +107,7 @@ def cmd_run(args):
         now = _now(args.now)
         pipeline.fetch_stage(config, work, fetcher, previous, now, mode, _log)
         pipeline.digest_stage(config, work, log=_log)
+        pipeline.brief_stage(config, work, previous, log=_log)
         health = pipeline.build_stage(config, work, previous, args.out, now, _log)
     finally:
         if not args.work:
@@ -139,7 +171,7 @@ def cmd_restore(args):
                 continue
             pipeline.write(os.path.join(args.out, *ref["path"].split("/")), data)
             for item in items["items"]:
-                for file, limit in ((item["digest"], validate.DIGEST_BYTES), (item["transcript"]["file"], validate.TRANSCRIPT_BYTES)):
+                for file, limit in ((item["digest"], validate.DIGEST_BYTES), (item["transcript"]["file"], validate.TRANSCRIPT_BYTES), (item.get("brief"), validate.BRIEF_BYTES)):
                     if file is not None:
                         data = get(file["path"], limit)
                         if not validate.check_file(data, file, file["path"]):
@@ -176,6 +208,13 @@ def main(argv=None):
     c.add_argument("--config", default="config/sources.json")
     c.add_argument("--work", required=True)
     c.set_defaults(run=cmd_digest)
+    c = sub.add_parser("briefs", help="stage 3b: write model briefs into the work folder (format 1.3; reads OPENROUTER_API_KEY; without it, writes nothing)")
+    common(c)
+    c.add_argument("--work", default="work", help="the work folder of a fetch (a dry run fetches into a temporary one when it is not there)")
+    c.add_argument("--previous", help="the previous output folder: its briefs are reused when the transcript is unchanged, and its state.json holds the month's spend")
+    c.add_argument("--dry-run", action="store_true", help="print which items would get a model brief and the estimated cost; no model call")
+    c.add_argument("--limit", type=int, help="at most this many items")
+    c.set_defaults(run=cmd_briefs)
     c = sub.add_parser("build", help="stage 4: write the output folder from the work folder and the previous output")
     c.add_argument("--config", default="config/sources.json")
     c.add_argument("--work", required=True)

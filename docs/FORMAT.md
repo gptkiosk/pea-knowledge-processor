@@ -1,4 +1,4 @@
-# The PEA knowledge format, version 1.2
+# The PEA knowledge format, version 1.3
 
 This is the one format the PEA knowledge processor writes and the PEA iPhone app reads. A curated list of sources goes in; a folder of static files comes out. The app never reads a publisher's feed: it reads this, and it checks every file before it uses it. The one thing it may fetch from a publisher is the transcript an item points to (`transcript_source`, section 6), when the owner wants the whole text.
 
@@ -14,6 +14,7 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 store.json                                   the store listing: every source as a card, its state, the hash of its items file
 sources/<source>/items.json                  one source's items, newest first, with the hash and size of every file
 sources/<source>/<item>.digest.json          one item's digest: everything needed to talk about it
+sources/<source>/<item>.brief.json           one item's brief (1.3): a short fixed-shape summary for search and talk
 sources/<source>/<item>.transcript.pea.txt   one item's transcript (PEA transcript v1), only where the terms allow
 health.json                                  what the last run did (for the curator; an app does not need it)
 state.json                                   the pipeline's memory between runs (an app MUST NOT fetch or use it)
@@ -33,7 +34,7 @@ All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, 
 
 | Member | What it is for |
 | --- | --- |
-| `format`, `format_version` | `"pea-knowledge-store"`, `"1.2"`. See section 8. |
+| `format`, `format_version` | `"pea-knowledge-store"`, `"1.3"`. See section 8. |
 | `generated_at` | When this output was built (UTC, `YYYY-MM-DDTHH:MM:SSZ`). |
 | `generator` | The program and version that wrote it. |
 | `min_app_version` | The oldest app version that should read this output, or null. An older app keeps what it has and asks for an update. |
@@ -79,6 +80,7 @@ Each listing:
 | `digest` | Path, SHA-256, size, and what kind of digest it is (`basis`, `grade`, `method`), repeated from the file so a reader can choose without opening it. |
 | `transcript` | `available`: `yes`, `partial` or `no`; `reason`; `file` (path, SHA-256, size) or null. Since 1.1 also `read`: what the pipeline read at the publisher to make the digest (`full`, `partial`, `none`), whether or not the file is published. |
 | `topics`, `topics_by` (1.2) | What the item is about: up to four `{"id", "score"}`, best first, ids of the vocabulary in `store.json` only; and how they were made, `keywords` or `model`. Optional, always together. An empty list means no topic was confident enough. Section 11. |
+| `brief` (1.3) | Optional; present on every item of an output from generator 0.6.0 on. The item's brief file: `path`, `sha256`, `bytes`, and `kind` (`model` or `extractive`) and `covers` (`whole` or `partial`), repeated from the file so a reader can choose without opening it. **The brief's size is not counted in `bytes`**: `bytes` stays the digest plus the transcript, so a 1.2 reader's check of it still holds; the item's whole size is `bytes` plus `brief.bytes`. Section 12. |
 | `transcript_source` | Since 1.1, optional. Where the publisher itself offers this item's transcript: `link`, `format`, `route`, `bytes`, and `extract` for an HTML page. Present on every item of an output from generator 0.5.0 on (it is what makes the item discussable). Section 6 describes it. |
 
 Transcript reasons are typed:
@@ -303,6 +305,7 @@ Everything a publisher wrote is untrusted data: titles, descriptions, show notes
 - **Within a major version, changes are additive only**: new optional members, new files. No member is removed or renamed, no type or meaning changes, no limit grows, no enumeration gains a value a reader must act on. A new enumeration value needs a new major version, because the enumerations are closed.
 - **1.1 (2026-11-15)** added the members listed under "What 1.1 adds". A reason a source is paused for want of transcripts uses the existing code `format_changed`: a code of its own would be a new enumeration value, which needs 2.0.
 - **1.2 (2026-11-15)** added topics (section 11): `topics` at the top of `store.json`, `topics` in a listing, and `topics` with `topics_by` on an item. All optional; nothing else changed. A digest is as in 1.1, except that it says 1.2. Why not within 1.1: a reader whose known minor is 1 holds a 1.1 file to the letter, so a new member in a file that still said 1.1 would have been refused as `schema`. A file that says 1.2 is read by that same reader with the new members ignored. A reader that wants topics raises its known minor to 2 and takes the 1.2 schemas.
+- **1.3 (2026-11-17)** added briefs (section 12): a new file per item, `sources/<source>/<item>.brief.json`, named by an optional `brief` member of the item in `items.json`, and optional `briefs` members in `health.json` and `state.json`. Nothing else changed; every file says 1.3. A 1.2 reader ignores `brief` on an item (a newer minor) and never fetches the brief file; `bytes` keeps its meaning, so its cross-check still holds. A reader that wants briefs raises its known minor to 3 and takes the 1.3 `items` and `brief` schemas.
 - **A reader accepts every file whose major it knows.** When the file's minor is newer than the reader's, the reader ignores members it does not know. When the minor is the reader's own or older, an unknown member is an error (`schema`): at the same version the writer is held to the letter.
 - **A reader refuses a major it does not know** with reason `unsupported_version`, keeps what it has, and tells the owner an update is needed.
 - `min_app_version` lets the curator say "this output needs at least this app" before a major change arrives.
@@ -310,7 +313,7 @@ Everything a publisher wrote is untrusted data: titles, descriptions, show notes
 
 ## 9. How a reader verifies a file
 
-Limits, refused unread when exceeded (`too_large`): `store.json` 512,000 bytes; `items.json` 512,000; a digest 24,000; a transcript 1,000,000.
+Limits, refused unread when exceeded (`too_large`): `store.json` 512,000 bytes; `items.json` 512,000; a digest 24,000; a brief 8,000; a transcript 1,000,000.
 
 In order, for each file:
 
@@ -319,6 +322,7 @@ In order, for each file:
 3. The cross-checks of that file:
    - `store.json`: ids unique; topic ids unique, and every topic a source names is in the vocabulary of the same file (`inconsistent`); an items file is at `sources/<id>/items.json` (`path_invalid`); a withdrawn source lists nothing; a paused or withdrawn source has a message, a reason and a time; `purge` only with `withdrawn`; `item_count` and `items_file` agree; a paused source is stale (`inconsistent`).
    - `items.json`: `source_id` is the listing's (`identity_mismatch`); the count is the listing's; ids unique; each file is at `sources/<source>/<item>.digest.json` or `.transcript.pea.txt` (`path_invalid`); `bytes` is the sum; `available`, `reason` and `file` agree; no transcript file in a `digest_only` source; a `transcript_source` only on an item whose transcript was read, with `extract` exactly when its format is `html`; `topics` and `topics_by` together or not at all, every topic id in the vocabulary of the `store.json` that named the file, no id twice, scores with at most two decimals and best first; newest first (`inconsistent`). `transcript_source.link` is checked as an address (`address`).
+   - a brief (1.3): source, source name, item, title, date and link are those of the index, and `brief_kind` and `covers` those of the item's `brief` (`identity_mismatch`); the visible text is within 1,800 characters (`brief_too_long`); a `model` brief names its model, has at least four claims each with a ref, and a `new`; an `extractive` one has no model; a `partial` brief has a `covers_note` and a `whole` one none; every topic is in the vocabulary of the `store.json`; when the transcript is in the output, every ref names one of its lines and every quote is in it (`inconsistent`). The brief is at `sources/<source>/<item>.brief.json` (`path_invalid`).
    - a transcript: conforms to PEA transcript v1 (`transcript_invalid`); cut or not as the index says.
    - a digest: source, item, title, date, link, duration, basis, grade and method are those of the index (`identity_mismatch`); the brief form is within 900 characters (`brief_too_long`); no quotes and no moments without a transcript basis; chapters in order of time and not overlapping; `link_kind` as in the index; when the transcript is in the output, `transcript_sha256` is its hash, every pointer names a segment it has, and every `exact` quote and every moment is in the segment it points to (`inconsistent`).
 
@@ -326,7 +330,7 @@ A file with any problem is not used, and the typed reason is kept for the owner 
 
 ## 10. health.json
 
-For the curator. `mode` (`live` or `offline`), what the model cost (`calls`, `accepted`, `fell_back`, `skipped_for_budget`, tokens, `cost_usd`), and per source: what the run did (`ok`, `unchanged`, `failed`, `skipped`, `removed`), the state, the reason, how many items are new, reused, kept, stale and pruned, transcripts by outcome (of the listed items), digests by method, `dropped`, `phone_probe`, and plain notes (skipped entries, a feed that changed shape, a transcript that could not be refreshed, the first few items that were left out).
+For the curator. `mode` (`live` or `offline`), `briefs` (1.3: whether model briefs were asked for and a key given, the model, calls, briefs written, reused from the cache, retried, fallen back, stopped by a cap and kept extractive by terms, tokens, this run's spend and the month's in US cents against both caps, the briefs in the output by kind, the count of flags, and a note), what the model cost (`calls`, `accepted`, `fell_back`, `skipped_for_budget`, tokens, `cost_usd`), and per source: what the run did (`ok`, `unchanged`, `failed`, `skipped`, `removed`), the state, the reason, how many items are new, reused, kept, stale and pruned, transcripts by outcome (of the listed items), digests by method, `dropped`, `phone_probe`, and plain notes (skipped entries, a feed that changed shape, a transcript that could not be refreshed, the first few items that were left out).
 
 - `dropped`: the items of the feed that are **not** in `items.json` because they are not discussable, counted by typed reason: `none_published` (no transcript is offered for the item), `fetch_failed` (the pipeline could not fetch it; asked again next run), `unreadable` (fetched, but not a transcript or too little text), `no_source` (read, but no address to fetch the whole text from) and `phone_probe` (the probe failed for it). They are not in `items`, `new` or any other counter. On a run that finds the feed unchanged the counts of the last run that read it are shown again.
 - `phone_probe`: `null` when no probe ran this run (the feed was unchanged, nothing was discussable, the source failed first, or the probe is off: `phone_probe` false), otherwise `{"item", "result", "reason", "checked_at", "reused"}`. `result` is `ok` or `failed`; `reason` is `{"code", "detail"}` with a code of `refused` (401, 402, 403), `not_found`, `rate_limited`, `http_status` (anything else but 200), `timeout`, `network`, `content_type`, `too_large` or `unreadable`. `reused` is true when an ok result under 24 hours old (`phone_probe_reuse_hours`) for the same item and address was reused instead of asking again.
@@ -411,3 +415,33 @@ It costs about 500 tokens more per call, inside the same limits. Like the model 
 ### When the vocabulary or the lexicon changes
 
 Every item is made anew on the next run (its key holds a hash of both files), so no item keeps a tag from an older version. An item kept from an earlier run for another reason loses any id the vocabulary no longer has. `"topics": {"enabled": false}` in the config switches topics off: no vocabulary, no topics anywhere.
+
+## 12. Briefs (format 1.3)
+
+A brief is one short summary of one item in a fixed shape, so an app can keep the briefs of many items on the phone, find the best two or three for what the owner asks by plain text search, and put them in a prompt with their source and date. **Every listed item has one** (from generator 0.6.0 on): a `model` brief where a model wrote one that passed every check, otherwise an `extractive` brief built from the item's digest.
+
+| Member | Limit | What it is |
+| --- | --- | --- |
+| `format`, `format_version` | | `"pea-knowledge-brief"`, `"1.3"`. |
+| `source_id`, `source_name`, `item_id`, `title`, `date`, `link` | | What the brief is about. The same as the index; never taken from a transcript or a model. |
+| `brief_kind` | | `model`: written by a model from the transcript and checked against it. `extractive`: built from the digest by the processor, no model. |
+| `model` | 80 | The model id for a `model` brief; null for `extractive`. |
+| `covers`, `covers_note` | 200 | `whole`: the brief covers the whole item. `partial`: only part of it, and `covers_note` says which in one sentence (a cut transcript, "covers the first 3 parts of the transcript, to 02:30:00", or a digest made from notes only). A `whole` brief has a null note. |
+| `headline` | 160 | One sentence: what this item is about. |
+| `claims` | 8 × 220 | Specific statements (a name, a number, a date, a position), one sentence each, in order, each with `ref`: where in the transcript it comes from, its time `HH:MM:SS`, or `L<n>` for the n-th transcript line (counted from 1, sponsor reads included) when the line has no time; null only in an extractive brief with nothing to point at. A `model` brief has 4 to 8 claims, each with a ref. Refs are for the processor and for a deep dive; they are not read out. |
+| `new` | 300 | What is new or changed, as far as the item itself says; null in an extractive brief (it does not say). "Nothing in the text marks it as new." is a valid answer. |
+| `quotes` | 2 | At most two short quotes: `text` (300), `speaker` (80, or `unknown`), `time` (a ref as above). Each was checked word for word against the transcript by the processor (whitespace, case and typographic quotes and dashes aside). |
+| `topics` | 4 | Ids of the vocabulary in `store.json` (section 11); empty when the output has no vocabulary. |
+| `keywords` | 5 × 40 | Short search words or phrases, lower case. |
+| `entities` | 12 × 80 | Names only: people, companies, organisations, products, places. |
+| `transcript_sha256` | | SHA-256 of the normalized transcript the brief was made from, or null. |
+
+**Size.** The visible text (headline, claim texts, `new`, quote texts and speakers, topics, keywords and entities, all together) is at most **1,800 characters**; a file is at most 8,000 bytes. A typical brief is 1,200 to 1,700 characters of text and 2 to 3 KB on disk.
+
+**How a model brief is made and checked** (`src/pea_knowledge/brief.py`, the writer prompt of phase 1, spike/WRITER-PROMPT-v3.md, with its ten rules). The model sees the item's title, show and date and the transcript with one mark per line, and answers one JSON object. Before anything is kept: exact keys and types; every limit above; text rules T1 to T4 and no text addressed to the assistant; topics only from the vocabulary; every quote word for word in the transcript and its `time` a line of it; a quote's speaker the speaker of that line, and (rule 8) the speaker named by any claim that uses the same line; a claim whose ref is no line is dropped; fewer than four claims left fails. Names and numbers in claims that are nowhere in the transcript are counted as flags (`health.json`), not refused. A brief that fails is sent back once with the list of problems; if the second answer fails too, the item gets the extractive brief. A transcript longer than `briefs.chunk_chars` (60,000 characters) is written in up to `max_chunks` (4) parts, one partial brief each, and the partial briefs are merged in one more call, checked against the whole transcript; parts beyond the last make the brief `partial`.
+
+**How an extractive brief is made**: the headline is the first sentence of the digest's `about`, the claims its talking points (shortened to 220), the quotes its first two exact quotes, the entities its guests and the people, organisations and products of the glossary, the keywords the other glossary terms and mentioned resources, the topics the item's. Over the cap, keywords, entities, quotes and claims give way in that order.
+
+**Cost.** Model briefs are made only for new items, and a brief is reused, without a call, when the item is made again from the same transcript (`transcript_sha256`) by the same model. Spending is capped per run and per calendar month in US cents (`brief_budget`: `per_run_cents` 100, `monthly_cents` 200 by default); before each call the worst case (the prompt at three characters a token, plus `max_output_tokens`) must fit both. The cost of a call is the provider's own figure when it gives one (`usage.cost`), else its token counts at the configured prices. When a cap is reached the run stops calling the model and every remaining item gets an extractive brief. The month's spend is kept in `state.json` (`briefs`: `month`, `spent_cents`, `calls`, and whether the last brief step had a key), which each run restores from the published output, so the cap holds across scheduled runs. A source whose terms forbid quotes or derived summaries is marked `brief_writer: extractive` in the config and is never sent to a model.
+
+**Terms.** A brief is an original short summary with at most two short quotes and a link back. No transcript text is written to the output beyond those quotes, and the transcripts themselves are still withheld (`withheld_terms`).

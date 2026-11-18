@@ -1,0 +1,79 @@
+{
+  "brief_kind": "extractive",
+  "claims": [
+    {
+      "ref": "00:00:56",
+      "text": "The Grey Point Trust voted on it in March, and the old lamp won by 36 votes to nine."
+    },
+    {
+      "ref": "00:00:56",
+      "text": "An electric lamp would have cost the Trust 120 thousand dollars before a single night of light."
+    },
+    {
+      "ref": "00:02:06",
+      "text": "Last winter the ledger showed 52 ships turning back at the bar, twice the number of the year before."
+    },
+    {
+      "ref": "00:04:26",
+      "text": "I trim the wick at dusk, wind the clockwork every four hours, and write the ledger before I sleep."
+    },
+    {
+      "ref": "00:05:22",
+      "text": "The Grey Point Trust pays for the apprentices out of visitor tickets and a small grant from the county."
+    },
+    {
+      "ref": "00:06:18",
+      "text": "There is a plan from the county to build a visitor centre on the meadow behind the keeper's cottage."
+    },
+    {
+      "ref": "00:08:10",
+      "text": "Tobias Renn, keeper of the Grey Point lighthouse, thank you for showing us the ledger and the lamp."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-12",
+  "entities": [
+    "Tobias Renn",
+    "Mara",
+    "Tobias",
+    "Harbour Board",
+    "Grey Point Trust",
+    "Northwind Cooperative"
+  ],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "Mara and Tobias at the Grey Point lighthouse.",
+  "item_id": "2026-11-12-49be7f43a2",
+  "keywords": [
+    "tobias renn",
+    "north quay",
+    "harbor voices",
+    "the wren"
+  ],
+  "link": "https://tide.example.org/episodes/6",
+  "model": null,
+  "new": null,
+  "quotes": [
+    {
+      "speaker": "Tobias",
+      "text": "The ledger records weather.",
+      "time": "00:02:06"
+    },
+    {
+      "speaker": "Tobias",
+      "text": "The ledger records weather.",
+      "time": "00:02:06"
+    },
+    {
+      "speaker": "Tobias",
+      "text": "The ledger records weather.",
+      "time": "00:02:06"
+    }
+  ],
+  "source_id": "tide-tables",
+  "source_name": "Tide Tables",
+  "title": "The keeper's ledger, read aloud",
+  "topics": [],
+  "transcript_sha256": "fa717b43bfafb3c047ecd1b189bbbd6a7863dbed96bb890bd757220fc43a994c"
+}

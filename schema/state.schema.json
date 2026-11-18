@@ -73,6 +73,13 @@
                     "no_source",
                     "phone_probe"
                   ]
+                },
+                "brief": {
+                  "description": "Since 1.3: fell_back when a model brief was tried for this item and did not pass the checks; the item is not fetched again for a model brief until it changes.",
+                  "type": "string",
+                  "enum": [
+                    "fell_back"
+                  ]
                 }
               }
             }
@@ -154,6 +161,36 @@
               }
             }
           }
+        }
+      }
+    },
+    "briefs": {
+      "description": "Since 1.3, optional: the cost ledger of model briefs for the current month, carried from run to run so the monthly cap holds.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "month",
+        "spent_cents",
+        "calls"
+      ],
+      "properties": {
+        "month": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}$"
+        },
+        "spent_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "key": {
+          "description": "Whether the last run's brief step had a key (never the key). The fetch job, which has none, goes by it.",
+          "type": "boolean"
         }
       }
     }

@@ -150,19 +150,23 @@ def transcript_prompt(transcript, limit):
 
 def call(settings, title, prompt, notes="", system=SYSTEM):
     """One chat completion. Returns (the answer text, prompt tokens, completion tokens, cost or None). Raises ModelError."""
+    return chat(settings, [{"role": "system", "content": system},
+                           {"role": "user", "content": "Episode title (untrusted): %s\n\nShow notes (untrusted): %s\n\nTranscript (untrusted):\n%s" % (title, notes or "none", prompt)}])
+
+
+def chat(settings, messages, max_tokens=None, temperature=0):
+    """One chat completion with these messages (also used by brief.py). `temperature` None leaves it out of the request,
+    for models that refuse any value but their own. Returns (the answer text, prompt tokens, completion tokens, cost in US
+    dollars as the server reported it, or None). Raises ModelError."""
     parts = urlsplit(settings.base_url)
     local = parts.hostname in ("127.0.0.1", "localhost", "::1")
     if parts.scheme != "https" and not (parts.scheme == "http" and local):
         raise ModelError("the model server must be reached over https")
-    body = json.dumps({
-        "model": settings.model,
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": "Episode title (untrusted): %s\n\nShow notes (untrusted): %s\n\nTranscript (untrusted):\n%s" % (title, notes or "none", prompt)}],
-        "temperature": 0,
-        "max_tokens": settings.max_output_tokens,
-        "response_format": {"type": "json_object"},
-        "usage": {"include": True},
-    }).encode("utf-8")
+    request = {"model": settings.model, "messages": messages}
+    if temperature is not None:
+        request["temperature"] = temperature
+    request.update({"max_tokens": max_tokens or settings.max_output_tokens, "response_format": {"type": "json_object"}, "usage": {"include": True}})
+    body = json.dumps(request).encode("utf-8")
     headers = {"Authorization": "Bearer " + settings.key, "Content-Type": "application/json", "Accept": "application/json",
                "HTTP-Referer": REPOSITORY_URL, "X-Title": GENERATOR_NAME, "Connection": "close"}
     port = parts.port or (443 if parts.scheme == "https" else 80)

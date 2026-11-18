@@ -645,6 +645,14 @@
               "type": "string",
               "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"
             }
+          },
+          "brief_writer": {
+            "description": "model (the default): a model may write this source's briefs. extractive: never send this source to a model; set it when the source's terms forbid quotes or derived summaries.",
+            "type": "string",
+            "enum": [
+              "model",
+              "extractive"
+            ]
           }
         }
       }
@@ -658,6 +666,89 @@
         "enabled": {
           "description": "False: the output carries no vocabulary and no topics.",
           "type": "boolean"
+        }
+      }
+    },
+    "briefs": {
+      "description": "Format 1.3 briefs. Extractive briefs are always made; model briefs only when enabled and a key is given.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "base_url": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 500,
+          "maximum": 16000
+        },
+        "chunk_chars": {
+          "description": "A transcript longer than this is written in parts and merged.",
+          "type": "integer",
+          "minimum": 5000,
+          "maximum": 400000
+        },
+        "max_chunks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "max_calls_per_run": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "upgrade_per_run": {
+          "description": "How many listed items with an extractive brief may be fetched again per run to get a model brief.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "price_per_million_input_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "price_per_million_output_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "temperature": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 2
+        }
+      }
+    },
+    "brief_budget": {
+      "description": "Caps on what model briefs may cost, in US cents. The month's spend is kept in state.json.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "monthly_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "per_run_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000
         }
       }
     }

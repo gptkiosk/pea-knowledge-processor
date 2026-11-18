@@ -476,6 +476,159 @@
           "maximum": 1000000
         }
       }
+    },
+    "briefs": {
+      "description": "Since 1.3, optional: what the briefs of this run cost and how they were made. Caps and spend in US cents.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "key",
+        "used",
+        "model",
+        "calls",
+        "written",
+        "cached",
+        "retried",
+        "fell_back",
+        "skipped_for_budget",
+        "skipped_by_terms",
+        "prompt_tokens",
+        "completion_tokens",
+        "run_cents",
+        "month",
+        "month_cents",
+        "monthly_cap_cents",
+        "run_cap_cents",
+        "listed",
+        "flags",
+        "note"
+      ],
+      "properties": {
+        "requested": {
+          "description": "Model briefs are switched on in the config.",
+          "type": "boolean"
+        },
+        "key": {
+          "description": "A key was given to the brief step (never the key itself).",
+          "type": "boolean"
+        },
+        "used": {
+          "description": "At least one model brief was written this run.",
+          "type": "boolean"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "written": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "cached": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "retried": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "fell_back": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "skipped_for_budget": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "skipped_by_terms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "completion_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "run_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "month": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}$"
+        },
+        "month_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "monthly_cap_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "run_cap_cents": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "listed": {
+          "description": "Briefs in the output by kind.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "model",
+            "extractive"
+          ],
+          "properties": {
+            "model": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "extractive": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            }
+          }
+        },
+        "flags": {
+          "description": "Names or numbers in kept model briefs that the checker could not find in the transcript (they pass, a person may look).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 240
+        }
+      }
     }
   }
 }

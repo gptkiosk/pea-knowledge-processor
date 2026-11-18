@@ -27,6 +27,22 @@
     "price_per_million_input_usd": 0.1,
     "price_per_million_output_usd": 0.4
   },
+  "briefs": {
+    "enabled": true,
+    "model": "anthropic/claude-haiku-5.5",
+    "base_url": "https://openrouter.ai/api/v1",
+    "max_output_tokens": 4000,
+    "chunk_chars": 60000,
+    "max_chunks": 4,
+    "max_calls_per_run": 60,
+    "upgrade_per_run": 12,
+    "price_per_million_input_usd": 0.1,
+    "price_per_million_output_usd": 0.5
+  },
+  "brief_budget": {
+    "monthly_cents": 200,
+    "per_run_cents": 100
+  },
   "sources": [
     {
       "id": "ai-daily-brief",

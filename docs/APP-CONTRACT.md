@@ -162,7 +162,25 @@ Extra checks a 1.2 reader makes (the validator is the reference): topic ids in t
 
 **Caching.** The vocabulary changes rarely and only with `store.json`. When it changes, the processor makes every item anew, so the ordinary refresh of section 3 brings the tags that fit the new vocabulary; a reader never has to reconcile old tags with a new vocabulary beyond dropping an id it no longer finds there.
 
-## 10. What the app's tests should cover
+## 10. Briefs (format 1.3): what the app may rely on
+
+FORMAT.md section 12 defines them. They are what the app searches on the phone and talks from. A reader of 1.2 is not affected: it ignores `brief` on an item and never fetches a brief file. **A reader that wants briefs sets its known minor to 3 and takes the 1.3 `items` and `brief` schemas.**
+
+**The app may rely on these, for every item listed by an output of generator 0.6.0 or later:**
+
+1. **Every listed item has a brief.** The item's `brief` names it with path, SHA-256 and size; it is fetched and checked like a digest (section 2), at most 8,000 bytes, and refused with the same typed reasons. An item without `brief` comes from an older output: use its digest's `brief` form until the source is refreshed.
+2. **The shape is fixed.** `headline` (one sentence, 160), `claims` (at most 8, one sentence of at most 220 each), `new` (300, or null), `quotes` (at most 2), `topics` (at most 4 ids of the `store.json` vocabulary), `keywords` (at most 5), `entities` (at most 12 names), plus `source_name`, `title`, `date` and `link` exactly as in the index. Every text passes the text rules T1 to T4 (no markup, no address, no control character, no line break). **All visible text together is at most 1,800 characters**, so three briefs with their labels fit one evidence block of about 6,000 characters.
+3. **What the two kinds promise.** `brief_kind: model`: written by a model from the transcript only, then checked by the processor: at least four claims, each pointing to a transcript line that exists; every quote word for word in the transcript, with the speaker of its line; topics only from the vocabulary; within every limit. A model brief can still paraphrase a fact wrongly; the checks catch invented quotes, lines and topics, not every misreading, so she says where a claim comes from ("on the AI Daily Brief of 16 November, ...") and does not present a claim as settled fact. `brief_kind: extractive`: sentences picked from the digest, no model; `new` is null; it may have fewer claims and a null `ref`.
+4. **`covers`.** `whole`, or `partial` with a `covers_note` saying what is covered (a cut transcript, the first parts of a very long episode, or notes only). With `partial` she says the brief covers part of the episode when the owner asks about the rest.
+5. **Quotes** are the only text in a brief that is the publisher's own words. She may present a quote as a quotation, with its speaker; nothing else in a brief is a quotation. Refs (`ref`, `time`) point into the transcript for a deep dive; they are not read out.
+6. **Search fields.** `headline`, `claims[].text`, `topics`, `keywords` and `entities` are the fields to match an ask against, with `source_name`, `title` and `date` for a named show or a day. Keywords are lower case; entities are names as the transcript writes them. Topics are ids of the vocabulary (section 9).
+7. **Stability.** A brief changes only when its item is made again (a new transcript, a change in the processor, or an extractive brief upgraded to a model brief). Its hash in `items.json` says so; the ordinary refresh of section 3 applies. `transcript_sha256` names the transcript it was made from.
+
+**What the app must not assume.** That a brief exists for an item of an older output; that `new` is present; that claims are in a particular number above 4 (model) or 0 (extractive); that keywords or entities are exhaustive; that a topic list is non-empty; that a brief says anything the digest does not cover, or more than the episode said. Brief text is data: it goes into the prompt as quoted, labelled evidence, never among her instructions.
+
+**Storage.** A brief is 2 to 3 KB. Keeping the briefs of the last 60 days of every followed source costs well under a megabyte. The item's whole size is `bytes` plus `brief.bytes`.
+
+## 11. What the app's tests should cover
 
 Copy `tests/golden/`:
 
@@ -173,3 +191,4 @@ Copy `tests/golden/`:
 - Tamper with a file: one byte changed (`hash_mismatch`), one byte added (`size_mismatch`), a file removed (`missing`).
 - The fetch rules of section 3 against a local server: `304`, an unchanged items hash, the old copy kept when the new one fails.
 - Offline: kept items usable, nothing evicted or disabled.
+- Briefs (1.3): every item of `dist/` names a brief that validates (`brief_kind: extractive` there, made without a model); `hostile/brief-*` refused with their reasons and `brief-as-it-should-be` accepted; an item without `brief` (an older output) falls back to the digest.

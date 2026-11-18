@@ -1,0 +1,218 @@
+[
+ {
+  "id": "2026-11-16-78ddb21e73",
+  "source": "ai-daily-brief",
+  "title": "5 Questions That Could Reshape AI",
+  "date": "2026-11-16",
+  "transcript_chars": 34187,
+  "kept_chars": 34187,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "Anthropic's IPO, a possible OpenAI spoiler model, the push to bring back Jensen Huang, Howard Lutnick's exposure and export controls: five questions that could make this a before-and-after week for AI.",
+   "hook": "What was said about Jensen Huang",
+   "points": [
+    "So let's talk about the five questions that are shaping AI, not only for this week as it turns out, but for the entire rest of the year and beyond Now starting off, the…",
+    "Screw investors, it's CapEx time Now, one curveball to watch for, which becomes our second big question shaping the week is the potential for a big model release from…",
+    "The third big question this week, which is no less important for its obviousness is whether we start to see momentum for bringing Jensen Huang back to NVIDIA On Friday…"
+   ],
+   "quote": null
+  }
+ },
+ {
+  "id": "2026-11-15-04e8728dad",
+  "source": "ai-daily-brief",
+  "title": "7 Things AI-Native Companies Do Differently",
+  "date": "2026-11-15",
+  "transcript_chars": 26482,
+  "kept_chars": 26482,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "Stripe, Shopify, Uber, Ramp and others have published how they run agents in production, and seven practices stand out, most of them about managing context. NLW also explains why \"agents as teammates\" isn't one of them.",
+   "hook": "What was said about AI-native",
+   "points": [
+    "It kicks off tomorrow and will transform you not only into an agent user, but into someone who can help agents propagate across your entire organization.",
+    "across a large number of different agents, the orchestrator keeps the summaries and the key context, and each worker gets a narrow instruction and a clean slate, and…",
+    "Uber's library, meanwhile, has 3,600 skills that runs over 30,000 times a day way to, another way to build this sort of shared system comes from Shopify Its coding…"
+   ],
+   "quote": null
+  }
+ },
+ {
+  "id": "2026-11-10-559221f486",
+  "source": "lex-fridman",
+  "title": "#504 – Russia-Ukraine War: Putin, Zelenskyy, Drones and the Future of Warfare",
+  "date": "2026-11-10",
+  "transcript_chars": 162473,
+  "kept_chars": 120000,
+  "cut": "yes",
+  "publisher_quality": "partial",
+  "digest_brief": {
+   "about": "Preston Stewart is a West Point graduate and Afghanistan veteran who covers the Ukraine war extensively on his YouTube channel, his podcast called War and Conflict, and his newsletter called Defense Tech News. Michael Kofman is a…",
+   "hook": "What was said about Russian",
+   "points": [
+    "They’re generally low cost, and that’s been a dynamic that we’ve seen with both Russia and Ukraine in this war, is they’ve gone from the very few but high cost, maybe…",
+    "We underestimated how the Ukraine military would perform in the initial opening of the war, in part because we knew far less about the Ukraine military.",
+    "He then tries to advance on Rostov in Russia, which is where the headquarters of the Russian military effort for the war is."
+   ],
+   "quote": null
+  }
+ },
+ {
+  "id": "2026-10-26-7d63addabb",
+  "source": "lex-fridman",
+  "title": "#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis & Complexity Theory",
+  "date": "2026-10-26",
+  "transcript_chars": 164075,
+  "kept_chars": 120000,
+  "cut": "yes",
+  "publisher_quality": "partial",
+  "digest_brief": {
+   "about": "Ankur Moitra, Steven Brunton and Alex Kontorovich are three mathematicians who can speak to this incredible moment in the history of mathematics, when AI solved some of its hardest problems: Navier-Stokes, the quasi-Riemann hypothesis…",
+   "hook": "What was said about Navier-Stokes",
+   "points": [
+    "Over the last few weeks, machines claimed to have solved some of the hardest problems in the history of math: Navier-Stokes, the quasi-Riemann hypothesis, the unique…",
+    "I don’t really know what to make of that.",
+    "But there’s this really nice Feynman quote that, you know, we know how to write down these very general equations, Maxwell’s equations, Navier-Stokes equations…"
+   ],
+   "quote": null
+  }
+ },
+ {
+  "id": "2026-11-16-fd9acebcf4",
+  "source": "diary-of-a-ceo",
+  "title": "How Did Jensen Huang Fall For A Chinese Spy? | Ex-CIA Officer & Former Honeypot",
+  "date": "2026-11-16",
+  "transcript_chars": 114404,
+  "kept_chars": 114404,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "How did Jensen Huang CEO of Nvidia the world's most critical AI company fall victim to a multi billion dollar intelligence trap? Former CIA officer John Kiriakou and former Russian operative Aliia Roza expose the dark reality of spies…",
+   "hook": "What was said about CIA",
+   "points": [
+    "And not only did the president and Jensen Wang go to China together from Anchorage, but Trump insisted to the Chinese that Jensen sit at the same table with him, with…",
+    "When I was in Moscow in 1968, I did this operation.",
+    "where he, and it didn't really matter if Vladimir would fall in love or we would have any relationship, it didn't really matter because as long as the leader of this…"
+   ],
+   "quote": null
+  }
+ },
+ {
+  "id": "2026-11-13-3b81081930",
+  "source": "diary-of-a-ceo",
+  "title": "Most Replayed Moment: The Childhood Scripts Still Running Your Life! Chase Hughes",
+  "date": "2026-11-13",
+  "transcript_chars": 24977,
+  "kept_chars": 24977,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "What if your \"authentic self\" was actually shaped by an 8-year-old? Chase Hughes is a former US Navy behaviour expert and #1 bestselling author of Six-Minute X-Ray, known for teaching intelligence agencies, police and elite teams how to…",
+   "hook": "What was said about Sarah",
+   "points": [
+    "And 90% of us are walking around with this exact triangle governing our life.",
+    "Part two of this is I need to focus on that being a kid. that belongs to a child.",
+    "And that video is probably short 20, maybe 40 second video that captures your focus through novelty."
+   ],
+   "quote": {
+    "speaker": null,
+    "text": "How I deal with conflict, how I make friends, how I stay safe, all these little patterns that I learned when I was eight or nine.",
+    "time_seconds": 4
+   }
+  }
+ },
+ {
+  "id": "2026-11-03-b72f761d9b",
+  "source": "darknet-diaries",
+  "title": "182: Blackshades",
+  "date": "2026-11-03",
+  "transcript_chars": 42388,
+  "kept_chars": 42388,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "What if you got infected by a friend who wanted to spy on you? This is the story of how BlackShades spread to more than half a million machines, and 97 people got arrested. Sponsors Support for this show comes from Drata.",
+   "hook": "What was said about Blackshades RAT",
+   "points": [
+    "[Music] They marketed Blackshades like a regular software product.",
+    "Before Blackshades there was another tool called DarkComet.",
+    "Data breaches are extremely common, and malware like this makes it easy for an attacker to get into your computer to see your stuff."
+   ],
+   "quote": {
+    "speaker": "JACK",
+    "text": "Since Blackshades can spread from a friend’s computer to yours using malicious links, it can look like it’s coming from someone you trust.",
+    "time_seconds": 510
+   }
+  }
+ },
+ {
+  "id": "2026-10-20-c4c27b9c4f",
+  "source": "darknet-diaries",
+  "title": "181: Ricky",
+  "date": "2026-10-20",
+  "transcript_chars": 86310,
+  "kept_chars": 86310,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "Imagine driving down the road and your phone loses signal. Not just a lost signal, but it starts displaying SOS. Meaning no service configured at all.",
+   "hook": "What was said about Bitcoin",
+   "points": [
+    "But for Ricky, he was on an Xbox, and when he’d play, the internet would go down in the whole house, and it was just him and his mom living there.",
+    "Ricky doesn't remember the first crypto heist he did.",
+    "Some of Ricky’s burner phones, his iPhone, his crypto wallets, and some other SIM cards were taken."
+   ],
+   "quote": {
+    "speaker": "JACK",
+    "text": "Once Ricky got his first taste of stealing a gamer tag, he wanted more.",
+    "time_seconds": 1164
+   }
+  }
+ },
+ {
+  "id": "2026-11-16-2a09851118",
+  "source": "80000-hours",
+  "title": "39 specific projects to improve our chances with AGI | Holden Karnofsky, Anthropic",
+  "date": "2026-11-16",
+  "transcript_chars": 157349,
+  "kept_chars": 120000,
+  "cut": "yes",
+  "publisher_quality": "partial",
+  "digest_brief": {
+   "about": "In light of recent events in AI, we're rereleasing some of older episodes that seem more relevant than ever. This episode with Anthropic's Holden Karnofsky from October 2025 lays out the many concrete things people can do to reduce the…",
+   "hook": "What was said about AIs",
+   "points": [
+    "But you actually don’t think that this is what’s going on.",
+    "I don’t know exactly what people’s model is.",
+    "I don’t want to get more into it than that."
+   ],
+   "quote": {
+    "speaker": "Rob Wiblin",
+    "text": "So you’ve described a lot of ways that Anthropic could help, basically maybe save the world, around the time that we’re first building AGI.",
+    "time_seconds": null
+   }
+  }
+ },
+ {
+  "id": "2026-11-13-ade16d9093",
+  "source": "80000-hours",
+  "title": "How the New Congress Can Save Us From AI Disaster | Rob Wiblin",
+  "date": "2026-11-13",
+  "transcript_chars": 24308,
+  "kept_chars": 24308,
+  "cut": "no",
+  "publisher_quality": "yes",
+  "digest_brief": {
+   "about": "We now know the makeup of Congress for what may turn out to be the two most important years in AI’s development. Democrats won big and AI was maybe the fourth or fifth biggest driver of the backlash. So is strong and smart AI legislation…",
+   "hook": "What was said about CAISSI",
+   "points": [
+    "There are at least four ways Congress can make progress right away, even with a veto hanging over it.",
+    "To give companies less reason to pass off capabilities work as alignment work, the rules could require that any work conducted with the help of more recent models has…",
+    "That means it’s incredibly valuable for Congress and the executive to get more transparency into AI companies."
+   ],
+   "quote": null
+  }
+ }
+]

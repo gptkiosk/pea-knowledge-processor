@@ -1,0 +1,501 @@
+{
+ "format": "pea-knowledge-topics",
+ "about": "The controlled vocabulary of topics. Published as `topics` in store.json. An id never changes once published; a topic is added at the end.",
+ "topics": [
+  {
+   "id": "technology",
+   "label": "Technology",
+   "synonyms": [
+    "tech",
+    "technology",
+    "gadgets",
+    "computers",
+    "hardware",
+    "chips",
+    "the internet",
+    "devices",
+    "robots"
+   ],
+   "description": "The technology industry, its companies, hardware, chips, devices and the internet."
+  },
+  {
+   "id": "ai",
+   "label": "Artificial intelligence",
+   "synonyms": [
+    "ai",
+    "artificial intelligence",
+    "machine learning",
+    "chatbots",
+    "language models",
+    "llms",
+    "agi",
+    "robots"
+   ],
+   "description": "AI models, the labs that build them, what they can do, and AI safety."
+  },
+  {
+   "id": "software-engineering",
+   "label": "Software engineering",
+   "synonyms": [
+    "software",
+    "programming",
+    "coding",
+    "code",
+    "developers",
+    "python",
+    "open source",
+    "engineering",
+    "web development"
+   ],
+   "description": "Writing and running software: languages, tools, libraries, open source and systems."
+  },
+  {
+   "id": "security-privacy",
+   "label": "Security and privacy",
+   "synonyms": [
+    "security",
+    "cybersecurity",
+    "hacking",
+    "hackers",
+    "privacy",
+    "surveillance",
+    "breaches",
+    "scams",
+    "cybercrime"
+   ],
+   "description": "Hacking, breaches, online crime, surveillance, and keeping data and people safe."
+  },
+  {
+   "id": "science",
+   "label": "Science",
+   "synonyms": [
+    "science",
+    "physics",
+    "biology",
+    "chemistry",
+    "space",
+    "math",
+    "mathematics",
+    "research",
+    "astronomy",
+    "neuroscience"
+   ],
+   "description": "Physics, biology, mathematics, space and how research finds things out."
+  },
+  {
+   "id": "health",
+   "label": "Health",
+   "synonyms": [
+    "health",
+    "medicine",
+    "medical",
+    "disease",
+    "doctors",
+    "longevity",
+    "aging",
+    "healthcare",
+    "the body",
+    "the brain"
+   ],
+   "description": "Medicine, disease, the body and the brain, longevity and health care."
+  },
+  {
+   "id": "wellness",
+   "label": "Wellness",
+   "synonyms": [
+    "wellness",
+    "wellbeing",
+    "self care",
+    "sleep",
+    "stress",
+    "mindfulness",
+    "meditation",
+    "relaxation",
+    "healthy living"
+   ],
+   "description": "Everyday wellbeing: sleep, stress, rest, mindfulness and healthy routines."
+  },
+  {
+   "id": "supplements-nutrition",
+   "label": "Supplements and nutrition",
+   "synonyms": [
+    "supplements",
+    "vitamins",
+    "nutrition",
+    "diet",
+    "food",
+    "eating",
+    "fasting",
+    "protein",
+    "healthy eating"
+   ],
+   "description": "What people eat and take: diet, nutrients, vitamins, supplements and fasting."
+  },
+  {
+   "id": "fitness",
+   "label": "Fitness",
+   "synonyms": [
+    "fitness",
+    "exercise",
+    "working out",
+    "workouts",
+    "training",
+    "the gym",
+    "strength",
+    "running",
+    "cardio"
+   ],
+   "description": "Exercise and training: strength, cardio, endurance and staying in shape."
+  },
+  {
+   "id": "mental-health",
+   "label": "Mental health",
+   "synonyms": [
+    "mental health",
+    "psychology",
+    "therapy",
+    "anxiety",
+    "depression",
+    "trauma",
+    "addiction",
+    "stress",
+    "mindfulness",
+    "emotions"
+   ],
+   "description": "The mind and its troubles: psychology, therapy, anxiety, depression, trauma and addiction."
+  },
+  {
+   "id": "politics",
+   "label": "Politics",
+   "synonyms": [
+    "politics",
+    "political",
+    "elections",
+    "government",
+    "democracy",
+    "congress",
+    "parliament",
+    "politicians",
+    "washington"
+   ],
+   "description": "Elections, parties, governments and the people who run for and hold office."
+  },
+  {
+   "id": "policy-law",
+   "label": "Policy and law",
+   "synonyms": [
+    "policy",
+    "law",
+    "legal",
+    "regulation",
+    "courts",
+    "lawsuits",
+    "government",
+    "rules",
+    "legislation",
+    "rights"
+   ],
+   "description": "Laws, regulation, courts and public policy, and how the rules get made."
+  },
+  {
+   "id": "world-news",
+   "label": "World news",
+   "synonyms": [
+    "news",
+    "world news",
+    "current events",
+    "world affairs",
+    "geopolitics",
+    "war",
+    "foreign policy",
+    "international",
+    "conflict"
+   ],
+   "description": "Wars, diplomacy and what is happening between countries around the world."
+  },
+  {
+   "id": "economics-finance",
+   "label": "Economics and finance",
+   "synonyms": [
+    "money",
+    "economics",
+    "the economy",
+    "finance",
+    "markets",
+    "investing",
+    "stocks",
+    "personal finance",
+    "inflation",
+    "wealth"
+   ],
+   "description": "The economy, markets, banking, investing and personal money matters."
+  },
+  {
+   "id": "business",
+   "label": "Business",
+   "synonyms": [
+    "business",
+    "companies",
+    "strategy",
+    "marketing",
+    "sales",
+    "brands",
+    "industry",
+    "commerce",
+    "entrepreneurs"
+   ],
+   "description": "How companies are run and compete: strategy, marketing, sales, deals and results."
+  },
+  {
+   "id": "startups-investing",
+   "label": "Startups and investing",
+   "synonyms": [
+    "startups",
+    "founders",
+    "venture capital",
+    "vc",
+    "fundraising",
+    "investing",
+    "entrepreneurship",
+    "entrepreneurs",
+    "funding"
+   ],
+   "description": "Starting companies and funding them: founders, venture capital and fundraising."
+  },
+  {
+   "id": "leadership-management",
+   "label": "Leadership and management",
+   "synonyms": [
+    "leadership",
+    "management",
+    "leading",
+    "managing",
+    "managers",
+    "teams",
+    "bosses",
+    "company culture",
+    "hiring"
+   ],
+   "description": "Leading people and running teams: management, culture, hiring and hard decisions."
+  },
+  {
+   "id": "careers-work",
+   "label": "Careers and work",
+   "synonyms": [
+    "careers",
+    "career",
+    "work",
+    "jobs",
+    "job hunting",
+    "the workplace",
+    "remote work",
+    "salary",
+    "hiring",
+    "professional life"
+   ],
+   "description": "Working life: careers, jobs, the workplace, pay and how work is changing."
+  },
+  {
+   "id": "religion-spirituality",
+   "label": "Religion and spirituality",
+   "synonyms": [
+    "religion",
+    "faith",
+    "spirituality",
+    "god",
+    "church",
+    "christianity",
+    "islam",
+    "judaism",
+    "buddhism",
+    "prayer",
+    "meditation"
+   ],
+   "description": "Religions, faith, belief, spiritual practice and the questions they answer."
+  },
+  {
+   "id": "philosophy",
+   "label": "Philosophy",
+   "synonyms": [
+    "philosophy",
+    "ethics",
+    "morality",
+    "meaning",
+    "the meaning of life",
+    "consciousness",
+    "big questions",
+    "stoicism",
+    "deep thoughts"
+   ],
+   "description": "Ethics, meaning, consciousness and the big questions, old and new."
+  },
+  {
+   "id": "history",
+   "label": "History",
+   "synonyms": [
+    "history",
+    "the past",
+    "historical",
+    "ancient history",
+    "world war",
+    "empires",
+    "historians",
+    "how things began"
+   ],
+   "description": "The past: wars, empires, people and events, and how things came to be."
+  },
+  {
+   "id": "culture-media",
+   "label": "Culture and media",
+   "synonyms": [
+    "culture",
+    "pop culture",
+    "entertainment",
+    "movies",
+    "film",
+    "tv",
+    "music",
+    "books",
+    "games",
+    "journalism",
+    "social media",
+    "celebrities"
+   ],
+   "description": "Film, television, music, books, games, journalism, social media and the people in them."
+  },
+  {
+   "id": "education",
+   "label": "Education",
+   "synonyms": [
+    "education",
+    "school",
+    "schools",
+    "college",
+    "university",
+    "teaching",
+    "learning",
+    "students",
+    "teachers",
+    "studying"
+   ],
+   "description": "Schools, universities, teaching and how people learn."
+  },
+  {
+   "id": "relationships-family",
+   "label": "Relationships and family",
+   "synonyms": [
+    "relationships",
+    "family",
+    "parenting",
+    "kids",
+    "children",
+    "marriage",
+    "dating",
+    "love",
+    "friendship",
+    "parents"
+   ],
+   "description": "Love, marriage, dating, friendship, parenting and family life."
+  },
+  {
+   "id": "creativity-writing",
+   "label": "Creativity and writing",
+   "synonyms": [
+    "creativity",
+    "writing",
+    "writers",
+    "storytelling",
+    "art",
+    "design",
+    "creative work",
+    "poetry",
+    "authors"
+   ],
+   "description": "Making things: writing, storytelling, art, design and the creative process."
+  },
+  {
+   "id": "sports",
+   "label": "Sports",
+   "synonyms": [
+    "sports",
+    "sport",
+    "football",
+    "soccer",
+    "basketball",
+    "baseball",
+    "athletes",
+    "the olympics",
+    "tennis",
+    "racing",
+    "fighting"
+   ],
+   "description": "Sports, athletes, teams, competition and coaching."
+  },
+  {
+   "id": "environment-climate",
+   "label": "Environment and climate",
+   "synonyms": [
+    "climate",
+    "climate change",
+    "environment",
+    "the environment",
+    "energy",
+    "nature",
+    "sustainability",
+    "green",
+    "pollution",
+    "wildlife"
+   ],
+   "description": "Climate change, energy, nature and looking after the planet."
+  },
+  {
+   "id": "crypto",
+   "label": "Crypto",
+   "synonyms": [
+    "crypto",
+    "cryptocurrency",
+    "bitcoin",
+    "blockchain",
+    "ethereum",
+    "web3",
+    "stablecoins",
+    "digital money"
+   ],
+   "description": "Bitcoin, blockchains, stablecoins and the crypto industry."
+  },
+  {
+   "id": "self-improvement",
+   "label": "Self-improvement",
+   "synonyms": [
+    "self improvement",
+    "self help",
+    "personal growth",
+    "personal development",
+    "habits",
+    "productivity",
+    "motivation",
+    "mindset",
+    "success",
+    "discipline",
+    "happiness"
+   ],
+   "description": "Getting better at life: habits, discipline, motivation, mindset and purpose."
+  },
+  {
+   "id": "podcasting-media",
+   "label": "Podcasting and audio",
+   "synonyms": [
+    "podcasting",
+    "podcasts",
+    "podcast industry",
+    "audio",
+    "radio",
+    "making a podcast",
+    "broadcasting",
+    "rss",
+    "creators"
+   ],
+   "description": "The podcast and audio business: making shows, apps, hosting, standards and money."
+  }
+ ]
+}

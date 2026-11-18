@@ -1,8 +1,15 @@
 {
   "format": "pea-knowledge-items",
-  "format_version": "1.2",
+  "format_version": "1.3",
   "items": [
     {
+      "brief": {
+        "bytes": 2238,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/tide-tables/2026-11-12-49be7f43a2.brief.json",
+        "sha256": "a5ac35cfcf265f55c1b3d8c96c7c513fdc9c37f9af15cfba25fd73182e358096"
+      },
       "bytes": 14768,
       "date": "2026-11-12",
       "digest": {
@@ -11,7 +18,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-12-49be7f43a2.digest.json",
-        "sha256": "20162d90ad85af779f3b2f8bc4d2b4d13944f25e837cfc481f2fd3d87060da05"
+        "sha256": "f3779fbd4186ea4a1a2e0dcbde5d01b03bb8d2bda42ad83ad7315a58346bc082"
       },
       "duration_seconds": 518,
       "id": "2026-11-12-49be7f43a2",
@@ -44,6 +51,13 @@
       }
     },
     {
+      "brief": {
+        "bytes": 2219,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/tide-tables/2026-11-11-90db1628c6.brief.json",
+        "sha256": "1ddd9a2c69ab29b59a653949b3f5ded21c86729bb279a8c483591a42768f2afc"
+      },
       "bytes": 14875,
       "date": "2026-11-11",
       "digest": {
@@ -52,7 +66,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-11-90db1628c6.digest.json",
-        "sha256": "2bf67998223ba3e8de901cfb08ceb542204a9daa69dbb9513923cf173c1ff4ce"
+        "sha256": "d880e6b79343a6bd163f226e41aac199a5a09568eea4fa6676f1517b99f3eabe"
       },
       "duration_seconds": 518,
       "id": "2026-11-11-90db1628c6",
@@ -85,6 +99,13 @@
       }
     },
     {
+      "brief": {
+        "bytes": 2235,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/tide-tables/2026-11-10-bbf6b9d195.brief.json",
+        "sha256": "cf79cc91c2807a470d49ef18ed544f2cadb96a62dc9eb5e7422be85c1d17d993"
+      },
       "bytes": 14412,
       "date": "2026-11-10",
       "digest": {
@@ -93,7 +114,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-10-bbf6b9d195.digest.json",
-        "sha256": "c494eba39dab1804947f990a0a7bbee167f66e15a760e1eb50a8d58f2b731cd2"
+        "sha256": "8d2e9c1b1cb0147d8384fa16dc3faa514ad38a811b347ae2108f4f8fc57eeec2"
       },
       "duration_seconds": null,
       "id": "2026-11-10-bbf6b9d195",
@@ -126,6 +147,13 @@
       }
     },
     {
+      "brief": {
+        "bytes": 2283,
+        "covers": "whole",
+        "kind": "extractive",
+        "path": "sources/tide-tables/2026-11-07-420826b378.brief.json",
+        "sha256": "06bf909d263932ca59ce997eb5ecc6414fc08760f124227d931e6c5a60319f25"
+      },
       "bytes": 14806,
       "date": "2026-11-07",
       "digest": {
@@ -134,7 +162,7 @@
         "grade": "full",
         "method": "extractive",
         "path": "sources/tide-tables/2026-11-07-420826b378.digest.json",
-        "sha256": "a1c1af8a07ae6edc8425a98f9c77d8fe3eaca6263dad38a52719ea32bcec70ef"
+        "sha256": "11b2c947798e1bbdc0b1871250faaf818ce205896e490cd0d59c416761b83513"
       },
       "duration_seconds": 518,
       "id": "2026-11-07-420826b378",

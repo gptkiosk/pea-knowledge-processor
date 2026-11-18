@@ -400,6 +400,48 @@
               "keywords",
               "model"
             ]
+          },
+          "brief": {
+            "description": "Since 1.3, optional: the item's brief file and its kind (repeated from the file). Its size is not counted in `bytes`, so a 1.2 reader's check of `bytes` still holds.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "bytes",
+              "kind",
+              "covers"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^sources/[a-z0-9][a-z0-9-]{0,63}/[a-z0-9][a-z0-9-]{0,63}\\.brief\\.json$",
+                "maxLength": 200
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8000
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "model",
+                  "extractive"
+                ]
+              },
+              "covers": {
+                "type": "string",
+                "enum": [
+                  "whole",
+                  "partial"
+                ]
+              }
+            }
           }
         }
       }

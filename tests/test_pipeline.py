@@ -92,11 +92,15 @@ class OneRun(Base):
         """The first run of this version finds an output written by 0.1.0: no link_kind, none of the 1.1 members."""
         support.run(self.out)
         for path, data in support.tree(self.out).items():
+            if path.endswith(".brief.json"):   # 1.0 had no briefs (1.3)
+                os.remove(os.path.join(self.out, *path.split("/")))
+                continue
             if path.endswith(".json") and path not in ("health.json",):
                 value = json.loads(data)
                 value["format_version"] = "1.0"
+                value.pop("briefs", None)
                 for item in value.get("items", []) if isinstance(value.get("items"), list) else []:
-                    for key in ("link_kind", "transcript_source", "topics", "topics_by"):
+                    for key in ("link_kind", "transcript_source", "topics", "topics_by", "brief"):
                         item.pop(key, None)
                 if path == "store.json":   # 1.0 had no vocabulary of topics
                     value.pop("topics")
@@ -131,9 +135,11 @@ class OneRun(Base):
                     listing["avg_bytes"] = sum(i["bytes"] for i in index["items"]) // len(index["items"])
             with open(os.path.join(self.out, "store.json"), "w", encoding="utf-8") as f:
                 f.write(js.dumps(store))
-        self.assertEqual(self.codes(), [], "a 1.0 output is valid for a reader of 1.2")
+        self.assertEqual(self.codes(), [], "a 1.0 output is valid for a reader of 1.3")
         health = support.run(self.out, LATER)
         self.assertEqual(self.codes(), [])
+        self.assertTrue(all(i["brief"]["kind"] == "extractive" for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)),
+                        "an item kept from an output without briefs gets an extractive one")
         self.assertTrue(all("link_kind" in i and "topics" in i for sid in ("harbor-voices", "tide-tables") for i in support.items(self.out, sid)))
         self.assertEqual(health["totals"]["items"], 20)
 
@@ -266,6 +272,8 @@ class OneRun(Base):
         args = ["--config", support.CONFIG]
         self.assertEqual(cli.main(["fetch", *args, "--work", work, "--offline-fixtures", support.WEB, "--now", "2026-11-14T12:00:00Z"]), 0)
         self.assertEqual(cli.main(["digest", *args, "--work", work]), 0)
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(cli.main(["briefs", *args, "--work", work]), 0)   # no key: writes nothing, the build makes extractive briefs
         summary = os.path.join(self.base, "summary.md")
         self.assertEqual(cli.main(["build", *args, "--work", work, "--out", self.out, "--summary", summary]), 0)
         other = os.path.join(self.base, "other")

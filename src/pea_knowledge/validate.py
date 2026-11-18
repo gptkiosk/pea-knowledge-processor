@@ -11,7 +11,7 @@ import json
 import os
 import re
 
-from . import FORMAT_MAJOR, FORMAT_MINOR, digest as dg, jsonschema_lite, textrules, topics as tp
+from . import FORMAT_MAJOR, FORMAT_MINOR, brief as br, digest as dg, jsonschema_lite, textrules, topics as tp
 from .fetch import validate_url
 from .transcript import pea_transcript as pt
 
@@ -20,6 +20,7 @@ ITEMS_BYTES = 512_000
 HEALTH_BYTES = 512_000
 TRANSCRIPT_BYTES = 1_000_000
 DIGEST_BYTES = dg.DIGEST_BYTES
+BRIEF_BYTES = br.BRIEF_BYTES
 
 CODES = (
     "missing",               # a file that must be there is not
@@ -34,7 +35,7 @@ CODES = (
     "hash_mismatch",         # the bytes differ from the SHA-256 the index states
     "identity_mismatch",     # a file says it is something other than what the index says
     "inconsistent",          # members that contradict one another
-    "brief_too_long",        # the brief form is over its limit
+    "brief_too_long",        # the brief form of a digest, or a brief file (1.3), is over its limit
     "transcript_invalid",    # not a conforming PEA transcript v1 file
     "unlisted_file",         # a file in the folder that no index names
 )
@@ -186,6 +187,9 @@ def check_items(data, listing, topics=None):
             size += t["file"]["bytes"]
             if t["file"]["path"] != "sources/%s/%s.transcript.pea.txt" % (sid, item["id"]):
                 problems.append(Problem("path_invalid", at, "the transcript is not where it belongs"))
+        b = item.get("brief")
+        if b is not None and b["path"] != "sources/%s/%s.brief.json" % (sid, item["id"]):
+            problems.append(Problem("path_invalid", at, "the brief is not where it belongs"))
         if item["bytes"] != size:
             problems.append(Problem("inconsistent", at, "bytes is not the size of the item's files"))
         fits = {"yes": t["reason"] is None and t["file"] is not None, "partial": t["reason"] == "cut" and t["file"] is not None,
@@ -284,6 +288,44 @@ def check_digest(data, listing, item, transcript=None, transcript_sha256=None):
     return (None if problems else d), problems
 
 
+def check_brief(data, listing, item, topics=None, transcript=None):
+    """An item's brief file (format 1.3), against its entry in the items file. `topics` is the vocabulary of the
+    store.json (None skips that check). With the transcript (only where the output carries it), every ref must name a
+    line of it and every quote must be in it word for word."""
+    ref = item["brief"]
+    where = ref["path"]
+    problems = check_file(data, ref, where)
+    if problems:
+        return None, problems
+    b, problems = read_json(data, "brief", where, BRIEF_BYTES)
+    if b is None:
+        return None, problems
+    same = (("source_id", listing["id"]), ("source_name", listing["name"]), ("item_id", item["id"]), ("title", item["title"]), ("date", item["date"]),
+            ("link", item["link"]), ("brief_kind", ref["kind"]), ("covers", ref["covers"]))
+    for key, expected in same:
+        if b[key] != expected:
+            problems.append(Problem("identity_mismatch", "%s.%s" % (where, key), "differs from the index"))
+    size = br.visible_chars(b)
+    if size > br.VISIBLE_CHARS:
+        problems.append(Problem("brief_too_long", where, "%d visible characters, the limit is %d" % (size, br.VISIBLE_CHARS)))
+    if (b["brief_kind"] == "model") != (b["model"] is not None):
+        problems.append(Problem("inconsistent", where + ".model", "brief_kind and model disagree"))
+    if b["brief_kind"] == "model" and (len(b["claims"]) < br.CLAIMS_MIN or any(c["ref"] is None for c in b["claims"]) or b["new"] is None):
+        problems.append(Problem("inconsistent", where + ".claims", "a model brief has at least %d claims, each with a ref, and says what is new" % br.CLAIMS_MIN))
+    if (b["covers"] == "whole") != (b["covers_note"] is None):
+        problems.append(Problem("inconsistent", where + ".covers_note", "a partial brief says what it covers, a whole one has no note"))
+    if topics is not None and any(t not in {x["id"] for x in topics} for t in b["topics"]):
+        problems.append(Problem("inconsistent", where + ".topics", "a topic is not in the vocabulary"))
+    if transcript is not None:
+        refs = {r for r, _, _, _ in br.lines_of(transcript)} | {br.ref_of_segment(s, n) for n, s in enumerate(transcript.segments)}
+        body = br.norm(" ".join(s.text for s in transcript.segments))
+        if any(c["ref"] is not None and c["ref"] not in refs for c in b["claims"]) or any(q["time"] not in refs for q in b["quotes"]):
+            problems.append(Problem("inconsistent", where, "a ref names no line of the transcript"))
+        if any(br.norm(q["text"]) not in body for q in b["quotes"]):
+            problems.append(Problem("inconsistent", where + ".quotes", "a quote is not in the transcript word for word"))
+    return (None if problems else b), problems
+
+
 class Report:
     def __init__(self):
         self.problems, self.files, self.bytes, self.sources, self.items = [], 0, 0, 0, 0
@@ -342,6 +384,16 @@ def check_source_folder(folder, listing, report=None, topics=None):
                     problems += found
                     report.files += 1
                     report.bytes += len(data)
+                if item.get("brief") is not None:
+                    listed.add(item["brief"]["path"])
+                    data = _read(folder, item["brief"]["path"])
+                    if data is None:
+                        problems.append(Problem("missing", item["brief"]["path"], "the brief is not there"))
+                    else:
+                        _, found = check_brief(data, listing, item, topics, transcript)
+                        problems += found
+                        report.files += 1
+                        report.bytes += len(data)
     base = os.path.join(folder, "sources", listing["id"])
     if os.path.isdir(base):
         for name in sorted(os.listdir(base)):

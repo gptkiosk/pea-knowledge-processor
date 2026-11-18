@@ -267,7 +267,7 @@ class InTheOutput(unittest.TestCase):
     def test_the_vocabulary_the_sources_and_every_item_carry_topics(self):
         support.run(self.out)
         store = support.store(self.out)
-        self.assertEqual(store["format_version"], "1.2")
+        self.assertEqual(store["format_version"], "1.3")
         self.assertEqual(store["topics"], topics.Tagger().topics)
         known = {t["id"] for t in store["topics"]}
         self.assertEqual(support.listing(self.out, "tide-tables")["topics"], ["history", "environment-climate"])
