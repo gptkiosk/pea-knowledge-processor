@@ -709,6 +709,9 @@ def brief_stage(config, work, previous=None, environment=None, log=print, limit=
     if use_model:
         log("briefs: %(calls)d calls, %(written)d written, %(cached)d cached, %(retried)d retried, %(fell_back)d fell back, "
             "%(skipped_for_budget)d over the cap, %(run_cents).4f US cents (month %(month_cents).4f)" % state["briefs"])
+        if report.seconds:
+            took = sorted(report.seconds)
+            log("briefs: seconds per call: fastest %.1f, median %.1f, slowest %.1f" % (took[0], took[len(took) // 2], took[-1]))
     return state["briefs"]
 
 
