@@ -99,6 +99,8 @@ jobs:
   publish:
     name: Build, check and publish
     needs: digest
+    # First real brief run (branch only): build and validate, publish only from main.
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
