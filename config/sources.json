@@ -34,14 +34,14 @@
     "max_output_tokens": 4000,
     "chunk_chars": 60000,
     "max_chunks": 4,
-    "max_calls_per_run": 60,
+    "max_calls_per_run": 40,
     "upgrade_per_run": 12,
     "price_per_million_input_usd": 0.1,
     "price_per_million_output_usd": 0.5
   },
   "brief_budget": {
     "monthly_cents": 200,
-    "per_run_cents": 100
+    "per_run_cents": 25
   },
   "sources": [
     {
