@@ -66,6 +66,8 @@ class Golden(unittest.TestCase):
                 data = f.read()
             if case["kind"] == "store":
                 value, problems = validate.check_store(data)
+            elif case["kind"] == "briefs-index":
+                value, problems = validate.check_briefs_index(data, support.store(DIST), {s["id"]: {"items": support.items(DIST, s["id"])} for s in support.store(DIST)["sources"] if s["items_file"]})
             elif case["kind"] == "brief":
                 value, problems = validate.read_json(data, "brief", name, validate.BRIEF_BYTES)
                 if value is not None and br.visible_chars(value) > br.VISIBLE_CHARS:
@@ -81,14 +83,16 @@ class Golden(unittest.TestCase):
                 self.assertIsNone(value, name)
                 self.assertIn(case["expect"], {p.code for p in problems}, "%s gave %s" % (name, problems[:2]))
         self.assertEqual({c["expect"] for c in manifest.values()},
-                         {"ok", "text_rule", "schema", "inconsistent", "path_invalid", "address", "unsupported_version", "not_json", "brief_too_long"})
+                         {"ok", "text_rule", "schema", "inconsistent", "path_invalid", "address", "unsupported_version", "not_json", "brief_too_long", "missing", "identity_mismatch"})
 
     def test_the_hostile_samples_are_the_ones_the_generator_writes(self):
         paused = json.loads(self.states["05-paused-by-the-curator"]["store.json"])
         item = support.items(self.out, "tide-tables")[0]
         with open(os.path.join(self.out, *item["brief"]["path"].split("/")), encoding="utf-8") as f:
             brief = json.load(f)
-        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"]), support.store(self.out), brief):
+        with open(os.path.join(self.out, "briefs-index.json"), encoding="utf-8") as f:
+            index = json.load(f)
+        for name, kind, text, code in make_golden.hostile(paused, support.digest_of(self.out, "tide-tables", item["id"]), support.store(self.out), brief, index):
             with open(os.path.join(support.GOLDEN, "hostile", "%s.%s.json" % (name, kind)), encoding="utf-8", newline="") as f:
                 self.assertEqual(f.read(), text, "%s: %s" % (name, REMAKE))
 
@@ -143,7 +147,8 @@ class Golden(unittest.TestCase):
         self.assertEqual(codes(lambda f: os.makedirs(os.path.join(f, "sources", "stranger"))), ["unlisted_file"])
         self.assertEqual(codes(lambda f: os.remove(os.path.join(f, "store.json"))), ["missing"])
         self.assertEqual(codes(edit("store.json", b'"item_count": 4', b'"item_count": 3')), ["inconsistent"])
-        self.assertEqual(codes(edit("sources/tide-tables/items.json", b'"stale": false', b'"stale": true ')), ["hash_mismatch", "unlisted_file"])
+        self.assertEqual(codes(edit("sources/tide-tables/items.json", b'"stale": false', b'"stale": true ')), ["hash_mismatch", "missing", "unlisted_file"],
+                         "an items file that is refused takes its briefs with it, so the briefs index names briefs that are not listed")
         self.assertEqual(codes(lambda f: open(os.path.join(f, "store.json"), "ab").write(b" " * 600_000)), ["too_large"])
 
     def test_a_digest_is_checked_against_the_index_and_the_transcript(self):

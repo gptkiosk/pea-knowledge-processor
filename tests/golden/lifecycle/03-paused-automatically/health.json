@@ -30,7 +30,7 @@
   "generated_at": "2026-11-15T06:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "mode": "offline",
   "model": {
@@ -237,7 +237,7 @@
     }
   ],
   "totals": {
-    "bytes": 151592,
+    "bytes": 154648,
     "items": 9,
     "requests": 12,
     "sources": 5

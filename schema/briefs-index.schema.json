@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pea-knowledge:v1:briefs-index",
+  "title": "Index of the briefs (briefs-index.json)",
+  "description": "Format 1.3, additive: the shows the output holds briefs for, how many, and the newest briefs of each and overall. Made from the items files; nothing in it that they do not say. See docs/FORMAT.md section 13.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "generated_at",
+    "shows",
+    "latest_overall"
+  ],
+  "properties": {
+    "format": {
+      "const": "pea-knowledge-briefs-index"
+    },
+    "format_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d{1,4}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "description": "The generated_at of the store.json it was made with."
+    },
+    "shows": {
+      "type": "array",
+      "maxItems": 60,
+      "description": "Every source with at least one brief, newest first.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "brief_count",
+          "latest"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "description": "The source id in store.json."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The source's name, as in store.json."
+          },
+          "kind": {
+            "enum": [
+              "podcast",
+              "news"
+            ],
+            "description": "The source's kind, as in store.json."
+          },
+          "brief_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500,
+            "description": "How many listed items of the source have a brief."
+          },
+          "latest": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "item_id",
+                "title",
+                "date",
+                "method",
+                "partial"
+              ],
+              "properties": {
+                "item_id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                  "description": "The item's id in its source's items.json. Its brief is at sources/<show>/<item_id>.brief.json."
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120,
+                  "description": "The item's title, shortened to 120 characters."
+                },
+                "date": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+                  "description": "The item's date."
+                },
+                "method": {
+                  "enum": [
+                    "model",
+                    "extractive"
+                  ],
+                  "description": "The brief's kind: written by a model and checked, or built from the digest."
+                },
+                "partial": {
+                  "type": "boolean",
+                  "description": "True when the brief covers only part of the item (the brief's covers is partial)."
+                }
+              }
+            },
+            "description": "Its newest briefs, newest first, at most five."
+          }
+        }
+      }
+    },
+    "latest_overall": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "show_id",
+          "item_id",
+          "title",
+          "date",
+          "method",
+          "partial"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "description": "The item's id in its source's items.json. Its brief is at sources/<show>/<item_id>.brief.json."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "The item's title, shortened to 120 characters."
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+            "description": "The item's date."
+          },
+          "method": {
+            "enum": [
+              "model",
+              "extractive"
+            ],
+            "description": "The brief's kind: written by a model and checked, or built from the digest."
+          },
+          "partial": {
+            "type": "boolean",
+            "description": "True when the brief covers only part of the item (the brief's covers is partial)."
+          },
+          "show_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "description": "The show (source id) the brief belongs to."
+          }
+        }
+      },
+      "description": "The newest briefs across every show, newest first, at most twelve."
+    }
+  }
+}

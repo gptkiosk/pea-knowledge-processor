@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 (2026-11-19)
+
+The app was asked for "three across three different podcasts" and said it had only two podcast briefs, then found two from a third show: it counted whatever few briefs happened to be in its prompt. This release publishes the list it should count from.
+
+- **`briefs-index.json`** (format 1.3, additive; `src/pea_knowledge/briefs_index.py`, `schema/briefs-index.schema.json`, docs/FORMAT.md section 13, docs/APP-CONTRACT.md section 10): `generated_at` (that of `store.json`), `shows[]` (id, name, kind, `brief_count`, `latest`: the newest five briefs with `item_id`, `title` cut to 120, `date`, `method` model or extractive, `partial`), and `latest_overall` (the twelve newest across shows, with `show_id`). Sorted and deterministic, written compact (the one file without indent): about 11 KB for today's fourteen sources. Nothing in it that the items files do not say.
+- **Build** writes it after the items files, from them. **Validate** checks it when present (optional, so an output of 0.6.0 still validates): schema and text rules, at most 32,000 bytes, `generated_at` that of `store.json`, every named brief listed (`missing`), and equal to the index made again from the items files (`inconsistent`). **Restore** fetches it when it is published.
+- Generator 0.7.0, so every source's feed is read once more; items are not made again.
+- Tests: `tests/test_briefs_index.py` (the offline fixture run writes an index the validator accepts; same bytes for the same output; tampered counts, titles, kinds, order, a brief that is not listed, another run's time, oversize; cut titles and order; fourteen sources under 15 KB; restore with and without one). Golden files regenerated, with nine `index-*` hostile samples checked against `golden/dist`.
+
 ## 0.6.0 (2026-11-17)
 
 Phase 2 of the briefs plan (stateless talk on current information): a short brief per item that the app can search on the phone.

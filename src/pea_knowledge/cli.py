@@ -180,6 +180,11 @@ def cmd_restore(args):
                             pipeline.write(os.path.join(args.out, *file["path"].split("/")), data)
         for name in ("state.json", "health.json"):
             pipeline.write(os.path.join(args.out, name), get(name, validate.HEALTH_BYTES))
+        try:   # the briefs index (1.3) is made anew by every build; an output of 0.6.0 has none
+            pipeline.write(os.path.join(args.out, "briefs-index.json"), get("briefs-index.json", validate.INDEX_BYTES))
+        except fetch.FetchError as e:
+            if e.code != "not_found":
+                raise
     except fetch.FetchError as e:
         _log("the published output could not be read in full: %s" % e)
         return 2

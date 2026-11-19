@@ -1,5 +1,5 @@
 {
- "about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest or a brief.",
+ "about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest, a brief, or briefs-index.json (checked against golden/dist).",
  "files": {
   "a-web-page.store.json": {
    "expect": "not_json",
@@ -92,6 +92,42 @@
   "empty.store.json": {
    "expect": "not_json",
    "kind": "store"
+  },
+  "index-as-it-should-be.briefs-index.json": {
+   "expect": "ok",
+   "kind": "briefs-index"
+  },
+  "index-count-that-is-not-the-briefs.briefs-index.json": {
+   "expect": "inconsistent",
+   "kind": "briefs-index"
+  },
+  "index-from-another-run.briefs-index.json": {
+   "expect": "identity_mismatch",
+   "kind": "briefs-index"
+  },
+  "index-names-a-brief-that-is-not-listed.briefs-index.json": {
+   "expect": "missing",
+   "kind": "briefs-index"
+  },
+  "index-newer-minor-with-a-new-member.briefs-index.json": {
+   "expect": "ok",
+   "kind": "briefs-index"
+  },
+  "index-same-minor-with-a-new-member.briefs-index.json": {
+   "expect": "schema",
+   "kind": "briefs-index"
+  },
+  "index-show-left-out.briefs-index.json": {
+   "expect": "inconsistent",
+   "kind": "briefs-index"
+  },
+  "index-title-with-a-link.briefs-index.json": {
+   "expect": "text_rule",
+   "kind": "briefs-index"
+  },
+  "index-unknown-method.briefs-index.json": {
+   "expect": "schema",
+   "kind": "briefs-index"
   },
   "items-path-of-another-source.store.json": {
    "expect": "path_invalid",
