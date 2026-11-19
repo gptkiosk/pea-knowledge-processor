@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """PEA knowledge processor: a curated list of sources in, one fixed and validated format out."""
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 GENERATOR_NAME = "pea-knowledge-processor"
 REPOSITORY_URL = "https://github.com/gptkiosk/pea-knowledge-processor"

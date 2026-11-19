@@ -1,0 +1,48 @@
+{
+  "brief_kind": "model",
+  "claims": [
+    {
+      "ref": "00:00:00",
+      "text": "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc."
+    },
+    {
+      "ref": "00:00:00",
+      "text": "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc."
+    },
+    {
+      "ref": "00:00:00",
+      "text": "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc."
+    },
+    {
+      "ref": "00:00:00",
+      "text": "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-12",
+  "entities": [],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.",
+  "item_id": "2026-11-12-8a5b8d3d14",
+  "keywords": [],
+  "link": "https://harbor.example.org/e/2026-11-12",
+  "model": "anthropic/claude-haiku-5.5",
+  "new": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.",
+  "quotes": [
+    {
+      "speaker": "Tobias Renn",
+      "text": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq.",
+      "time": "00:02:34"
+    }
+  ],
+  "source_id": "harbor-voices",
+  "source_name": "Harbor Voices",
+  "title": "Who counts the ships at Grey Point?",
+  "topics": [
+    "maritime",
+    "local-government"
+  ],
+  "transcript_sha256": "e2dee19db172242ba32de18565ad21dbe3fd7930a0b67c0702e5b226fde123c7"
+}

@@ -26,12 +26,12 @@ import os
 import re
 import time
 
-from . import FORMAT_VERSION, digest as dg, jsonschema_lite, model_digest, textrules
+from . import FORMAT_VERSION, contract, digest as dg, jsonschema_lite, model_digest, textrules
 from .transcript import pea_transcript as pt
 
 KEY_VARIABLE = model_digest.KEY_VARIABLE
 KEY_EXPECTED_VARIABLE = "PEA_BRIEFS_KEY_EXPECTED"
-DEFAULT_MODEL = "anthropic/claude-haiku-5.5"  # Haiku 5.5 as OpenRouter is expected to name it; not verified against the live list
+DEFAULT_MODEL = "anthropic/claude-haiku-5.5"  # Haiku 5.5 as OpenRouter names it (id verified by the owner, 2026-11-19)
 WRITER_REVISION = 1
 KINDS = ("model", "extractive")
 VISIBLE_CHARS = 1_800
@@ -323,7 +323,8 @@ def visible_chars(b):
 
 
 def _text_ok(value, limit):
-    return isinstance(value, str) and 0 < len(value) <= limit and textrules.check(value) is None and not textrules.looks_like_instruction(value)
+    """Plain text a brief may carry: the format's text rules and the contract's (no markup, no app label, no instruction)."""
+    return isinstance(value, str) and 0 < len(value) <= limit and textrules.check(value) is None and contract.text_reason(value) is None
 
 
 def _name_parts(name):
@@ -533,6 +534,8 @@ def extractive(d, topic_ids=()):
     headline = textrules.first_sentences(d["about"], HEADLINE_CHARS, most=1) if d.get("about") else ""
     if not _text_ok(headline, HEADLINE_CHARS):
         headline = textrules.shorten(d["title"], HEADLINE_CHARS)
+    if not _text_ok(headline, HEADLINE_CHARS):   # the contract: a headline is always there and always plain
+        headline = "An episode from %s." % d["date"]
     claims = []
     for p in d.get("talking_points", [])[:CLAIMS_MAX]:
         text = textrules.shorten(p["point"], CLAIM_CHARS)
@@ -557,6 +560,8 @@ def extractive(d, topic_ids=()):
     b = {"headline": headline, "claims": claims, "new": None, "quotes": quotes, "topics": list(topic_ids)[:TOPICS_MAX],
          "keywords": [k for k in dict.fromkeys(keywords) if _text_ok(k, KEYWORD_CHARS)][:KEYWORDS_MAX],
          "entities": [e for e in dict.fromkeys(entities) if _text_ok(e, ENTITY_CHARS)][:ENTITIES_MAX]}
+    if not claims:   # the contract: every brief has at least one claim; with no usable point, the headline is it
+        claims.append({"text": headline, "ref": None})
     for key in ("keywords", "entities", "quotes", "claims"):   # over the cap: the least needed goes first
         while visible_chars(b) > VISIBLE_CHARS and len(b[key]) > (1 if key == "claims" else 0):
             b[key].pop()
@@ -570,12 +575,17 @@ def extractive(d, topic_ids=()):
 
 # --- The file ----------------------------------------------------------------------------------------------------------
 def document(source, item, fields, kind, model, covers, note, transcript_sha256):
-    """The brief file as a dict. What identifies the item never comes from a model."""
-    return {"format": "pea-knowledge-brief", "format_version": FORMAT_VERSION,
+    """The brief file as a dict. What identifies the item never comes from a model. Over the contract's talk size
+    (contract.TALK_CHARS, what the app's block shows of a brief), the quotes give way, the last first."""
+    doc = {"format": "pea-knowledge-brief", "format_version": FORMAT_VERSION,
             "source_id": source["id"], "source_name": source["name"], "item_id": item["id"], "title": item["title"], "date": item["date"],
             "link": item["link"], "brief_kind": kind, "model": model[:80] if model else None, "covers": covers, "covers_note": note,
             "headline": fields["headline"], "claims": fields["claims"], "new": fields["new"], "quotes": fields["quotes"],
             "topics": fields["topics"], "keywords": fields["keywords"], "entities": fields["entities"], "transcript_sha256": transcript_sha256}
+    doc["quotes"] = list(doc["quotes"])
+    while doc["quotes"] and contract.talk_chars(doc) > contract.TALK_CHARS:
+        doc["quotes"].pop()
+    return doc
 
 
 def extractive_file(source, item, digest_dict, topic_ids=()):

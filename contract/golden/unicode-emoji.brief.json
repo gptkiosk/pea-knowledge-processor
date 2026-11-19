@@ -1,0 +1,56 @@
+{
+  "brief_kind": "model",
+  "claims": [
+    {
+      "ref": "00:00:00",
+      "text": "Renn führt das Logbuch seit 32 Jahren – jede Überfahrt über die Barre wird notiert."
+    },
+    {
+      "ref": "00:00:42",
+      "text": "المنارة is what the Arabic-speaking crews call the light, he says, smiling 😀."
+    },
+    {
+      "ref": "00:00:42",
+      "text": "Naïve estimates put the cost at €140 000? No: 150 thousand dollars, he insists."
+    },
+    {
+      "ref": "00:01:38",
+      "text": "港の船の数は去年の冬に64隻でした, twice the year before."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-12",
+  "entities": [
+    "Tobias Renn",
+    "Björk Sigurðardóttir",
+    "山田太郎"
+  ],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "Mara und Tobias Renn sprechen über das Logbuch von Grey Point 📖, 港の灯台, and a family visit 👨‍👩‍👧.",
+  "item_id": "2026-11-12-8a5b8d3d14",
+  "keywords": [
+    "Leuchtturm",
+    "灯台",
+    "écluse"
+  ],
+  "link": "https://harbor.example.org/e/2026-11-12",
+  "model": "anthropic/claude-haiku-5.5",
+  "new": "Neu: die Abstimmung im März — 42 zu 9 — hält die alte Lampe in Betrieb 🕯️.",
+  "quotes": [
+    {
+      "speaker": "Tobias Renn",
+      "text": "Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring.",
+      "time": "00:02:34"
+    }
+  ],
+  "source_id": "harbor-voices",
+  "source_name": "Harbor Voices — Stimmen am Hafen",
+  "title": "Wer zählt die Schiffe? Épisode spéciale 🚢⚓",
+  "topics": [
+    "maritime",
+    "local-government"
+  ],
+  "transcript_sha256": "e2dee19db172242ba32de18565ad21dbe3fd7930a0b67c0702e5b226fde123c7"
+}

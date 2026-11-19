@@ -132,6 +132,12 @@ jobs:
         run: python3 -m pea_knowledge build --config config/sources.json --work work --previous previous --out dist --summary "$GITHUB_STEP_SUMMARY"
       - name: Check the output as an app would
         run: python3 -m pea_knowledge validate dist
+      - name: The brief contract (contract/README.md); any failure stops the publish
+        # The golden corpus must give the results its manifest states, and every brief about to be published must pass
+        # the contract on its own. A failed step stops the job here, so nothing is packaged or published.
+        run: |
+          python3 -m pea_knowledge contract
+          python3 -m pea_knowledge check-briefs dist
       - name: Package for Pages
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

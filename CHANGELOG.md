@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 (2026-11-19)
+
+The brief contract (contract/README.md): the processor is the thorough side, the app a thin reader. Builds on 0.7.0 (briefs index).
+
+- **Stricter brief rules**, in the reader's check (`validate.brief_rules`, also `check_brief_alone` for a brief on its own): a talk size of at most 1,050 characters (what the app's 4,200-character block shows of a brief, so any three fit by construction), a date that exists, at least one claim, and no markup, app label or instruction in any authored text. The writer's check and the extractive builder use the same text rule; quotes give way to the talk size; an extractive brief always has a plain headline and a claim; a model brief or an earlier published brief that fails is replaced by an extractive one, so the build never publishes what the reader refuses. The format stays 1.3.
+- **Golden corpus** `contract/golden/` (38 files: 9 must pass, 29 must fail with one typed reason each) with `manifest.json` (SHA-256 per file and over the corpus), written by `contract/make_golden.py`.
+- **Commands**: `python3 -m pea_knowledge contract` (the corpus holds) and `check-briefs <paths>` (the strict check over any brief output, no network).
+- **Workflows**: the test workflow checks the corpus and the offline run's briefs; the publish job runs `contract` and `check-briefs dist` after `validate dist`, and publishes nothing if one fails.
+- Generator 0.8.0, so every source's feed is read once more; items are not made again.
+- Tests: `tests/test_contract.py`. Golden files regenerated.
+
 ## 0.7.0 (2026-11-19)
 
 The app was asked for "three across three different podcasts" and said it had only two podcast briefs, then found two from a third show: it counted whatever few briefs happened to be in its prompt. This release publishes the list it should count from.

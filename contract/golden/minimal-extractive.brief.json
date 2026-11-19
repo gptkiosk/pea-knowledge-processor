@@ -1,0 +1,27 @@
+{
+  "brief_kind": "extractive",
+  "claims": [
+    {
+      "ref": null,
+      "text": "Tobias Renn keeps a ledger of every ship that crosses the bar at Grey Point."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-12",
+  "entities": [],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "An episode about the ledger of ships kept at the Grey Point lighthouse.",
+  "item_id": "2026-11-12-8a5b8d3d14",
+  "keywords": [],
+  "link": "https://harbor.example.org/e/2026-11-12",
+  "model": null,
+  "new": null,
+  "quotes": [],
+  "source_id": "harbor-voices",
+  "source_name": "Harbor Voices",
+  "title": "Who counts the ships at Grey Point?",
+  "topics": [],
+  "transcript_sha256": null
+}
