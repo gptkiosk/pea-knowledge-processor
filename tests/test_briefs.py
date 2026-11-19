@@ -362,6 +362,61 @@ class InThePipeline(unittest.TestCase):
                                      pipeline.Previous(self.out), support.T0.replace(hour=23, minute=45), "offline", support.QUIET, {})
         self.assertFalse(any(not i["reuse"] and i["transcript"]["file"] for r in state["sources"].values() for i in r["items"]), "after a run without a key, nothing is fetched again")
 
+    def split_jobs(self, config, now, fetch_environment, brief_environment):
+        """One run as the workflow runs it: the fetch job (no key, only `fetch_environment`), then the digest job (the key
+        given to the brief step only), then the build. Returns (the fetch job's work.json, health)."""
+        work = os.path.join(self.base, "split-work")
+        shutil.rmtree(work, ignore_errors=True)
+        os.makedirs(work)
+        previous = pipeline.Previous(self.out)
+        fetched = pipeline.fetch_stage(config, work, __import__("pea_knowledge").fetch.fixture_fetcher(support.WEB, log=support.QUIET),
+                                       previous, now, "offline", support.QUIET, fetch_environment)
+        pipeline.digest_stage(config, work, {}, support.QUIET)
+        pipeline.brief_stage(config, work, previous, brief_environment, support.QUIET)
+        health = pipeline.build_stage(config, work, previous, self.out, now, support.QUIET)
+        return fetched, health
+
+    def test_the_first_keyed_run_upgrades_when_only_the_brief_step_has_the_key(self):
+        # The published output was made without a key, so its ledger says the last brief step had none. The fetch job never
+        # has the key; it is told by PEA_BRIEFS_KEY_EXPECTED that the digest job will, and fetches the newest few again.
+        server = self.serve()
+        support.run(self.out, config=self.config(server), environment={})
+        before = self.briefs_of()
+        config = self.config(server, upgrade_per_run=2)
+        eligible = sorted(((e["date"], sid, iid) for (sid, iid), (e, b) in before.items()
+                           if e["digest"]["basis"] == "transcript" and pipeline.transcript_read(e) != "none"), reverse=True)
+        self.assertGreater(len(eligible), 2)
+        fetched, health = self.split_jobs(config, support.T0.replace(hour=18), {br.KEY_EXPECTED_VARIABLE: "true"}, {br.KEY_VARIABLE: FAKE_KEY})
+        upgraded = sorted(((i["date"], sid, i["id"]) for sid, r in fetched["sources"].items() for i in r["items"] if i.get("upgrade")), reverse=True)
+        self.assertEqual(len(upgraded), 2)
+        self.assertEqual([u[0] for u in upgraded], [e[0] for e in eligible[:2]], "newest first across all sources")
+        self.assertTrue(all(i["transcript"]["file"] for r in fetched["sources"].values() for i in r["items"] if i.get("upgrade")))
+        self.assertEqual((health["briefs"]["written"], health["briefs"]["listed"]["model"]), (2, 2))
+        after = self.briefs_of()
+        self.assertEqual({(s, i) for (s, i), (e, b) in after.items() if b["brief_kind"] == "model"}, {(u[1], u[2]) for u in upgraded})
+        self.assertEqual(validate.check_folder(self.out).problems, [])
+
+    def test_no_upgrade_is_fetched_when_no_key_is_expected(self):
+        server = self.serve()
+        support.run(self.out, config=self.config(server), environment={})
+        for told in ({}, {br.KEY_EXPECTED_VARIABLE: "false"}):
+            fetched, health = self.split_jobs(self.config(server), support.T0.replace(hour=18), told, {})
+            self.assertFalse(any(i.get("upgrade") or (not i["reuse"] and i["transcript"]["file"]) for r in fetched["sources"].values() for i in r["items"]))
+        self.assertEqual(server.requests, [])
+
+    def test_upgrades_respect_terms_and_the_months_cap(self):
+        server = self.serve()
+        support.run(self.out, config=self.config(server), environment={})
+        previous = pipeline.Previous(self.out)
+        told = {br.KEY_EXPECTED_VARIABLE: "true"}
+        everyone = [s["id"] for s in support.load_config()["sources"]]
+        self.assertEqual(pipeline.upgrade_choice(self.config(server, writer=everyone), previous, support.T0, told), set())
+        some = pipeline.upgrade_choice(self.config(server, writer=everyone[1:]), previous, support.T0, told)
+        self.assertTrue(some and all(sid == everyone[0] for sid, _ in some))
+        self.assertEqual(pipeline.upgrade_choice(self.config(server, upgrade_per_run=0), previous, support.T0, told), set())
+        previous.briefs = {"month": "2026-11", "spent_cents": 500.0, "calls": 9, "key": True}
+        self.assertEqual(pipeline.upgrade_choice(self.config(server), previous, support.T0, told), set(), "the month's cap is spent")
+
     def test_the_reader_refuses_a_brief_that_does_not_fit_its_index(self):
         server = self.serve()
         support.run(self.out, config=self.config(server), environment={br.KEY_VARIABLE: FAKE_KEY})
@@ -405,6 +460,22 @@ class DryRun(unittest.TestCase):
         self.assertNotIn(FAKE_KEY, text)
         self.assertFalse(os.path.exists(os.path.join(base, "none")))
 
+
+    def test_the_dry_run_lists_the_upgrades_of_a_published_output_without_a_key(self):
+        base = tempfile.mkdtemp(prefix="pea-dry-")
+        self.addCleanup(shutil.rmtree, base, True)
+        out = os.path.join(base, "dist")
+        support.run(out, environment={})
+        with mock.patch.dict(os.environ, {}, clear=False), contextlib.redirect_stdout(io.StringIO()) as said, contextlib.redirect_stderr(io.StringIO()):
+            os.environ.pop(br.KEY_VARIABLE, None)
+            os.environ.pop(br.KEY_EXPECTED_VARIABLE, None)
+            code = cli.main(["briefs", "--dry-run", "--config", support.CONFIG, "--offline-fixtures", support.WEB, "--previous", out,
+                             "--now", "2026-11-14T18:00:00Z", "--work", os.path.join(base, "none")])
+        text = said.getvalue()
+        self.assertEqual(code, 0)
+        rows = [l for l in text.splitlines() if l.startswith("  ")]
+        self.assertTrue(rows and all("upgrade of an extractive brief" in l and "US cents" in l for l in rows), text)
+        self.assertIn("no key is set", text)
 
 if __name__ == "__main__":
     unittest.main()

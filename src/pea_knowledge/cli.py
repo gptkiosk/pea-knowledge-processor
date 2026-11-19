@@ -64,7 +64,9 @@ def cmd_briefs(args):
         temporary = work = tempfile.mkdtemp(prefix="pea-knowledge-dry-")
         fetcher, mode = _fetcher(args)
         _log("no work folder at %s: fetching into a temporary one first (no model is called)" % args.work)
-        pipeline.fetch_stage(config, work, fetcher, previous, _now(args.now), mode, _log)
+        # As the scheduled run's fetch job does when the secret is there: extractive briefs to upgrade are fetched again too.
+        environment = dict(os.environ, **{pipeline.br.KEY_EXPECTED_VARIABLE: "true"})
+        pipeline.fetch_stage(config, work, fetcher, previous, _now(args.now), mode, _log, environment)
     try:
         rows, t = pipeline.brief_estimate(config, work, previous, limit=args.limit)
     finally:

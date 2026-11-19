@@ -29,6 +29,7 @@ from . import FORMAT_VERSION, digest as dg, jsonschema_lite, model_digest, textr
 from .transcript import pea_transcript as pt
 
 KEY_VARIABLE = model_digest.KEY_VARIABLE
+KEY_EXPECTED_VARIABLE = "PEA_BRIEFS_KEY_EXPECTED"
 DEFAULT_MODEL = "anthropic/claude-haiku-5.5"  # Haiku 5.5 as OpenRouter is expected to name it; not verified against the live list
 WRITER_REVISION = 1
 KINDS = ("model", "extractive")
@@ -68,6 +69,9 @@ class Settings:
         self.monthly_cap_cents = float(budget.get("monthly_cents", 200))
         self.run_cap_cents = float(budget.get("per_run_cents", 100))
         self.key = environment.get(KEY_VARIABLE, "")
+        # Whether the brief step of this run will have a key (`true`; never the key itself): the fetch job, which has no key,
+        # fetches transcripts for upgrades by it (the workflow sets it from a dispatch input or a repository variable).
+        self.key_expected = environment.get(KEY_EXPECTED_VARIABLE, "").strip().lower() in ("1", "true", "yes")
 
     def cents(self, prompt_tokens, completion_tokens):
         return (prompt_tokens * self.price_input + completion_tokens * self.price_output) / 10_000

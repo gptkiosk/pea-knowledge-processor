@@ -434,21 +434,41 @@ def wants_model_brief(config, source, entry, before_item=None, settings=None, ke
                 and (entry.get("brief") or {}).get("kind") != "model" and (before_item or {}).get("brief") != "fell_back")
 
 
+def upgrade_choice(config, previous, now, environment=None):
+    """{(source, item)} of the listed items whose extractive brief is to be upgraded to a model brief in this run: at most
+    `briefs.upgrade_per_run`, newest first across all sources, only items digested from a transcript (so a transcript can be
+    fetched again), of active sources whose terms allow a model brief, and only when a key is expected for the brief step
+    and the month's cap is not spent. Empty otherwise."""
+    briefs = br.Settings(config, environment)
+    ledger = br.ledger_from({"briefs": previous.briefs}, timestamp(now)[:7])
+    key = bool(briefs.key) or briefs.key_expected or ledger["key"]
+    if not key or briefs.upgrade_per_run <= 0 or ledger["spent_cents"] >= briefs.monthly_cap_cents:
+        return set()
+    found = []
+    for source in config["sources"]:
+        if source.get("state") in ("paused", "withdrawn"):
+            continue
+        sid = source["id"]
+        known_items = previous.state.get(sid, {}).get("items", {})
+        for iid, old in previous.items.get(sid, {}).items():
+            known = known_items.get(iid)
+            if known and not old["stale"] and transcript_read(old) != "none" \
+                    and wants_model_brief(config, source, old, known, briefs, key):
+                found.append((old["date"], sid, iid))
+    found.sort(reverse=True)
+    return {(sid, iid) for _, sid, iid in found[:briefs.upgrade_per_run]}
+
+
 def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print, environment=None):
     """Reads every source that is not manually switched off and writes the work folder."""
     wanted = "model" if model_digest.Settings(config.get("model")).enabled else "extractive"
     # Format 1.3: a listed item whose brief is extractive is fetched again (a few per run) when a model brief can be written for it.
-    # The fetch job has no key; it goes by the last run's ledger, which says whether that run's brief step had one (never the key).
-    briefs = br.Settings(config, environment)
-    ledger = br.ledger_from({"briefs": previous.briefs}, timestamp(now)[:7])
-    key = bool(briefs.key) or ledger["key"]
-    upgrades = [briefs.upgrade_per_run if key and ledger["spent_cents"] < briefs.monthly_cap_cents else 0]
+    # The fetch job has no key. It goes by PEA_BRIEFS_KEY_EXPECTED (set by the workflow from whether the secret is there, never
+    # the key), else by the last run's ledger, which says whether that run's brief step had one.
+    chosen = upgrade_choice(config, previous, now, environment)
 
     def upgrade(source, old, known):
-        if upgrades[0] > 0 and wants_model_brief(config, source, old, known, briefs, key):
-            upgrades[0] -= 1
-            return True
-        return False
+        return (source["id"], old["id"]) in chosen
     out = {"now": timestamp(now), "mode": mode, "sources": {}}
     for source in config["sources"]:
         sid = source["id"]
@@ -460,7 +480,7 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print, en
         before, before_items = previous.state.get(sid, {}), previous.items.get(sid, {})
         settled = bool(before_items) and before.get("config") == source_key(config, source) and not any(i["stale"] or i["transcript"]["reason"] == "fetch_failed" for i in before_items.values()) \
             and all(m["method"] == wanted or before_items.get(i, {}).get("digest", {}).get("basis") != "transcript" for i, m in before.get("items", {}).items()) \
-            and not (upgrades[0] and any(wants_model_brief(config, source, o, before.get("items", {}).get(i), briefs, key) for i, o in before_items.items()))
+            and not any(sid == c[0] for c in chosen)
         try:
             answer = fetcher.get(source["url"], fetch.FEED_BYTES, before.get("etag", "") if settled else "", before.get("last_modified", "") if settled else "")
             if answer.not_modified:
@@ -521,6 +541,8 @@ def fetch_stage(config, work, fetcher, previous, now, mode="live", log=print, en
                 elif setting(config, source, "only_discussable_items"):
                     item["dropped"] = drop_reason(old)
             elif not news:
+                if known and old and upgrade(source, old, known):
+                    item["upgrade"] = True   # fetched again for a model brief (format 1.3)
                 status, why, detail, text, origin = normalize_transcript(fetcher, source, item, e.transcripts, e.link, e.links)
                 item["transcript"] = {"status": status, "reason": why, "detail": textrules.clean(detail, 200), "file": None, "source": origin}
                 if text is not None:
@@ -718,6 +740,8 @@ def brief_estimate(config, work, previous=None, environment=None, limit=None):
         cents = settings.cents(tokens_in, tokens_out)
         over = total_cents + cents > settings.run_cap_cents or ledger["spent_cents"] + total_cents + cents > settings.monthly_cap_cents
         what = "extractive (over the cap)" if over else ("model, %d parts%s" % (len(parts), "" if complete else ", cut") if len(parts) > 1 else "model")
+        if item.get("upgrade"):
+            what += ", upgrade of an extractive brief"
         if not over:
             total_cents += cents
             total_calls += calls
