@@ -180,6 +180,10 @@ FORMAT.md section 12 defines them. They are what the app searches on the phone a
 
 **Storage.** A brief is 2 to 3 KB. Keeping the briefs of the last 60 days of every followed source costs well under a megabyte. The item's whole size is `bytes` plus `brief.bytes`.
 
+### The briefs index (1.3, additive)
+
+`briefs-index.json` (FORMAT.md section 13) lists the shows the output holds briefs for, how many each, and their newest briefs, newest first, plus the twelve newest across shows. The app may use it for any statement about which shows it holds briefs for and how many, and to pick one brief per show. It is not named by a hash: fetch it after `store.json`, check it as section 13 says, and when it is absent or fails a check, build the same list from `store.json` and the items files kept on the phone. Counts in it are of the published output; when the phone keeps fewer briefs than are published (retention, sources not followed), the app says what it holds, not what is published.
+
 ## 11. What the app's tests should cover
 
 Copy `tests/golden/`:
@@ -191,4 +195,5 @@ Copy `tests/golden/`:
 - Tamper with a file: one byte changed (`hash_mismatch`), one byte added (`size_mismatch`), a file removed (`missing`).
 - The fetch rules of section 3 against a local server: `304`, an unchanged items hash, the old copy kept when the new one fails.
 - Offline: kept items usable, nothing evicted or disabled.
+- The briefs index (1.3): `dist/briefs-index.json` reads and agrees with `dist/`; `hostile/index-*` refused with their reasons, `index-as-it-should-be` and `index-newer-minor-with-a-new-member` accepted; with no index the same list is built from `dist/`.
 - Briefs (1.3): every item of `dist/` names a brief that validates (`brief_kind: extractive` there, made without a model); `hostile/brief-*` refused with their reasons and `brief-as-it-should-be` accepted; an item without `brief` (an older output) falls back to the digest.

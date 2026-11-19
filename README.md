@@ -17,6 +17,7 @@ store.json                                   every source as a store card, its s
 sources/<source>/items.json                  one source's items, with the hash and size of every file
 sources/<source>/<item>.digest.json          what the assistant needs to talk about one item
 sources/<source>/<item>.transcript.pea.txt   the transcript (PEA transcript v1), only where the publisher's terms allow
+briefs-index.json                            the shows with briefs, how many, and the newest briefs (format 1.3, additive)
 health.json                                  what the last run did
 ```
 
@@ -81,6 +82,7 @@ Every listed item has a brief: a short summary of fixed shape (a headline, 4 to 
 - **Upgrades**: listed items whose brief is extractive get a model brief a few per run (`briefs.upgrade_per_run`, newest first). The fetch job has no key, so it fetches their transcripts again only when it knows the brief step will have one: dispatch with `gh workflow run process.yml -f expect_key=true`, or set the repository variable `PEA_BRIEFS_KEY_EXPECTED` to `true` for scheduled runs; once a published `state.json` records a brief step with a key, scheduled runs go on by that.
 - **Before spending**: `python3 -m pea_knowledge briefs --dry-run --limit 10` prints which items would get a model brief and the estimated tokens and cost. It calls no model.
 - **Terms**: `"brief_writer": "extractive"` on a source keeps it away from any model (for a source whose terms forbid quotes or derived summaries).
+- **The briefs index** (`briefs-index.json`, about 11 KB): every show with briefs, its brief count and newest five briefs (title, date, model or extractive, whether it covers only part), and the twelve newest across shows. Made by every build from the items files; the validator makes it again and refuses one that differs. The app uses it to say truthfully which shows and how many briefs it holds; older apps ignore it. docs/FORMAT.md section 13.
 - No real key is used in the tests; they run against a local stand-in server. The first real runs (2026-11-19, branch only) are in docs/FIRST-REAL-BRIEFS.md.
 
 ## Topics

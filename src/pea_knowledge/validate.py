@@ -11,7 +11,7 @@ import json
 import os
 import re
 
-from . import FORMAT_MAJOR, FORMAT_MINOR, brief as br, digest as dg, jsonschema_lite, textrules, topics as tp
+from . import FORMAT_MAJOR, FORMAT_MINOR, brief as br, briefs_index as bx, digest as dg, jsonschema_lite, textrules, topics as tp
 from .fetch import validate_url
 from .transcript import pea_transcript as pt
 
@@ -21,6 +21,7 @@ HEALTH_BYTES = 512_000
 TRANSCRIPT_BYTES = 1_000_000
 DIGEST_BYTES = dg.DIGEST_BYTES
 BRIEF_BYTES = br.BRIEF_BYTES
+INDEX_BYTES = bx.INDEX_BYTES
 
 CODES = (
     "missing",               # a file that must be there is not
@@ -326,6 +327,28 @@ def check_brief(data, listing, item, topics=None, transcript=None):
     return (None if problems else b), problems
 
 
+def check_briefs_index(data, store, items_by_source):
+    """briefs-index.json (format 1.3, optional), against the store.json and the items files it was made from
+    (`items_by_source`: {source id: parsed items file}). It must be exactly what those files give: every brief it names
+    is listed, every count and title agrees, nothing is missing. An index that differs is not used."""
+    where = bx.INDEX_FILE
+    index, problems = read_json(data, "briefs-index", where, INDEX_BYTES)
+    if index is None:
+        return None, problems
+    expected = bx.known_view(bx.build(store, items_by_source, store["generated_at"]))
+    found = bx.known_view(index)
+    if found["generated_at"] != expected["generated_at"]:
+        problems.append(Problem("identity_mismatch", where + ".generated_at", "not the generated_at of the store.json beside it"))
+    briefs = {(s, i["id"]) for s, items in items_by_source.items() for i in (items or {"items": []})["items"] if i.get("brief")}
+    named = [(s["id"], e["item_id"]) for s in found["shows"] for e in s["latest"]] + [(e["show_id"], e["item_id"]) for e in found["latest_overall"]]
+    missing = [n for n in named if n not in briefs]
+    if missing:
+        problems.append(Problem("missing", where, "names a brief that is not listed: %s/%s" % missing[0]))
+    elif found["shows"] != expected["shows"] or found["latest_overall"] != expected["latest_overall"]:
+        problems.append(Problem("inconsistent", where, "differs from the briefs listed in the items files"))
+    return (None if problems else index), problems
+
+
 class Report:
     def __init__(self):
         self.problems, self.files, self.bytes, self.sources, self.items = [], 0, 0, 0, 0
@@ -406,8 +429,8 @@ def check_source_folder(folder, listing, report=None, topics=None):
 
 
 def check_folder(folder):
-    """A whole output folder: store.json, every source's items file, every digest and transcript, health.json and
-    state.json, and nothing else. Returns a Report."""
+    """A whole output folder: store.json, every source's items file, every digest, brief and transcript, the briefs
+    index when there is one, health.json and state.json, and nothing else. Returns a Report."""
     report = Report()
     data = _read(folder, "store.json")
     if data is None:
@@ -421,6 +444,17 @@ def check_folder(folder):
     for listing in store["sources"]:
         report.sources += 1
         check_source_folder(folder, listing, report, store.get("topics", []))
+    data = _read(folder, bx.INDEX_FILE)
+    if data is not None:   # optional: an output of generator 0.6.0 has none, and a reader then makes the same list itself
+        items_by_source = {}
+        for listing in store["sources"]:
+            ref = listing["items_file"]
+            raw = _read(folder, ref["path"]) if ref else None
+            if raw is not None:
+                items_by_source[listing["id"]] = check_items(raw, listing, store.get("topics", []))[0]
+        report.files += 1
+        report.bytes += len(data)
+        report.problems += check_briefs_index(data, store, items_by_source)[1]
     known = {s["id"] for s in store["sources"]}
     base = os.path.join(folder, "sources")
     for name in sorted(os.listdir(base)) if os.path.isdir(base) else []:
@@ -437,6 +471,6 @@ def check_folder(folder):
         _, problems = read_json(data, kind, name, HEALTH_BYTES)
         report.problems += problems
     for name in sorted(os.listdir(folder)):
-        if name not in ("store.json", "health.json", "state.json", "sources", ".nojekyll", "index.html"):
+        if name not in ("store.json", bx.INDEX_FILE, "health.json", "state.json", "sources", ".nojekyll", "index.html"):
             report.problems.append(Problem("unlisted_file", name, "not part of the format"))
     return report

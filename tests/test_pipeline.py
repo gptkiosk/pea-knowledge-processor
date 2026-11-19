@@ -92,7 +92,7 @@ class OneRun(Base):
         """The first run of this version finds an output written by 0.1.0: no link_kind, none of the 1.1 members."""
         support.run(self.out)
         for path, data in support.tree(self.out).items():
-            if path.endswith(".brief.json"):   # 1.0 had no briefs (1.3)
+            if path.endswith(".brief.json") or path == "briefs-index.json":   # 1.0 had no briefs nor their index (1.3)
                 os.remove(os.path.join(self.out, *path.split("/")))
                 continue
             if path.endswith(".json") and path not in ("health.json",):
@@ -260,7 +260,7 @@ class OneRun(Base):
             if path == "health.json":
                 continue
             a, b = first[path], second[path]
-            if path == "store.json":
+            if path in ("store.json", "briefs-index.json"):
                 a, b = a.replace(b"2026-11-14T12:00:00Z", b"T"), b.replace(b"2026-11-14T18:00:00Z", b"T")
             self.assertEqual(a, b, path + " differs only by generated_at")
         self.assertEqual([(s["new"], s["outcome"]) for s in health["sources"]], [(0, "unchanged"), (0, "ok"), (0, "ok"), (0, "unchanged"), (0, "unchanged")],

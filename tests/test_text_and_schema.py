@@ -64,7 +64,7 @@ class StrictJSON(unittest.TestCase):
 class Schemas(unittest.TestCase):
     def test_every_schema_stays_inside_what_the_checker_knows(self):
         files = sorted(glob.glob(os.path.join(support.ROOT, "schema", "*.schema.json")))
-        self.assertEqual(len(files), 7)
+        self.assertEqual(len(files), 8)
         for path in files:
             with open(path, encoding="utf-8") as f:
                 schema = json.load(f)

@@ -22,7 +22,7 @@ import statistics
 import types
 from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br, briefs_index as bx, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
@@ -1108,6 +1108,9 @@ def build_stage(config, work, previous, out, now, log=print):
     store = {"format": "pea-knowledge-store", "format_version": FORMAT_VERSION, "generated_at": stamp, "generator": generator,
              "min_app_version": config.get("min_app_version"), "sources": listings, **vocabulary}
     write(os.path.join(staging, "store.json"), jsonschema_lite.dumps(store))
+    # The briefs index (1.3, additive): made from the items files just written, so it says nothing they do not.
+    written = {s["id"]: jsonschema_lite.loads(read(os.path.join(staging, *s["items_file"]["path"].split("/")))) for s in listings if s["items_file"]}
+    write(os.path.join(staging, bx.INDEX_FILE), bx.dumps(bx.build(store, written, stamp)))
     month = stamp[:7]
     ledger = br.ledger_from({"briefs": previous.briefs}, month)
     briefs = state.get("briefs") or brief_report_without_step(config, month, ledger)

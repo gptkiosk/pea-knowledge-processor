@@ -16,6 +16,7 @@ sources/<source>/items.json                  one source's items, newest first, w
 sources/<source>/<item>.digest.json          one item's digest: everything needed to talk about it
 sources/<source>/<item>.brief.json           one item's brief (1.3): a short fixed-shape summary for search and talk
 sources/<source>/<item>.transcript.pea.txt   one item's transcript (PEA transcript v1), only where the terms allow
+briefs-index.json                            the shows the output holds briefs for and their newest briefs (1.3, additive, section 13)
 health.json                                  what the last run did (for the curator; an app does not need it)
 state.json                                   the pipeline's memory between runs (an app MUST NOT fetch or use it)
 ```
@@ -26,9 +27,9 @@ A reader starts at `store.json` and follows hashes: the listing names each sourc
 
 Why the split: the store screen needs only `store.json` (about 43 KB for thirteen listings, 12 KB of it the vocabulary of topics). A source's items are loaded only after the owner adds that source. `items.json` carries no time of its own, so its hash changes only when an item changes; a run that finds nothing new changes only `generated_at` in `store.json` and the counters in `health.json`.
 
-JSON Schemas (draft 2020-12) are in `schema/`: `store`, `items`, `digest`, `health`, `state`, and `sources` for the curated list. The schemas, plus the rules of sections 7 to 9 and 11 that a schema cannot state, are the format. `python3 -m pea_knowledge validate <folder>` checks all of it and is the reference for the app's checks.
+JSON Schemas (draft 2020-12) are in `schema/`: `store`, `items`, `digest`, `brief`, `briefs-index`, `health`, `state`, and `sources` for the curated list. The schemas, plus the rules of sections 7 to 9 and 11 that a schema cannot state, are the format. `python3 -m pea_knowledge validate <folder>` checks all of it and is the reference for the app's checks.
 
-All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, one line break at the end. The same data always gives the same bytes.
+All JSON is UTF-8 without a byte order mark, keys sorted, two spaces of indent, one line break at the end. The same data always gives the same bytes. The one exception is `briefs-index.json`, written without indent or spaces (keys still sorted) so that it stays small.
 
 ## 2. store.json: the store listing
 
@@ -445,3 +446,26 @@ A brief is one short summary of one item in a fixed shape, so an app can keep th
 **Cost.** Model briefs are made for new items and, a few per run, for listed items whose brief is extractive (`briefs.upgrade_per_run`, newest first across all sources, only items whose digest was made from a transcript, of sources whose terms allow a model brief): the fetch job, which never has the key, fetches their transcripts again when it is told that the brief step will have one (`PEA_BRIEFS_KEY_EXPECTED`, set from the dispatch input `expect_key` or the repository variable of that name) or when the last published `state.json` says the last brief step had one. A brief is reused, without a call, when the item is made again from the same transcript (`transcript_sha256`) by the same model. Spending is capped per run and per calendar month in US cents (`brief_budget`: `per_run_cents` 100, `monthly_cents` 200 by default); before each call the worst case (the prompt at three characters a token, plus `max_output_tokens`) must fit both. The cost of a call is the provider's own figure (`usage.cost`) or its token counts at the configured prices, whichever is higher (the provider gave 0 for every call of the first real run). When a cap is reached the run stops calling the model and every remaining item gets an extractive brief. The month's spend is kept in `state.json` (`briefs`: `month`, `spent_cents`, `calls`, and whether the last brief step had a key), which each run restores from the published output, so the cap holds across scheduled runs. A source whose terms forbid quotes or derived summaries is marked `brief_writer: extractive` in the config and is never sent to a model.
 
 **Terms.** A brief is an original short summary with at most two short quotes and a link back. No transcript text is written to the output beyond those quotes, and the transcripts themselves are still withheld (`withheld_terms`).
+
+## 13. The briefs index (`briefs-index.json`, 1.3, additive)
+
+One small file beside `store.json` that lists the shows the output holds briefs for, how many each, and their newest briefs, so an app can say truthfully what it holds ("briefs from 11 shows; the newest are ...") and choose one brief per show without loading every items file. It is written by every build from generator 0.7.0 on. **It carries nothing the items files do not already say**: it is made from them after they are written, and the validator makes it again from them and refuses an index that differs in any member. A reader that does not know the file never fetches it; the format stays 1.3.
+
+| Member | What it is |
+| --- | --- |
+| `format`, `format_version` | `"pea-knowledge-briefs-index"`, `"1.3"`. |
+| `generated_at` | The `generated_at` of the `store.json` it was made with. An index whose time differs is from another run and is not used. |
+| `shows` | Every source with at least one listed brief (withdrawn sources have none), newest first by its newest brief, then by id. At most 60. |
+| `shows[].id`, `name`, `kind` | As in `store.json`. |
+| `shows[].brief_count` | How many listed items of the source have a brief (1 to 500). |
+| `shows[].latest` | Its newest briefs, in the order of its items file (newest first), at most 5. |
+| `latest_overall` | The newest briefs across every show, at most 12: by date (newest first), then show id, then the order of the items file. Each also has `show_id`. |
+| `item_id` | The item's id. The brief is at `sources/<show>/<item_id>.brief.json`, named with its hash in the items file. |
+| `title` | The item's title, shortened to 120 characters (at a space, ended with `…`). |
+| `date` | The item's date. |
+| `method` | The brief's `brief_kind`: `model` or `extractive`. |
+| `partial` | True when the brief's `covers` is `partial` (it covers only part of the item). |
+
+**Size.** About 11 KB for the published feed of 2026-11-19 (fourteen sources, eleven with briefs); fourteen sources of five briefs with titles of usual length stay under 15 KB. A reader refuses one over 32,000 bytes unread.
+
+**How a reader checks it.** Fetch it after `store.json` (no hash names it), refuse it over 32,000 bytes, read it like any file (strict JSON, version, `schema/briefs-index.schema.json`, text rules), check `generated_at` against `store.json`, and check that every brief it names is listed in the items file of its show. Where it fails any check, or is absent (an output of 0.6.0), a reader makes the same list from `store.json` and the items files it holds; `briefs_index.build` is the reference. `python3 -m pea_knowledge validate` refuses an index that names a brief that is not listed (`missing`), whose counts, titles, kinds or order differ from the items files (`inconsistent`), or that was made with another `store.json` (`identity_mismatch`). The `index-*` samples in `tests/golden/hostile/` are checked against `tests/golden/dist/`.

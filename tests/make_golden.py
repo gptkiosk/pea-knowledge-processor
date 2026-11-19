@@ -18,10 +18,10 @@ import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import support  # noqa: E402
-from pea_knowledge import jsonschema_lite  # noqa: E402
+from pea_knowledge import briefs_index, jsonschema_lite  # noqa: E402
 
 
-def hostile(store, digest, listed, brief=None):
+def hostile(store, digest, listed, brief=None, index=None):
     """(name, kind, text of the file, the code a reader must give or "ok"). `store` is a listing with a paused source
     and no topics, `listed` one with the vocabulary of topics (cut here to its first four, so the samples stay small)."""
     def changed(base, change):
@@ -112,7 +112,29 @@ def hostile(store, digest, listed, brief=None):
         ("brief-unknown-kind", "brief", changed(brief, lambda b: b.update(brief_kind="guess")), "schema"),
         ("brief-over-its-limit", "brief", changed(brief, lambda b: b.update(headline="h" * 160, claims=[{"text": "c" * 220, "ref": None}] * 8)), "brief_too_long"),
     ]
-    return cases + topics + briefs
+    def compact(value):
+        return briefs_index.dumps(value).decode("utf-8")
+
+    def changed_index(change):
+        value = copy.deepcopy(index)
+        change(value)
+        return compact(value)
+
+    def first(**values):
+        return lambda x: x["shows"][0]["latest"][0].update(values)
+    indexes = [] if index is None else [
+        # Format 1.3, additive: briefs-index.json, checked against the golden output (golden/dist) it was made from.
+        ("index-as-it-should-be", "briefs-index", compact(index), "ok"),
+        ("index-names-a-brief-that-is-not-listed", "briefs-index", changed_index(first(item_id="2026-01-01-0000000000")), "missing"),
+        ("index-count-that-is-not-the-briefs", "briefs-index", changed_index(lambda x: x["shows"][0].update(brief_count=x["shows"][0]["brief_count"] + 1)), "inconsistent"),
+        ("index-show-left-out", "briefs-index", changed_index(lambda x: x["shows"].pop()), "inconsistent"),
+        ("index-title-with-a-link", "briefs-index", changed_index(first(title="Listen at https://evil.example.org/now")), "text_rule"),
+        ("index-unknown-method", "briefs-index", changed_index(first(method="guess")), "schema"),
+        ("index-from-another-run", "briefs-index", changed_index(lambda x: x.update(generated_at="2020-01-01T00:00:00Z")), "identity_mismatch"),
+        ("index-newer-minor-with-a-new-member", "briefs-index", changed_index(lambda x: (x.update(format_version="1.9"), x["shows"][0].update(later_hint="x"))), "ok"),
+        ("index-same-minor-with-a-new-member", "briefs-index", changed_index(lambda x: x.update(surprise=True)), "schema"),
+    ]
+    return cases + topics + briefs + indexes
 
 
 def main():
@@ -140,13 +162,14 @@ def main():
         os.makedirs(target)
         manifest = {}
         brief = json.loads(open(os.path.join(out, *item["brief"]["path"].split("/")), encoding="utf-8").read())
-        for name, kind, text, code in hostile(paused, digest, support.store(out), brief):
+        index = json.loads(open(os.path.join(out, briefs_index.INDEX_FILE), encoding="utf-8").read())
+        for name, kind, text, code in hostile(paused, digest, support.store(out), brief, index):
             file = "%s.%s.json" % (name, kind)
             with open(os.path.join(target, file), "w", encoding="utf-8", newline="") as f:
                 f.write(text)
             manifest[file] = {"kind": kind, "expect": code}
         with open(os.path.join(target, "manifest.json"), "w", encoding="utf-8") as f:
-            json.dump({"about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest or a brief.", "files": manifest},
+            json.dump({"about": "Files a reader must refuse (or, for expect ok, accept). kind says which check applies: store.json, a digest, a brief, or briefs-index.json (checked against golden/dist).", "files": manifest},
                       f, indent=1, sort_keys=True)
             f.write("\n")
     finally:
