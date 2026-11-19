@@ -219,6 +219,17 @@ class Writer(unittest.TestCase):
         self.assertEqual(br.extractive(d, ["history"]), br.extractive(d, ["history"]))
 
 
+class Costs(unittest.TestCase):
+    def test_a_provider_cost_of_zero_does_not_switch_the_caps_off(self):
+        s = br.Settings({"brief_budget": {"per_run_cents": 1}}, {})
+        spend = br.Spend(s, {"month": "2026-11", "spent_cents": 0.0, "calls": 0})
+        spend.add(20_000, 3_000, 0.0)                    # the first real run: usage.cost 0 for every call
+        self.assertAlmostEqual(spend.cents, s.cents(20_000, 3_000))
+        spend.add(1_000, 100, 0.5)                       # a provider figure above the configured prices is kept
+        self.assertAlmostEqual(spend.cents, s.cents(20_000, 3_000) + 50)
+        self.assertIn("cap", spend.allows(10))
+
+
 class InThePipeline(unittest.TestCase):
     def setUp(self):
         self.base = tempfile.mkdtemp(prefix="pea-briefs-")

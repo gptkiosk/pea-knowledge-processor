@@ -34,7 +34,7 @@
     "max_output_tokens": 4000,
     "chunk_chars": 60000,
     "max_chunks": 4,
-    "max_calls_per_run": 8,
+    "max_calls_per_run": 14,
     "upgrade_per_run": 3,
     "price_per_million_input_usd": 0.1,
     "price_per_million_output_usd": 0.5
