@@ -14,6 +14,11 @@ on:
   schedule:
     - cron: "17 */6 * * *"   # every six hours, off the top of the hour
   workflow_dispatch:
+    inputs:
+      expect_key:
+        description: "The secret OPENROUTER_API_KEY is set: fetch again a few items whose brief is extractive, for model briefs"
+        type: boolean
+        default: false
 
 # Nothing by default; each job states what it needs.
 permissions: {}
@@ -44,6 +49,11 @@ jobs:
       - name: Bring back the last published output (the pipeline's memory)
         run: python3 -m pea_knowledge restore --url "$PAGES_URL" --out previous
       - name: Fetch and normalize
+        # This job never sees a secret. To fetch again the transcripts of a few items whose brief is extractive (briefs.upgrade_per_run,
+        # newest first) it must know that the digest job will have the key: from the dispatch input expect_key, else the repository
+        # variable PEA_BRIEFS_KEY_EXPECTED (not a secret), else the last published state.json (whether that run's brief step had a key).
+        env:
+          PEA_BRIEFS_KEY_EXPECTED: ${{ inputs.expect_key && 'true' || vars.PEA_BRIEFS_KEY_EXPECTED }}
         run: python3 -m pea_knowledge fetch --config config/sources.json --work work --previous previous
       - name: Hand over to the next job
         # The work folder holds transcripts that may not be republished. It is kept for one day only.
