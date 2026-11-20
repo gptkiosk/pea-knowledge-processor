@@ -30,7 +30,7 @@
   "generated_at": "2027-02-24T18:00:00Z",
   "generator": {
     "name": "pea-knowledge-processor",
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "mode": "offline",
   "model": {

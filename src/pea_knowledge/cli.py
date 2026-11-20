@@ -6,6 +6,8 @@
     python3 -m pea_knowledge run --config tests/fixtures/sources.json --out /tmp/dist --offline-fixtures tests/fixtures/web
     python3 -m pea_knowledge validate dist
     python3 -m pea_knowledge briefs --dry-run --limit 5     # which items would get a model brief, and the cost; no model call
+    python3 -m pea_knowledge contract                       # the golden brief corpus gives the results its manifest states
+    python3 -m pea_knowledge check-briefs dist              # every brief file under a folder passes the contract on its own
 
 `run` does everything. `fetch`, `digest`, `briefs` and `build` are its parts, for running them as separate jobs;
 `restore` brings back the last published output, which is the pipeline's memory between runs.
@@ -17,7 +19,7 @@ import shutil
 import sys
 import tempfile
 
-from . import fetch, jsonschema_lite, pipeline, validate
+from . import contract, fetch, jsonschema_lite, pipeline, validate
 
 
 def _now(text):
@@ -127,6 +129,43 @@ def cmd_validate(args):
     return 0 if report.ok else 1
 
 
+def cmd_contract(args):
+    mismatches = contract.check_corpus(args.corpus)
+    for m in mismatches:
+        print(m)
+    print("%s: the golden brief corpus in %s%s" % ("holds" if not mismatches else "DOES NOT HOLD", args.corpus, "" if not mismatches else " (%d mismatches)" % len(mismatches)))
+    return 0 if not mismatches else 1
+
+
+def brief_files(paths):
+    """Every *.brief.json file named, or under a folder named, in a stable order."""
+    out = []
+    for path in paths:
+        if os.path.isdir(path):
+            for top, dirs, names in os.walk(path):
+                dirs.sort()
+                out += [os.path.join(top, n) for n in sorted(names) if n.endswith(".brief.json")]
+        else:
+            out.append(path)
+    return out
+
+
+def cmd_check_briefs(args):
+    files, failed = brief_files(args.paths), 0
+    for path in files:
+        with open(path, "rb") as f:
+            data = f.read()
+        b, problems = validate.check_brief_alone(data, os.path.relpath(path))
+        if problems:
+            failed += 1
+            for p in problems:
+                print(repr(p))
+        elif args.verbose:
+            print("ok  %s  kind %s, %d visible, talk size %d of %d" % (os.path.relpath(path), b["brief_kind"], pipeline.br.visible_chars(b), contract.talk_chars(b), contract.TALK_CHARS))
+    print("%d brief files, %d pass, %d fail the contract" % (len(files), len(files) - failed, failed))
+    return 0 if files and not failed else 1
+
+
 def cmd_summary(args):
     health, problems = validate.read_json(pipeline.read(os.path.join(args.folder, "health.json")), "health", "health.json", validate.HEALTH_BYTES)
     if health is None:
@@ -232,6 +271,13 @@ def main(argv=None):
     c = sub.add_parser("validate", help="check an output folder against the schemas, the text rules and the hashes")
     c.add_argument("folder")
     c.set_defaults(run=cmd_validate)
+    c = sub.add_parser("contract", help="check the golden brief corpus against its manifest (contract/README.md)")
+    c.add_argument("--corpus", default=os.path.join("contract", "golden"))
+    c.set_defaults(run=cmd_contract)
+    c = sub.add_parser("check-briefs", help="the contract's strict check over brief files, or every brief file under folders (no network)")
+    c.add_argument("paths", nargs="+")
+    c.add_argument("-v", "--verbose", action="store_true", help="print a line for every brief that passes, with its sizes")
+    c.set_defaults(run=cmd_check_briefs)
     c = sub.add_parser("summary", help="print the health report of an output folder as Markdown")
     c.add_argument("folder")
     c.set_defaults(run=cmd_summary)

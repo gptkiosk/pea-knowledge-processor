@@ -11,7 +11,7 @@ import json
 import os
 import re
 
-from . import FORMAT_MAJOR, FORMAT_MINOR, brief as br, briefs_index as bx, digest as dg, jsonschema_lite, textrules, topics as tp
+from . import FORMAT_MAJOR, FORMAT_MINOR, brief as br, briefs_index as bx, contract, digest as dg, jsonschema_lite, textrules, topics as tp
 from .fetch import validate_url
 from .transcript import pea_transcript as pt
 
@@ -289,6 +289,45 @@ def check_digest(data, listing, item, transcript=None, transcript_sha256=None):
     return (None if problems else d), problems
 
 
+def brief_rules(b, where):
+    """The contract's rules for one parsed brief (contract/README.md), the same for a brief on its own and a brief in an
+    output folder: the visible-text cap, the talk size the app's block is built on, a date that exists, at least one claim,
+    the kind, model and coverage agreeing, a model brief's four claims with refs, and no markup, app label or instruction
+    in any authored text."""
+    problems = []
+    if not contract.real_date(b["date"]):
+        problems.append(Problem("schema", where + ".date", "not a date that exists"))
+    size = br.visible_chars(b)
+    if size > br.VISIBLE_CHARS:
+        problems.append(Problem("brief_too_long", where, "%d visible characters, the limit is %d" % (size, br.VISIBLE_CHARS)))
+    talk = contract.talk_chars(b)
+    if talk > contract.TALK_CHARS:
+        problems.append(Problem("brief_too_long", where, "a talk size of %d characters, the limit is %d" % (talk, contract.TALK_CHARS)))
+    if not b["claims"]:
+        problems.append(Problem("inconsistent", where + ".claims", "a brief has at least one claim"))
+    if (b["brief_kind"] == "model") != (b["model"] is not None):
+        problems.append(Problem("inconsistent", where + ".model", "brief_kind and model disagree"))
+    if b["brief_kind"] == "model" and (len(b["claims"]) < br.CLAIMS_MIN or any(c["ref"] is None for c in b["claims"]) or b["new"] is None):
+        problems.append(Problem("inconsistent", where + ".claims", "a model brief has at least %d claims, each with a ref, and says what is new" % br.CLAIMS_MIN))
+    if (b["covers"] == "whole") != (b["covers_note"] is None):
+        problems.append(Problem("inconsistent", where + ".covers_note", "a partial brief says what it covers, a whole one has no note"))
+    for at, text in contract.authored_texts(b):
+        why = contract.text_reason(text)
+        if why is not None:
+            problems.append(Problem("text_rule", "%s.%s" % (where, at), why))
+    return problems
+
+
+def check_brief_alone(data, where="brief"):
+    """A brief file on its own (no index entry, no transcript): size, strict JSON, version, schema, text rules and the
+    contract's rules. This is what the golden corpus is checked with, here and in the app."""
+    b, problems = read_json(data, "brief", where, BRIEF_BYTES)
+    if b is None:
+        return None, problems
+    problems = brief_rules(b, where)
+    return (None if problems else b), problems
+
+
 def check_brief(data, listing, item, topics=None, transcript=None):
     """An item's brief file (format 1.3), against its entry in the items file. `topics` is the vocabulary of the
     store.json (None skips that check). With the transcript (only where the output carries it), every ref must name a
@@ -306,15 +345,7 @@ def check_brief(data, listing, item, topics=None, transcript=None):
     for key, expected in same:
         if b[key] != expected:
             problems.append(Problem("identity_mismatch", "%s.%s" % (where, key), "differs from the index"))
-    size = br.visible_chars(b)
-    if size > br.VISIBLE_CHARS:
-        problems.append(Problem("brief_too_long", where, "%d visible characters, the limit is %d" % (size, br.VISIBLE_CHARS)))
-    if (b["brief_kind"] == "model") != (b["model"] is not None):
-        problems.append(Problem("inconsistent", where + ".model", "brief_kind and model disagree"))
-    if b["brief_kind"] == "model" and (len(b["claims"]) < br.CLAIMS_MIN or any(c["ref"] is None for c in b["claims"]) or b["new"] is None):
-        problems.append(Problem("inconsistent", where + ".claims", "a model brief has at least %d claims, each with a ref, and says what is new" % br.CLAIMS_MIN))
-    if (b["covers"] == "whole") != (b["covers_note"] is None):
-        problems.append(Problem("inconsistent", where + ".covers_note", "a partial brief says what it covers, a whole one has no note"))
+    problems += brief_rules(b, where)
     if topics is not None and any(t not in {x["id"] for x in topics} for t in b["topics"]):
         problems.append(Problem("inconsistent", where + ".topics", "a topic is not in the vocabulary"))
     if transcript is not None:

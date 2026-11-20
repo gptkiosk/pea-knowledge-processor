@@ -1,0 +1,359 @@
+{
+  "about": "The golden brief corpus of the brief contract (contract/README.md). Every reader gives exactly `reason` for a case that must fail, and accepts a case that must pass. `app`: what the iPhone app does with it (use it, refuse it, or refuse it and fall back to the item's digest).",
+  "cases": [
+    {
+      "app": "use",
+      "bytes": 2105,
+      "expect": "pass",
+      "file": "typical-model.brief.json",
+      "reason": null,
+      "sha256": "ef694421f419c7ab7ccfb607ef866c7825fccd3cbc3a8109be882dbd2eb92e9f",
+      "why": "a model brief as the pipeline writes it"
+    },
+    {
+      "app": "use",
+      "bytes": 731,
+      "expect": "pass",
+      "file": "minimal-extractive.brief.json",
+      "reason": null,
+      "sha256": "7f2ca016b69dca03fb6503f6d7b6a876c4b5fc5ea94c532ac01a73a45bfe0d9f",
+      "why": "the least a brief may hold: extractive, one claim, nulls and empty lists"
+    },
+    {
+      "app": "use",
+      "bytes": 3099,
+      "expect": "pass",
+      "file": "maximum-size.brief.json",
+      "reason": null,
+      "sha256": "deee20976ac21601f31d80973a36a7c0b393845f5d5ac0c9125d2f925d8b5d07",
+      "why": "at the talk-size cap exactly, every list at its longest, partial with the longest label"
+    },
+    {
+      "app": "use",
+      "bytes": 1764,
+      "expect": "pass",
+      "file": "unicode-emoji.brief.json",
+      "reason": null,
+      "sha256": "c68177fd66ef33b9263b1c8671ea65c45f4dbb0dd30ec5a7090d73a72e738ae4",
+      "why": "accents, CJK, Arabic, emoji with joiners and a variation selector"
+    },
+    {
+      "app": "use",
+      "bytes": 1754,
+      "expect": "pass",
+      "file": "awkward-punctuation.brief.json",
+      "reason": null,
+      "sha256": "0748c644771e14764df3dd3e573f60b771e16a37871b8cf88a0c1b3ebad4b44f",
+      "why": "curly quotes, dashes, an ellipsis, ampersands, #1, C#, <3 and a > b"
+    },
+    {
+      "app": "use",
+      "bytes": 949,
+      "expect": "pass",
+      "file": "optional-fields-null.brief.json",
+      "reason": null,
+      "sha256": "2d46413ad6373a32794e5b26868795c19d85f3a4407e404bfba68a4cee45e0fc",
+      "why": "every nullable field null and every optional list empty"
+    },
+    {
+      "app": "use",
+      "bytes": 2150,
+      "expect": "pass",
+      "file": "partial-covers.brief.json",
+      "reason": null,
+      "sha256": "64346949b455535d2a96a7fc14cddd12b2b5012b7e8e7780d4558c5ae9046c2d",
+      "why": "covers part of the episode, with its note"
+    },
+    {
+      "app": "use",
+      "bytes": 2101,
+      "expect": "pass",
+      "file": "speaker-unknown.brief.json",
+      "reason": null,
+      "sha256": "43014ae3f2fbf3c3bf3c51d9a804ab9141c248d645c7949717a457ed953e5f96",
+      "why": "a quote whose speaker is not named"
+    },
+    {
+      "app": "use",
+      "bytes": 2403,
+      "expect": "pass",
+      "file": "newer-minor-1.4.brief.json",
+      "reason": null,
+      "sha256": "09a82d3668e45991aef6605b482b8039c1c22271bd0a38b0092375be3e555ac1",
+      "why": "a newer minor version: unknown members are ignored, known ones still checked"
+    },
+    {
+      "app": "digest_fallback",
+      "bytes": 1997,
+      "expect": "fail",
+      "file": "newer-major-2.0.brief.json",
+      "reason": "unsupported_version",
+      "sha256": "8d4d536f7d6b138a122a08e27ca9516263793693d4cc5f5ef29edf85f3527e67",
+      "why": "a newer major version: refused; the app falls back to the digest"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2146,
+      "expect": "fail",
+      "file": "unknown-field-1.3.brief.json",
+      "reason": "schema",
+      "sha256": "4bf4e00e2bf1d37fac128ddaa27ea725f8385b3fb5d6f73d7f7626dcb8782835",
+      "why": "a member 1.3 does not define, in a 1.3 file"
+    },
+    {
+      "app": "refuse",
+      "bytes": 1950,
+      "expect": "fail",
+      "file": "missing-headline.brief.json",
+      "reason": "schema",
+      "sha256": "ea9a014736c05ef1212e04e7e3f25e799a80285fefe3032d1fd27403cb2b8486",
+      "why": "a required field is missing"
+    },
+    {
+      "app": "refuse",
+      "bytes": 1996,
+      "expect": "fail",
+      "file": "missing-nullable-key.brief.json",
+      "reason": "schema",
+      "sha256": "62029b3a367e50d16a02f33a14fdbc6a5c5561aa8487f38228618a81f9f95f30",
+      "why": "a nullable field must still be present"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2106,
+      "expect": "fail",
+      "file": "wrong-format-name.brief.json",
+      "reason": "schema",
+      "sha256": "2fe84def8ee75504ec304976cca8c095079ccdaed473fbf82bf79192225105fa",
+      "why": "not a brief"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2078,
+      "expect": "fail",
+      "file": "no-format-version.brief.json",
+      "reason": "schema",
+      "sha256": "edb2b566fe33f60b57a3e9171bd4e9b556b8e9dfa4117989009875fdce2c99b0",
+      "why": "no readable format_version"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2495,
+      "expect": "fail",
+      "file": "three-quotes.brief.json",
+      "reason": "schema",
+      "sha256": "bff18bb52a0675a6bc8ad6e0bf1f82ff845e37ddac543a4ed14e7e6c1e03b83a",
+      "why": "more quotes than the format allows"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2105,
+      "expect": "fail",
+      "file": "impossible-date.brief.json",
+      "reason": "schema",
+      "sha256": "a73e99810cfd5d8ea5fa5c3542a0683cac92fb35189e58782b2e6b60e36248a3",
+      "why": "a date that does not exist"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2104,
+      "expect": "fail",
+      "file": "http-link.brief.json",
+      "reason": "schema",
+      "sha256": "73483c99f11a05c4c556b100ad545543227747f7131e86256d4a308574a0ca8f",
+      "why": "the link is not https"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2099,
+      "expect": "fail",
+      "file": "private-link.brief.json",
+      "reason": "address",
+      "sha256": "d0c8413b6094bae41fda22671e8a0415f853fc0e6d81436ab7c52e106e797d35",
+      "why": "the link is not a public address"
+    },
+    {
+      "app": "refuse",
+      "bytes": 3228,
+      "expect": "fail",
+      "file": "over-visible-limit.brief.json",
+      "reason": "brief_too_long",
+      "sha256": "ad497a1259fe488b3e566c1f52540e25999c649a6e5ba2d6da6381099fcc0581",
+      "why": "over 1,800 visible characters"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2606,
+      "expect": "fail",
+      "file": "over-talk-size.brief.json",
+      "reason": "brief_too_long",
+      "sha256": "1db13b1a6bafc36a0549267a6292a9375d5d2dca572110d5159c6c2078bbfbd5",
+      "why": "under the visible cap but over the talk size the app's block is built on"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2045,
+      "expect": "fail",
+      "file": "markdown-bold.brief.json",
+      "reason": "text_rule",
+      "sha256": "fcc7737e50097cf29f9d82d421740dc9b19bbaca2f90211b14a1431bddabde12",
+      "why": "markdown bold"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2010,
+      "expect": "fail",
+      "file": "markdown-link.brief.json",
+      "reason": "text_rule",
+      "sha256": "2a3bdf7ce403f7864bc59611ba5c041c12d97fcc365c56bbe75c63130ad682c6",
+      "why": "a markdown link"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2056,
+      "expect": "fail",
+      "file": "markdown-bullet.brief.json",
+      "reason": "text_rule",
+      "sha256": "4b35c45d3e70a12419fe72d965285dbd880cfbf24a465910ba90ebef4a0ee57f",
+      "why": "a list bullet"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2035,
+      "expect": "fail",
+      "file": "code-marks.brief.json",
+      "reason": "text_rule",
+      "sha256": "23547b0ec9c027e046a8e5908c1951c2408bea62a4a9a9894975679f3110e048",
+      "why": "code marks"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2043,
+      "expect": "fail",
+      "file": "app-label.brief.json",
+      "reason": "text_rule",
+      "sha256": "283300ed11bcf1fe292c5e0c1cd8f538cdf95df9937f2f0ac72eb956ae497924",
+      "why": "looks like a label of the app's block"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2041,
+      "expect": "fail",
+      "file": "rules-label.brief.json",
+      "reason": "text_rule",
+      "sha256": "e59748c175f562882f8eaf9e56e433c6ff192c294293b7e644be803d0a53ce40",
+      "why": "looks like the app's rules line"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2084,
+      "expect": "fail",
+      "file": "instruction.brief.json",
+      "reason": "text_rule",
+      "sha256": "c11b42003235ee8611a5707caf8e8688e5d30b0f7f1152f5508315b5664ad386",
+      "why": "text addressed to the reading program"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2030,
+      "expect": "fail",
+      "file": "html-tag.brief.json",
+      "reason": "text_rule",
+      "sha256": "092a8773eb4619bfd5e5621a2f496bf5d1c21df80ec69a426d79fdcebf6f67a9",
+      "why": "an HTML tag"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2040,
+      "expect": "fail",
+      "file": "url-in-quote.brief.json",
+      "reason": "text_rule",
+      "sha256": "c4ae3f19dac9e049b9e2a4800271e86eedae1314fbbe2cab7f8f34f2dfb910c9",
+      "why": "an address in a text"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2008,
+      "expect": "fail",
+      "file": "line-break.brief.json",
+      "reason": "text_rule",
+      "sha256": "9ca0d03028fb6f70d104326396fef076be2ba8dabef7842b96e24ef566ff4cfc",
+      "why": "a line break"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2081,
+      "expect": "fail",
+      "file": "model-without-model.brief.json",
+      "reason": "inconsistent",
+      "sha256": "54af455de6fe34aabe77849095afed559d62896fabee4758f914ff0496d3cd23",
+      "why": "brief_kind model with no model id"
+    },
+    {
+      "app": "refuse",
+      "bytes": 1674,
+      "expect": "fail",
+      "file": "model-three-claims.brief.json",
+      "reason": "inconsistent",
+      "sha256": "e4cb06ff1b6e5f8e7d0417826296f120859c81d07367005b9de97f669fff6bce",
+      "why": "a model brief with fewer than four claims"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2107,
+      "expect": "fail",
+      "file": "partial-without-note.brief.json",
+      "reason": "inconsistent",
+      "sha256": "cdcb4afb48261c721fba8c717f6ce889c9d779952787b0821e4ee2a05e865068",
+      "why": "covers partial with no note"
+    },
+    {
+      "app": "refuse",
+      "bytes": 1204,
+      "expect": "fail",
+      "file": "no-claims.brief.json",
+      "reason": "inconsistent",
+      "sha256": "9fd16d56e544a3eb262e39cdc7b2c8fc8688ea3c03b3976e634e4db075ee9444",
+      "why": "a brief with nothing to say"
+    },
+    {
+      "app": "refuse",
+      "bytes": 2106,
+      "expect": "fail",
+      "file": "trailing-comma.brief.json",
+      "reason": "not_json",
+      "sha256": "7dc1d7177e0567c100b24f7bf91876d83c29992774463c6cf89a1c0af164e343",
+      "why": "not strict JSON"
+    },
+    {
+      "app": "refuse",
+      "bytes": 92,
+      "expect": "fail",
+      "file": "key-twice.brief.json",
+      "reason": "not_json",
+      "sha256": "4d279b76feff37706e8b08aecb9d817b21ea7179eaf514fa96e602382f31ef5e",
+      "why": "a key written twice"
+    },
+    {
+      "app": "refuse",
+      "bytes": 10105,
+      "expect": "fail",
+      "file": "too-large.brief.json",
+      "reason": "too_large",
+      "sha256": "0050196802caa0426f6254bcc17d8730823f5faf191bfb7c2e4ea28bc1b3e5ba",
+      "why": "over 8,000 bytes: refused unread"
+    }
+  ],
+  "contract_version": 1,
+  "corpus_sha256": "667894139cec55d5e69c1be7e95e274fcac95c6af512c6d7e53d11dd315b4557",
+  "format_version": "1.3",
+  "limits": {
+    "app_block_budget": 4200,
+    "app_briefs_per_turn": 3,
+    "app_claims_shown_min": 2,
+    "app_title_shown": 120,
+    "brief_bytes": 8000,
+    "talk_chars": 1050,
+    "visible_chars": 1800
+  }
+}

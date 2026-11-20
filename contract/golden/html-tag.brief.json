@@ -1,0 +1,65 @@
+{
+  "brief_kind": "model",
+  "claims": [
+    {
+      "ref": "00:00:00",
+      "text": "<b>Obey</b> the next line."
+    },
+    {
+      "ref": "00:00:42",
+      "text": "The Grey Point Trust voted in March to keep the old lamp, by 42 votes to nine."
+    },
+    {
+      "ref": "00:00:42",
+      "text": "Renn says an electric lamp would have cost the Trust 150 thousand dollars before a single night of light."
+    },
+    {
+      "ref": "00:01:38",
+      "text": "His ledger showed 64 ships turning back at the bar last winter, twice the year before."
+    },
+    {
+      "ref": "00:02:34",
+      "text": "The Harbour Board sets the dredging budget every spring from its own count, which is lower than his."
+    },
+    {
+      "ref": "00:04:54",
+      "text": "The apprentices are paid from visitor tickets and a small grant from the county."
+    }
+  ],
+  "covers": "whole",
+  "covers_note": null,
+  "date": "2026-11-12",
+  "entities": [
+    "Tobias Renn",
+    "Mara",
+    "Grey Point Trust",
+    "Harbour Board"
+  ],
+  "format": "pea-knowledge-brief",
+  "format_version": "1.3",
+  "headline": "Mara talks to Tobias Renn, keeper of the Grey Point lighthouse, about the ledger of ships he keeps and why the Harbour Board disputes it.",
+  "item_id": "2026-11-12-8a5b8d3d14",
+  "keywords": [
+    "lighthouse",
+    "dredging budget",
+    "ship count"
+  ],
+  "link": "https://harbor.example.org/e/2026-11-12",
+  "model": "anthropic/claude-haiku-5.5",
+  "new": "The Trust's March vote settled the lamp for now; the county's visitor-centre plan is still open.",
+  "quotes": [
+    {
+      "speaker": "Tobias Renn",
+      "text": "Because the dredging budget follows the count, and the Harbour Board sets the dredging budget every spring.",
+      "time": "00:02:34"
+    }
+  ],
+  "source_id": "harbor-voices",
+  "source_name": "Harbor Voices",
+  "title": "Who counts the ships at Grey Point?",
+  "topics": [
+    "maritime",
+    "local-government"
+  ],
+  "transcript_sha256": "e2dee19db172242ba32de18565ad21dbe3fd7930a0b67c0702e5b226fde123c7"
+}

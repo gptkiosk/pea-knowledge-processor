@@ -640,7 +640,7 @@ def brief_candidates(config, work_state, previous, settings):
             if old and (old.get("brief") or {}).get("kind") == "model":
                 try:
                     data = read(os.path.join(previous.folder, *old["brief"]["path"].split("/")))
-                    cached = (data, jsonschema_lite.loads(data))
+                    cached = (data, jsonschema_lite.loads(data)) if publishable_brief(data) else None
                 except (OSError, jsonschema_lite.NotJSON):
                     cached = None
             out.append((source, item, cached))
@@ -693,7 +693,13 @@ def brief_stage(config, work, previous=None, environment=None, log=print, limit=
             item["brief_outcome"] = "fell_back"
             continue
         fields, covers, cover_note = made
-        write(target, jsonschema_lite.dumps(br.document(source, item, fields, "model", settings.model, covers, cover_note, sha)))
+        data = jsonschema_lite.dumps(br.document(source, item, fields, "model", settings.model, covers, cover_note, sha)).encode("utf-8")
+        if not publishable_brief(data):   # e.g. over the talk size with its quotes gone: the build makes an extractive one
+            log("brief for %s/%s: does not pass the reader's check, the build makes an extractive one" % (source["id"], item["id"]))
+            report.fell_back += 1
+            item["brief_outcome"] = "fell_back"
+            continue
+        write(target, data)
         report.written += 1
         item["brief_outcome"] = "model"
     if not use_model:
@@ -829,9 +835,16 @@ def _new_item(config, source, work, item):
     if tagger(config) is not None and "topics" in item:
         entry["topics"], entry["topics_by"] = item["topics"], item["topics_by"]
     made = os.path.join(work, "briefs", sid, iid + ".brief.json")
-    data = read(made) if os.path.isfile(made) else br.extractive_file(source, item, d, [x["id"] for x in entry.get("topics", [])])
+    data = read(made) if os.path.isfile(made) else None
+    if data is None or not publishable_brief(data):   # the contract: only a brief that passes the reader's check is published
+        data = br.extractive_file(source, item, d, [x["id"] for x in entry.get("topics", [])])
     _attach_brief(entry, data, files)
     return entry, files
+
+
+def publishable_brief(data):
+    """True when a brief file passes the reader's check on its own (validate.check_brief_alone: the contract)."""
+    return validate.check_brief_alone(data)[0] is not None
 
 
 def _attach_brief(entry, data, files):
@@ -843,10 +856,13 @@ def _attach_brief(entry, data, files):
 
 
 def _with_brief(source, entry, files):
-    """An index entry kept from an earlier output, with a brief: its own when it has one, else an extractive one made from its digest."""
-    if "brief" in entry:
+    """An index entry kept from an earlier output, with a brief: its own when it has one that still passes the reader's
+    check (the contract may have grown stricter since), else an extractive one made from its digest."""
+    if "brief" in entry and publishable_brief(files[entry["brief"]["path"]]):
         return entry
     entry = dict(entry)
+    if "brief" in entry:
+        files.pop(entry.pop("brief")["path"], None)
     d = jsonschema_lite.loads(files[entry["digest"]["path"]])
     _attach_brief(entry, br.extractive_file(source, entry, d, [x["id"] for x in entry.get("topics", [])]), files)
     return entry
