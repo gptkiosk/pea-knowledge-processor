@@ -53,7 +53,15 @@ def text_reason(text):
 def authored_texts(b):
     """(where, text) of every authored text of a parsed brief."""
     out = [(k, b.get(k)) for k in AUTHORED]
-    out += [("claims[%d].text" % n, c.get("text")) for n, c in enumerate(b.get("claims") or []) if isinstance(c, dict)]
+    for n, c in enumerate(b.get("claims") or []):
+        if isinstance(c, dict):
+            out.append(("claims[%d].text" % n, c.get("text")))
+            for m, cit in enumerate(c.get("citations") or []):
+                if isinstance(cit, dict):
+                    out += [
+                        ("claims[%d].citations[%d].summary" % (n, m), cit.get("summary")),
+                        ("claims[%d].citations[%d].correlation" % (n, m), cit.get("correlation")),
+                    ]
     for n, q in enumerate(b.get("quotes") or []):
         if isinstance(q, dict):
             out += [("quotes[%d].text" % n, q.get("text")), ("quotes[%d].speaker" % n, q.get("speaker"))]

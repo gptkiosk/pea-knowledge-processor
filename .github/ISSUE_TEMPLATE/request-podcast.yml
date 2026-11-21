@@ -1,0 +1,44 @@
+name: Request a podcast
+description: Request a new podcast for the PEA curated catalog so automated ingestion testing runs on it.
+title: "Podcast request: "
+labels:
+  - source-request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit a podcast for the PEA curated catalog. When you open this issue, an automated zero-secret check tests the feed, `robots.txt`, episode transcripts, iPhone fetch compatibility, and the brief contract, and posts the result as a comment.
+
+        If you know the RSS feed or `agent.json` URL (or the show's official website), include it below so the ingestion test runs right away.
+  - type: input
+    id: show_name
+    attributes:
+      label: Podcast name
+      description: The public name of the show.
+      placeholder: e.g. The AI Daily Brief
+    validations:
+      required: true
+  - type: input
+    id: feed_url
+    attributes:
+      label: RSS feed or agent.json URL
+      description: Public https:// link to the RSS/Atom feed, JSON Feed, or agent.json (optional if you provide the official website below).
+      placeholder: https://feeds.example.org/show.xml
+    validations:
+      required: false
+  - type: input
+    id: website_url
+    attributes:
+      label: Official website URL
+      description: Public https:// link to the show's official homepage (used for RSS auto-discovery if no feed URL is given).
+      placeholder: https://example.org/
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes (optional)
+      description: Where transcripts are hosted (e.g. RSS transcript tags, episode pages, show notes) or anything else helpful for review.
+      placeholder: Transcripts are linked on each episode page...
+    validations:
+      required: false

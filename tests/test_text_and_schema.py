@@ -98,7 +98,7 @@ class Schemas(unittest.TestCase):
         config = pipeline.load_config(os.path.join(support.ROOT, "config", "sources.json"))
         self.assertGreaterEqual(len(config["sources"]), 4)
         for s in config["sources"]:
-            self.assertRegex(s["terms"]["checked"], r"^2026-11-1[45]$")
+            self.assertRegex(s["terms"]["checked"], r"^20\d{2}-\d{2}-\d{2}$")
             self.assertEqual(s["publish"], "digest_only", "full transcripts are published only where the terms clearly allow it")
             self.assertEqual(s["kind"], "podcast", "only sources with full transcripts are carried: no headline-only news")
             self.assertTrue(s.get("transcript_route") and s.get("chosen_because"), s["id"])

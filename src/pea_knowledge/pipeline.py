@@ -22,7 +22,7 @@ import statistics
 import types
 from urllib.parse import urlsplit
 
-from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br, briefs_index as bx, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, textrules, topics as tp, validate
+from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br, briefs_index as bx, digest as dg, fetch, htmlpage, jsonschema_lite, model_digest, probe, scholarly, textrules, topics as tp, validate
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
@@ -760,6 +760,109 @@ def brief_estimate(config, work, previous=None, environment=None, limit=None):
               "monthly_cap_cents": settings.monthly_cap_cents, "run_cap_cents": settings.run_cap_cents,
               "price": (settings.price_input, settings.price_output)}
     return rows, totals
+
+
+# --- Stage 3c/3d: scholarly evidence fetch (no secrets) and claim correlation (OpenRouter or extractive) -----------------
+def fetch_evidence_stage(config, work, max_claims=None, per_claim=None, opener=None, log=print):
+    """Zero-secret stage: scans generated briefs in `work/briefs/` for empirical science claims, queries OpenAlex
+    (`https://api.openalex.org/works`), and writes raw candidate papers to `work/evidence.json`."""
+    raw_cfg = (config or {}).get("scholarly") or {}
+    enabled = bool(raw_cfg.get("enabled", True))
+    max_claims = int(max_claims if max_claims is not None else raw_cfg.get("max_claims_per_run", scholarly.DEFAULT_MAX_CLAIMS_PER_RUN))
+    per_claim = int(per_claim if per_claim is not None else raw_cfg.get("citations_per_claim", scholarly.DEFAULT_CITATIONS_PER_CLAIM))
+    briefs_root = os.path.join(work, "briefs")
+    evidence = {"items": [], "claims_checked": 0, "papers_found": 0}
+    if not enabled or not os.path.isdir(briefs_root):
+        write(os.path.join(work, "evidence.json"), jsonschema_lite.dumps(evidence))
+        return evidence
+    paths = []
+    for top, dirs, names in os.walk(briefs_root):
+        dirs.sort()
+        for name in sorted(names):
+            if name.endswith(".brief.json"):
+                paths.append(os.path.join(top, name))
+    for path in paths:
+        if evidence["claims_checked"] >= max_claims:
+            break
+        try:
+            doc = jsonschema_lite.loads(read(path))
+        except (OSError, jsonschema_lite.NotJSON):
+            continue
+        rel = os.path.relpath(path, work).replace(os.sep, "/")
+        topics = doc.get("topics") or []
+        title = doc.get("title") or ""
+        entities = doc.get("entities") or []
+        claim_hits = []
+        for idx, cl in enumerate(doc.get("claims") or []):
+            if evidence["claims_checked"] >= max_claims:
+                break
+            if not isinstance(cl, dict) or cl.get("citations"):
+                continue
+            text = cl.get("text") or ""
+            if not scholarly.is_science_claim(text, topics=topics, title=title):
+                continue
+            query = scholarly.build_query(text, entities=entities)
+            if not query:
+                continue
+            evidence["claims_checked"] += 1
+            papers = scholarly.fetch_openalex(query, limit=per_claim, opener=opener)
+            if papers:
+                evidence["papers_found"] += len(papers)
+                claim_hits.append({"claim_index": idx, "claim_text": text, "query": query, "papers": papers})
+        if claim_hits:
+            evidence["items"].append({"brief_path": rel, "claims": claim_hits})
+    write(os.path.join(work, "evidence.json"), jsonschema_lite.dumps(evidence))
+    log("scholarly fetch: %d science claim(s) checked, %d peer-reviewed paper(s) found" % (evidence["claims_checked"], evidence["papers_found"]))
+    return evidence
+
+
+def correlate_stage(config, work, environment=None, call=None, log=print):
+    """Summarizes and correlates fetched scholarly papers in `work/evidence.json` against each brief's claims.
+    Uses OpenRouter when OPENROUTER_API_KEY is set (same model settings as `briefs`), otherwise deterministic extractive
+    correlation. Only writes a brief when the resulting format 1.4 file passes `publishable_brief`."""
+    ev_path = os.path.join(work, "evidence.json")
+    report = {"briefs_updated": 0, "citations_attached": 0, "mode": "none"}
+    if not os.path.isfile(ev_path):
+        return report
+    try:
+        evidence = jsonschema_lite.loads(read(ev_path))
+    except (OSError, jsonschema_lite.NotJSON):
+        return report
+    settings = br.Settings(config, environment)
+    use_model = (settings.enabled and bool(settings.key)) or call is not None
+    report["mode"] = "model" if use_model else "extractive"
+    for entry in evidence.get("items") or []:
+        rel = entry.get("brief_path") or ""
+        full = os.path.join(work, *rel.split("/"))
+        if not os.path.isfile(full):
+            continue
+        try:
+            doc = jsonschema_lite.loads(read(full))
+        except (OSError, jsonschema_lite.NotJSON):
+            continue
+        claim_map = {}
+        for ch in entry.get("claims") or []:
+            idx = ch.get("claim_index")
+            claim_text = ch.get("claim_text") or ""
+            cits = []
+            for paper in ch.get("papers") or []:
+                cit = scholarly.correlate_model(settings, claim_text, paper, call=call) if use_model else scholarly.correlate_extractive(claim_text, paper)
+                if cit is not None:
+                    cits.append(cit)
+            if cits and isinstance(idx, int):
+                claim_map[idx] = cits
+        if not claim_map:
+            continue
+        updated, count = scholarly.attach_citations(doc, claim_map)
+        if count <= 0:
+            continue
+        encoded = jsonschema_lite.dumps(updated).encode("utf-8")
+        if publishable_brief(encoded):
+            write(full, encoded)
+            report["briefs_updated"] += 1
+            report["citations_attached"] += count
+    log("scholarly correlate (%s): %d brief(s) updated, %d citation(s) attached" % (report["mode"], report["briefs_updated"], report["citations_attached"]))
+    return report
 
 
 # --- Stage 4: build ------------------------------------------------------------------------------------------------------

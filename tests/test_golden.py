@@ -208,12 +208,14 @@ class Workflows(unittest.TestCase):
     def test_only_the_digest_job_gets_the_key_and_nothing_else_has_secrets(self):
         text = self.read("process.yml")
         jobs = self.jobs(text)
-        self.assertEqual(list(jobs), ["fetch-and-normalize", "digest", "publish", "keep-alive"])
+        self.assertEqual(list(jobs), ["fetch-and-normalize", "digest", "fetch-evidence", "correlate", "publish", "keep-alive"])
         self.assertNotIn("secrets.", jobs["keep-alive"])
         self.assertNotIn("${{ secrets", text.split("\njobs:\n")[0])
         self.assertNotIn("secrets.", jobs["fetch-and-normalize"])
+        self.assertNotIn("secrets.", jobs["fetch-evidence"])
         self.assertNotIn("secrets.", jobs["publish"])
         self.assertEqual(re.findall(r"secrets\.([A-Z_]+)", jobs["digest"]), ["OPENROUTER_API_KEY"])
+        self.assertEqual(re.findall(r"secrets\.([A-Z_]+)", jobs["correlate"]), ["OPENROUTER_API_KEY"])
         self.assertNotIn("secrets.", self.read("test.yml"))
         self.assertNotIn("pull_request_target", text + self.read("test.yml"))
 
@@ -235,20 +237,22 @@ class Workflows(unittest.TestCase):
         self.assertIn('cron: "17 */6 * * *"', text)
         self.assertIn("workflow_dispatch:", text)
         self.assertRegex(text, r"concurrency:\n  group: process-and-publish\n  cancel-in-progress: false")
-        for name in ("fetch-and-normalize", "digest"):
+        for name in ("fetch-and-normalize", "digest", "fetch-evidence", "correlate"):
             self.assertEqual(re.findall(r"(?m)^      ([a-z-]+): (\w+)$", jobs[name].split("steps:")[0]), [("contents", "read")], name)
         self.assertEqual(re.findall(r"(?m)^      ([a-z-]+): (\w+)$", jobs["publish"].split("steps:")[0].split("environment:")[0]),
                          [("contents", "read"), ("pages", "write"), ("id-token", "write")])
         self.assertIn("name: github-pages", jobs["publish"])
         self.assertIn("needs: fetch-and-normalize", jobs["digest"])
-        self.assertIn("needs: digest", jobs["publish"])
+        self.assertIn("needs: digest", jobs["fetch-evidence"])
+        self.assertIn("needs: fetch-evidence", jobs["correlate"])
+        self.assertIn("needs: correlate", jobs["publish"])
         publish = jobs["publish"]
         self.assertLess(publish.index("pea_knowledge build"), publish.index("pea_knowledge validate dist"))
         self.assertLess(publish.index("pea_knowledge validate dist"), publish.index("upload-pages-artifact"))
         self.assertLess(publish.index("upload-pages-artifact"), publish.index("deploy-pages"))
         self.assertIn("GITHUB_STEP_SUMMARY", publish)
-        self.assertEqual(text.count("persist-credentials: false"), 3)
-        self.assertEqual(text.count("retention-days: 1"), 2)
+        self.assertEqual(text.count("persist-credentials: false"), 5)
+        self.assertEqual(text.count("retention-days: 1"), 4)
         self.assertNotIn("continue-on-error", text)
         test = self.read("test.yml")
         self.assertIn("pull_request:", test)

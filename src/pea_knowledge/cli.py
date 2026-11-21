@@ -19,7 +19,7 @@ import shutil
 import sys
 import tempfile
 
-from . import contract, fetch, jsonschema_lite, pipeline, validate
+from . import contract, fetch, intake, jsonschema_lite, pipeline, validate
 
 
 def _now(text):
@@ -87,6 +87,48 @@ def cmd_briefs(args):
 
 def cmd_digest(args):
     pipeline.digest_stage(pipeline.load_config(args.config), args.work, log=_log)
+    return 0
+
+
+def cmd_fetch_evidence(args):
+    pipeline.fetch_evidence_stage(pipeline.load_config(args.config), args.work, max_claims=args.max_claims, per_claim=args.per_claim, log=_log)
+    return 0
+
+
+def cmd_correlate(args):
+    pipeline.correlate_stage(pipeline.load_config(args.config), args.work, log=_log)
+    return 0
+
+
+def cmd_test_source(args):
+    """Tests a candidate podcast request against the real ingestion pipeline (feed, transcripts, phone probe, brief contract)."""
+    fetcher, _ = _fetcher(args)
+    name = args.name or ""
+    feed_url = args.feed_url or ""
+    website_url = args.website_url or ""
+    notes = args.notes or ""
+    if args.issue_env:
+        parsed = intake.parse_issue_body(os.environ.get(args.issue_env, ""))
+        name = name or parsed["show_name"]
+        feed_url = feed_url or parsed["feed_url"]
+        website_url = website_url or parsed["website_url"]
+        notes = notes or parsed["notes"]
+    report = intake.test_candidate(
+        fetcher,
+        name=name,
+        feed_url=feed_url,
+        website_url=website_url,
+        notes=notes,
+        check_items=args.check_items,
+    )
+    output = intake.format_markdown(report) if args.markdown else jsonschema_lite.dumps(report) + "\n"
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            f.write(output)
+    else:
+        sys.stdout.write(output)
+    if args.strict and report["verdict"] != "PASS":
+        return 1
     return 0
 
 
@@ -261,6 +303,28 @@ def main(argv=None):
     c.add_argument("--dry-run", action="store_true", help="print which items would get a model brief and the estimated cost; no model call")
     c.add_argument("--limit", type=int, help="at most this many items")
     c.set_defaults(run=cmd_briefs)
+    c = sub.add_parser("fetch-evidence", help="stage 3c (no secrets): fetch OpenAlex peer-reviewed papers for science claims in work/briefs")
+    c.add_argument("--config", default="config/sources.json")
+    c.add_argument("--work", required=True)
+    c.add_argument("--max-claims", type=int, default=None, help="maximum science claims checked in one run")
+    c.add_argument("--per-claim", type=int, default=None, help="maximum candidate papers kept per claim")
+    c.set_defaults(run=cmd_fetch_evidence)
+    c = sub.add_parser("correlate", help="stage 3d: summarize and correlate fetched papers against claims (format 1.4 citations; OPENROUTER_API_KEY optional)")
+    c.add_argument("--config", default="config/sources.json")
+    c.add_argument("--work", required=True)
+    c.set_defaults(run=cmd_correlate)
+    c = sub.add_parser("test-source", help="test a requested podcast against feed parsing, transcripts, phone probe, and brief contract")
+    common(c, config=False)
+    c.add_argument("--name", default="", help="podcast name")
+    c.add_argument("--feed-url", default="", help="RSS/Atom feed, JSON Feed, or agent.json URL")
+    c.add_argument("--website-url", default="", help="official website URL (used for feed auto-discovery if feed-url is blank)")
+    c.add_argument("--notes", default="", help="optional notes")
+    c.add_argument("--issue-env", help="environment variable holding a GitHub Issue Form body to parse safely")
+    c.add_argument("--check-items", type=int, default=5, help="newest episodes to check for transcripts (default: 5)")
+    c.add_argument("--markdown", action="store_true", help="print a Markdown report instead of JSON")
+    c.add_argument("--out", help="write report to this file instead of stdout")
+    c.add_argument("--strict", action="store_true", help="exit non-zero unless the verdict is PASS")
+    c.set_defaults(run=cmd_test_source)
     c = sub.add_parser("build", help="stage 4: write the output folder from the work folder and the previous output")
     c.add_argument("--config", default="config/sources.json")
     c.add_argument("--work", required=True)

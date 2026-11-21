@@ -104,11 +104,13 @@ GitHub switches off a scheduled workflow after 60 days without activity in the r
 
 ## Add a source
 
-0. **Only sources with full transcripts are carried, and only their items that have one.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it, and where the app's own request (not just the pipeline's) can fetch it too. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
-1. Go through the terms checklist in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md): robots.txt, licence, terms of use.
-2. Add an entry to `config/sources.json` (`schema/sources.schema.json` describes it): id, name, kind, adapter, feed address, site, description, overview, categories, icon hint, the hosts, where the transcript is (`transcript_route`; for a transcript that is a web page also `transcript_page`: how the page of an episode is found, its one host, and the elements to read), why it is there (`chosen_because`), the `terms` you verified, and `publish`. **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
-3. `python3 -m pea_knowledge run --config config/sources.json --out dist`, read the summary, open a digest.
-4. Open a pull request. The tests run on it.
+See [docs/ADDING-SOURCES.md](docs/ADDING-SOURCES.md) for the full request, automated testing, and onboarding workflow.
+
+0. **Request & test automatically:** Submit a podcast from the PEA app (**Settings → Knowledge sources → Browse curated sources → Request a podcast**) or open a `source-request` issue. `.github/workflows/test-source-request.yml` runs `python3 -m pea_knowledge test-source` (no secrets) and posts a report checking `robots.txt`, feed parsing, transcript share, the iPhone-style probe, the brief contract, and a starter `config/sources.json` block. You can run the same command locally: `python3 -m pea_knowledge test-source --name "..." --feed-url "https://..." --markdown`.
+1. **Only sources with full transcripts are carried, and only their items that have one.** The publisher itself must offer the full transcript, openly, where the pipeline can fetch it, and where the app's own request (not just the pipeline's) can fetch it too. Not behind a login, paywall or membership, and not YouTube captions or a third-party transcript site.
+2. Go through the terms checklist in [docs/SOURCES-TERMS.md](docs/SOURCES-TERMS.md): robots.txt, licence, terms of use.
+3. Add the verified entry to `config/sources.json` (`schema/sources.schema.json` describes it). **`publish` is `digest_only` unless the publisher clearly permits redistributing transcripts.**
+4. Run `python3 -I -m unittest` and `python3 -m pea_knowledge run --config config/sources.json --out dist`, read the summary, and open a pull request.
 
 ## Take a source offline in one commit
 

@@ -315,6 +315,25 @@ def brief_rules(b, where):
         why = contract.text_reason(text)
         if why is not None:
             problems.append(Problem("text_rule", "%s.%s" % (where, at), why))
+    valid_stances = {"supports", "mixed", "limited_human_evidence", "contradicts", "related"}
+    for n, c in enumerate(b.get("claims") or []):
+        cits = c.get("citations") if isinstance(c, dict) else None
+        if cits is None:
+            continue
+        if not isinstance(cits, list) or len(cits) > 4:
+            problems.append(Problem("schema", "%s.claims[%d].citations" % (where, n), "citations must be a list of at most 4 entries"))
+            continue
+        for m, cit in enumerate(cits):
+            p = "%s.claims[%d].citations[%d]" % (where, n, m)
+            if not isinstance(cit, dict):
+                problems.append(Problem("schema", p, "citation must be an object"))
+                continue
+            if cit.get("stance") not in valid_stances:
+                problems.append(Problem("schema", p + ".stance", "unknown citation stance"))
+            if any(not isinstance(cit.get(k), str) or not cit.get(k).strip() for k in ("title", "journal", "summary", "correlation")):
+                problems.append(Problem("schema", p, "citation title, journal, summary and correlation must be non-empty strings"))
+            if not isinstance(cit.get("link"), str) or validate_url(cit["link"]) != cit["link"]:
+                problems.append(Problem("address", p + ".link", "citation link must be a public https address"))
     return problems
 
 

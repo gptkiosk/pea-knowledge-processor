@@ -792,6 +792,186 @@
       "hosts": [
         "Lex Fridman"
       ]
+    },
+    {
+      "id": "hidden-brain",
+      "name": "Hidden Brain",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://www.hiddenbrain.org/feed/",
+      "site": "https://www.hiddenbrain.org/",
+      "publisher": "Hidden Brain Media",
+      "language": "en",
+      "description": "Explores human behavior, psychology, and the unconscious patterns that shape how people think, feel, and act.",
+      "overview": "A weekly narrative and interview show hosted by science journalist Shankar Vedantam. Each episode examines one question about human psychology, social behavior, decision-making, or relationships, pairing personal stories with interviews with behavioral scientists and researchers. Episodes usually open with a story, walk through the underlying research and experiments, and close with practical reflections.",
+      "categories": [
+        "psychology",
+        "science",
+        "society",
+        "behavior"
+      ],
+      "topics": [
+        "science",
+        "mental-health",
+        "self-improvement",
+        "relationships-family",
+        "culture-media"
+      ],
+      "icon": {
+        "symbol": "sparkles",
+        "colour": "purple"
+      },
+      "publish": "digest_only",
+      "attribution": "Hidden Brain, hiddenbrain.org",
+      "suggested_keep": 5,
+      "transcript_page": {
+        "from": "link",
+        "host": "www.hiddenbrain.org",
+        "extract": {
+          "within": [
+            "#ub-content-toggle-panel-0-transcript",
+            "#ub-content-toggle-transcript"
+          ]
+        }
+      },
+      "terms": {
+        "checked": "2026-11-21",
+        "robots": {
+          "url": "https://www.hiddenbrain.org/robots.txt",
+          "finding": "User-agent: * with empty Disallow (allows reading all pages). Read 2026-11-21."
+        },
+        "licence": {
+          "url": null,
+          "finding": "No open licence statement found; transcripts are provided openly on each episode page."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "No terms-of-use page found (/terms and /terms-of-use return 404, and the homepage links to none). Read 2026-11-21."
+        },
+        "summary": "The publisher posts full speaker-attributed transcripts openly on each episode page and its robots file allows reading. No licence permits republishing transcripts, so only digests with a link back are published.",
+        "uncertain": [
+          "No terms of use page was found, so automated reading and short quoted excerpts are not explicitly addressed; asking the publisher would settle it.",
+          "Transcripts are extracted from #ub-content-toggle-panel-0-transcript; if the WordPress theme changes, new episodes pause cleanly until updated."
+        ]
+      },
+      "transcript_route": "Each episode page on www.hiddenbrain.org/podcast/ includes a full speaker-attributed transcript inside #ub-content-toggle-panel-0-transcript (4 of 5 newest feed items verified 2026-11-21; phone probe OK).",
+      "chosen_because": "Requested by the owner; publisher hosts open full transcripts on episode pages with permissive robots.txt and clean phone-probe verification.",
+      "hosts": [
+        "Shankar Vedantam"
+      ]
+    },
+    {
+      "id": "revisionist-history",
+      "name": "Revisionist History",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/0e563f45-9d14-4ce8-8ef0-ae32006cd7e7/0d4cc74d-fff7-4b89-8818-ae32006cd7f0/podcast.rss",
+      "site": "https://www.pushkin.fm/podcasts/revisionist-history",
+      "publisher": "Pushkin Industries",
+      "language": "en",
+      "description": "Reexamines overlooked events, ideas, and figures from the past to challenge conventional wisdom.",
+      "overview": "A narrative journalism and commentary podcast from Pushkin Industries hosted by Malcolm Gladwell (plus occasional cross-posted Pushkin series). Each episode revisits a historical moment, policy decision, cultural figure, or conventional belief and argues that the standard story missed something important, blending archival clips, interviews, and storytelling.",
+      "categories": [
+        "history",
+        "society",
+        "culture",
+        "journalism"
+      ],
+      "topics": [
+        "history",
+        "culture-media",
+        "politics",
+        "philosophy",
+        "education"
+      ],
+      "icon": {
+        "symbol": "book",
+        "colour": "orange"
+      },
+      "publish": "digest_only",
+      "attribution": "Revisionist History, Pushkin Industries",
+      "suggested_keep": 5,
+      "terms": {
+        "checked": "2026-11-21",
+        "robots": {
+          "url": "https://www.omnycontent.com/robots.txt",
+          "finding": "Both www.omnycontent.com and api.omny.fm serve User-agent: * Allow: /. pushkin.fm disallows only /wp-admin/. Read 2026-11-21."
+        },
+        "licence": {
+          "url": null,
+          "finding": "All rights reserved under Pushkin Industries copyright; no open redistribution licence."
+        },
+        "terms_of_use": {
+          "url": "https://www.pushkin.fm/terms-of-service",
+          "finding": "Standard copyright notice prohibiting copying or republishing website content without permission; no anti-RSS restriction, and the public Omny RSS feed publishes podcast:transcript tags for podcast apps. Read 2026-11-21."
+        },
+        "summary": "The official Omny RSS feed publishes timed VTT/SRT transcripts openly with permissive robots.txt. Pushkin retains copyright, so only digests with a link back are published.",
+        "uncertain": [
+          "Pushkin's terms restrict republishing website portions without permission, so publish stays strictly digest_only with no republished transcripts."
+        ]
+      },
+      "transcript_route": "Official Omny RSS feed carries podcast:transcript links (VTT and SubRip on api.omny.fm) for 5 of 5 newest episodes (verified 2026-11-21; phone probe OK).",
+      "chosen_because": "Requested by the owner; official RSS feed publishes timed transcripts for 100% of recent episodes and passed the phone-style probe and brief contract.",
+      "hosts": [
+        "Malcolm Gladwell"
+      ]
+    },
+    {
+      "id": "stuff-you-should-know",
+      "name": "Stuff You Should Know",
+      "kind": "podcast",
+      "adapter": "feed",
+      "url": "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/a91018a4-ea4f-4130-bf55-ae270180c327/44710ecc-10bb-48d1-93c7-ae270180c33e/podcast.rss",
+      "site": "https://omny.fm/shows/stuff-you-should-know-1",
+      "publisher": "iHeartPodcasts",
+      "language": "en",
+      "description": "Curious, conversational deep dives explaining how everyday objects, history, science, and odd corners of the world work.",
+      "overview": "A long-running multi-weekly show hosted by Josh Clark and Chuck Bryant. Each episode picks one topic from science, history, culture, nature, or everyday life and walks through how it works, mixing research notes with friendly banter, plus shorter mid-week Short Stuff episodes and classic Selects.",
+      "categories": [
+        "education",
+        "science",
+        "history",
+        "culture"
+      ],
+      "topics": [
+        "education",
+        "science",
+        "history",
+        "culture-media"
+      ],
+      "icon": {
+        "symbol": "sparkles",
+        "colour": "yellow"
+      },
+      "publish": "digest_only",
+      "attribution": "Stuff You Should Know, iHeartPodcasts",
+      "suggested_keep": 5,
+      "terms": {
+        "checked": "2026-11-21",
+        "robots": {
+          "url": "https://www.omnycontent.com/robots.txt",
+          "finding": "Both www.omnycontent.com and api.omny.fm serve User-agent: * Allow: /. Read 2026-11-21."
+        },
+        "licence": {
+          "url": null,
+          "finding": "Copyright iHeartMedia / iHeartPodcasts; no open redistribution licence."
+        },
+        "terms_of_use": {
+          "url": null,
+          "finding": "Official public Omny RSS feed publishes timed VTT podcast:transcript links for podcast apps. No licence allows republishing transcripts, so publish stays digest_only. Read 2026-11-21."
+        },
+        "summary": "The official Omny RSS feed publishes timed VTT transcripts openly with permissive robots.txt. No licence allows republishing transcripts, so only digests with a link back are published.",
+        "uncertain": [
+          "The full RSS archive exceeds 8 MB, so the pipeline reads the newest complete entries from the head of the feed via head_of_feed.",
+          "iHeartPodcasts retains copyright, so publish stays strictly digest_only with no republished transcripts."
+        ]
+      },
+      "transcript_route": "Official Omny RSS feed carries podcast:transcript VTT links on api.omny.fm for 5 of 5 newest episodes (verified 2026-11-21; phone probe OK).",
+      "chosen_because": "Requested by the owner; official RSS feed publishes timed VTT transcripts for 100% of recent episodes and passed the phone-style probe and brief contract.",
+      "hosts": [
+        "Josh Clark",
+        "Chuck Bryant"
+      ]
     }
   ]
 }

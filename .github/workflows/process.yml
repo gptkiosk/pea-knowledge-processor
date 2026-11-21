@@ -1,9 +1,11 @@
 # Reads the curated sources, writes digests and publishes the result to GitHub Pages.
 #
-# Three jobs with different rights:
+# Five jobs with strict privilege separation:
 #   fetch-and-normalize  talks to the publishers. It has no secrets.
-#   digest               the only job that is given OPENROUTER_API_KEY. It talks to nobody else. It writes the digests
-#                        and then the briefs (format 1.3; model briefs only with the key, within brief_budget).
+#   digest               given OPENROUTER_API_KEY. Talks only to OpenRouter. Writes digests and briefs (format 1.3).
+#   fetch-evidence       talks only to OpenAlex for science claims in the new briefs. It has no secrets.
+#   correlate            given OPENROUTER_API_KEY. Talks only to OpenRouter. Summarizes & correlates papers into checked
+#                        format 1.4 claim citations (`1.2.3.c.1` in PEA), falling back to extractive without a key.
 #   publish              builds the output, checks it, and only then deploys it. A run that fails anywhere publishes nothing,
 #                        so the last good output stays online.
 #
@@ -106,9 +108,71 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  fetch-evidence:
+    name: Fetch scholarly evidence (no secrets)
+    needs: digest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: digested
+      - name: Fetch peer-reviewed papers for science claims (OpenAlex, no secrets)
+        run: python3 -m pea_knowledge fetch-evidence --config config/sources.json --work work
+      - name: Hand over to correlation job
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: evidenced
+          path: |
+            previous/
+            work/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  correlate:
+    name: Correlate scholarly citations (model key only)
+    needs: fetch-evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: evidenced
+      - name: Summarize and correlate papers against claims
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 -m pea_knowledge correlate --config config/sources.json --work work
+      - name: Hand over to publish job
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: correlated
+          path: |
+            previous/
+            work/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
   publish:
     name: Build, check and publish
-    needs: digest
+    needs: correlate
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -127,7 +191,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: digested
+          name: correlated
       - name: Build the output (the health report goes to the run summary)
         run: python3 -m pea_knowledge build --config config/sources.json --work work --previous previous --out dist --summary "$GITHUB_STEP_SUMMARY"
       - name: Check the output as an app would

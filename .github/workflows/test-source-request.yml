@@ -1,0 +1,66 @@
+# Automatically tests requested podcasts against the real ingestion pipeline (no secrets).
+#
+# Triggered when a `source-request` issue is opened or edited (including requests submitted from the PEA iOS app),
+# or manually via workflow_dispatch. Never receives OPENROUTER_API_KEY or deploy rights.
+# Every action is pinned to the same full commit SHA used by process.yml.
+name: Test requested podcast
+
+on:
+  issues:
+    types: [opened, edited]
+  workflow_dispatch:
+    inputs:
+      show_name:
+        description: "Podcast name"
+        required: true
+        type: string
+      feed_url:
+        description: "RSS feed or agent.json URL (optional)"
+        required: false
+        type: string
+      website_url:
+        description: "Official website URL (optional)"
+        required: false
+        type: string
+
+permissions: {}
+
+jobs:
+  test-source:
+    name: Test candidate source (no secrets)
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'source-request') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Run ingestion test (from issue form)
+        if: ${{ github.event_name == 'issues' }}
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          python3 -m pea_knowledge test-source --issue-env ISSUE_BODY --markdown --out report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Run ingestion test (manual dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          SHOW_NAME: ${{ inputs.show_name }}
+          FEED_URL: ${{ inputs.feed_url }}
+          WEBSITE_URL: ${{ inputs.website_url }}
+        run: |
+          python3 -m pea_knowledge test-source --name "$SHOW_NAME" --feed-url "$FEED_URL" --website-url "$WEBSITE_URL" --markdown --out report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Post ingestion test report on issue
+        if: ${{ github.event_name == 'issues' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue comment "$ISSUE_NUMBER" --body-file report.md
