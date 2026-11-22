@@ -8,7 +8,7 @@
     "auto_pause_after_failed_runs": 3,
     "tombstone_days": 90,
     "excerpt_budget_chars": 1500,
-    "suggested_keep": 5,
+    "suggested_keep": 3,
     "max_total_bytes": 40000000,
     "min_full_transcript_share": 0.6,
     "min_discussable_items": 2,
@@ -74,7 +74,7 @@
       },
       "publish": "digest_only",
       "attribution": "The AI Daily Brief, aidailybrief.ai",
-      "suggested_keep": 7,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-14",
         "robots": {
@@ -183,7 +183,7 @@
       "publish": "digest_only",
       "attribution": "Build Your SaaS, saas.transistor.fm",
       "retention_days": 400,
-      "max_items": 3,
+      "max_items": 5,
       "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-14",
@@ -241,7 +241,7 @@
       },
       "publish": "digest_only",
       "attribution": "Buzzcast, buzzcast.buzzsprout.com",
-      "suggested_keep": 4,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-14",
         "robots": {
@@ -302,7 +302,7 @@
       "attribution": "The Diary Of A CEO with Steven Bartlett, steven.com",
       "transcript_route": "podcast:transcript in the feed: WebVTT on rss.flightcast.com for the newest episodes (335 of 910 entries; all of the newest eight).",
       "chosen_because": "Named by the owner; number two on Snipd's most-listened list (read 2026-11-15). The publisher's own feed carries full WebVTT transcripts.",
-      "suggested_keep": 4,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-15",
         "robots": {
@@ -691,7 +691,7 @@
       "transcript_route": "podcast:transcript in the feed: WebVTT on podnews.net for 150 of 151 episodes.",
       "chosen_because": "Daily and short, with a transcript for nearly every episode and a page per episode.",
       "max_items": 5,
-      "suggested_keep": 5,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-15",
         "robots": {
@@ -748,8 +748,8 @@
       "publish": "digest_only",
       "attribution": "Lex Fridman Podcast, lexfridman.com",
       "retention_days": 120,
-      "max_items": 4,
-      "suggested_keep": 2,
+      "max_items": 5,
+      "suggested_keep": 3,
       "transcript_page": {
         "from": "notes_link",
         "host": "lexfridman.com",
@@ -823,7 +823,7 @@
       },
       "publish": "digest_only",
       "attribution": "Hidden Brain, hiddenbrain.org",
-      "suggested_keep": 5,
+      "suggested_keep": 3,
       "transcript_page": {
         "from": "link",
         "host": "www.hiddenbrain.org",
@@ -890,7 +890,7 @@
       },
       "publish": "digest_only",
       "attribution": "Revisionist History, Pushkin Industries",
-      "suggested_keep": 5,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-21",
         "robots": {
@@ -945,7 +945,7 @@
       },
       "publish": "digest_only",
       "attribution": "Stuff You Should Know, iHeartPodcasts",
-      "suggested_keep": 5,
+      "suggested_keep": 3,
       "terms": {
         "checked": "2026-11-21",
         "robots": {

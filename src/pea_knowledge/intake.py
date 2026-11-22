@@ -165,7 +165,7 @@ def _starter_config(name, adapter, feed_url, website_url, sample_format, robots_
         "icon": {"symbol": "mic", "colour": "blue"},
         "publish": "digest_only",
         "attribution": "%s, %s" % (textrules.clean(name, 60) or "Publisher", urlsplit(site).netloc),
-        "suggested_keep": 5,
+        "suggested_keep": 3,
         "terms": {
             "checked": today,
             "robots": {"url": robots_url, "finding": robots_note},

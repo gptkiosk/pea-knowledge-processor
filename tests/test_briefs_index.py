@@ -128,6 +128,55 @@ class BriefsIndex(unittest.TestCase):
             self.assertEqual(cli.main(["restore", "--url", "https://pages.example.org/kb/", "--out", back, "--offline-fixtures", web]), 0)
             self.assertEqual(os.path.exists(os.path.join(back, bx.INDEX_FILE)), keep)
 
+    def test_config_standardizes_episode_limits_and_stable_source_ids(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(root, "config", "sources.json"), encoding="utf-8") as f:
+            cfg = json.load(f)
+        self.assertEqual(cfg["defaults"]["max_items"], 5)
+        self.assertEqual(cfg["defaults"]["suggested_keep"], 3)
+        ids = [s["id"] for s in cfg["sources"]]
+        self.assertEqual(len(ids), len(set(ids)), "source ids must be unique")
+        for s in cfg["sources"]:
+            self.assertEqual(s.get("suggested_keep", cfg["defaults"]["suggested_keep"]), 3, s["id"])
+            self.assertEqual(s.get("max_items", cfg["defaults"]["max_items"]), 5, s["id"])
+
+    def test_adding_show_or_episode_keeps_existing_identities_and_order_deterministic(self):
+        store_v1 = {"generated_at": "2026-11-20T00:00:00Z", "sources": [
+            {"id": "show-alpha", "name": "Alpha", "kind": "podcast"},
+            {"id": "show-beta", "name": "Beta", "kind": "podcast"},
+        ]}
+        items_v1 = {
+            "show-alpha": {"items": [
+                {"id": "2026-11-19-a1", "title": "A1", "date": "2026-11-19", "brief": {"kind": "model", "covers": "whole"}},
+                {"id": "2026-11-18-a2", "title": "A2", "date": "2026-11-18", "brief": {"kind": "model", "covers": "whole"}},
+            ]},
+            "show-beta": {"items": [
+                {"id": "2026-11-17-b1", "title": "B1", "date": "2026-11-17", "brief": {"kind": "model", "covers": "whole"}},
+            ]},
+        }
+        idx_v1 = bx.build(store_v1, items_v1, store_v1["generated_at"])
+        self.assertEqual(bx.dumps(idx_v1), bx.dumps(bx.build(store_v1, items_v1, store_v1["generated_at"])), "identical inputs yield identical bytes")
+        # Adding a third show and a newer episode to show-beta keeps existing source_ids and per-show newest-first order intact.
+        store_v2 = {"generated_at": "2026-11-21T00:00:00Z", "sources": store_v1["sources"] + [
+            {"id": "show-gamma", "name": "Gamma", "kind": "podcast"},
+        ]}
+        items_v2 = {
+            "show-alpha": items_v1["show-alpha"],
+            "show-beta": {"items": [
+                {"id": "2026-11-21-b0", "title": "B0", "date": "2026-11-21", "brief": {"kind": "model", "covers": "whole"}},
+                items_v1["show-beta"]["items"][0],
+            ]},
+            "show-gamma": {"items": [
+                {"id": "2026-11-20-g1", "title": "G1", "date": "2026-11-20", "brief": {"kind": "model", "covers": "whole"}},
+            ]},
+        }
+        idx_v2 = bx.build(store_v2, items_v2, store_v2["generated_at"])
+        by_id = {s["id"]: s for s in idx_v2["shows"]}
+        self.assertEqual(set(by_id.keys()), {"show-alpha", "show-beta", "show-gamma"})
+        self.assertEqual([e["item_id"] for e in by_id["show-alpha"]["latest"]], ["2026-11-19-a1", "2026-11-18-a2"])
+        self.assertEqual([e["item_id"] for e in by_id["show-beta"]["latest"]], ["2026-11-21-b0", "2026-11-17-b1"])
+        self.assertEqual(bx.dumps(idx_v2), bx.dumps(bx.build(store_v2, items_v2, store_v2["generated_at"])))
+
 
 if __name__ == "__main__":
     unittest.main()

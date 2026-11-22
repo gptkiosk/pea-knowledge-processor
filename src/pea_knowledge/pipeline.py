@@ -26,7 +26,7 @@ from . import FORMAT_VERSION, GENERATOR_NAME, __version__, adapters, brief as br
 from .transcript import convert, pea_transcript as pt
 
 DEFAULTS = {"max_items": 6, "retention_days": 45, "auto_pause_after_failed_runs": 3, "tombstone_days": 90,
-            "excerpt_budget_chars": 1_500, "suggested_keep": 5, "max_total_bytes": 40_000_000,
+            "excerpt_budget_chars": 1_500, "suggested_keep": 3, "max_total_bytes": 40_000_000,
             # The rule of the catalog: an item is offered only when the assistant has a full path to its whole text, and a source only when
             # enough of its newest items are (docs/FORMAT.md, "Discussable items"). Of the newest `transcript_check_items`, at least
             # `min_discussable_items` and at least `min_full_transcript_share` of them must be discussable; 0 and 0 switch the rule off.
