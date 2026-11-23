@@ -960,9 +960,17 @@ def _attach_brief(entry, data, files):
 
 def _with_brief(source, entry, files):
     """An index entry kept from an earlier output, with a brief: its own when it has one that still passes the reader's
-    check (the contract may have grown stricter since), else an extractive one made from its digest."""
-    if "brief" in entry and publishable_brief(files[entry["brief"]["path"]]):
-        return entry
+    check (the contract may have grown stricter since), else an extractive one made from its digest.
+    Carried-forward citations are also audited against the current scholarly relevance gate."""
+    if "brief" in entry:
+        raw = files[entry["brief"]["path"]]
+        pruned, dropped = scholarly.prune_irrelevant_citations(raw)
+        if dropped > 0 and publishable_brief(pruned):
+            entry = dict(entry)
+            _attach_brief(entry, pruned, files)
+            return entry
+        if publishable_brief(raw):
+            return entry
     entry = dict(entry)
     if "brief" in entry:
         files.pop(entry.pop("brief")["path"], None)

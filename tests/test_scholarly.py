@@ -233,6 +233,88 @@ class ScholarlyTests(unittest.TestCase):
         self.assertNotIn("Perlmutter", q)
         self.assertIn("Alzheimer", q)
 
+    def test_prune_irrelevant_citations_strips_false_positives_and_keeps_valid(self):
+        doc = {
+            "format": "pea-knowledge-brief",
+            "format_version": "1.4",
+            "source_id": "harbor-voices",
+            "source_name": "Harbor Voices",
+            "item_id": "2026-11-20-test",
+            "title": "Just Watch Me!",
+            "date": "2026-11-20",
+            "link": "https://example.org/ep1",
+            "brief_kind": "model",
+            "model": "test",
+            "covers": "whole",
+            "covers_note": None,
+            "transcript_sha256": None,
+            "headline": "Stories and fasting.",
+            "claims": [
+                {
+                    "text": "Ben Rogers says he and his team have collected thousands of stories from people across their studies, ranging from prison to starting a new job.",
+                    "ref": None,
+                    "citations": [{
+                        "stance": "mixed",
+                        "summary": "Poetry analysis of Ben Lerner.",
+                        "correlation": "Unrelated.",
+                        "title": "Ben Lerner's Poetry and Prose",
+                        "journal": "Lit Journal",
+                        "year": 2021,
+                        "cited_by": 5,
+                        "link": "https://doi.org/10.1000/lerner",
+                    }],
+                },
+                {
+                    "text": "Intermittent fasting raises human autophagy biomarkers in controlled clinical trials.",
+                    "ref": None,
+                    "citations": [
+                        {
+                            "stance": "mixed",
+                            "summary": "Systematic review of human intermittent fasting trials measuring autophagy biomarkers.",
+                            "correlation": "Notes mixed biomarker responses across trials.",
+                            "title": "Intermittent fasting and human autophagy biomarkers: a clinical review",
+                            "journal": "Journal of Longevity",
+                            "year": 2025,
+                            "cited_by": 40,
+                            "link": "https://doi.org/10.1000/fasting",
+                        },
+                        {
+                            "stance": "mixed",
+                            "summary": "Flint municipal water lead contamination crisis.",
+                            "correlation": "Unrelated.",
+                            "title": "Flint's Water Crisis",
+                            "journal": "Water Policy",
+                            "year": 2018,
+                            "cited_by": 100,
+                            "link": "https://doi.org/10.1000/flint",
+                        },
+                    ],
+                },
+            ],
+            "new": None,
+            "quotes": [],
+            "topics": ["health"],
+            "keywords": ["fasting"],
+            "entities": ["Harbor Voices"],
+        }
+        raw = json.dumps(doc).encode("utf-8")
+        pruned_bytes, dropped = scholarly.prune_irrelevant_citations(raw)
+        self.assertEqual(dropped, 2)
+        pruned = json.loads(pruned_bytes.decode("utf-8"))
+        self.assertNotIn("citations", pruned["claims"][0])
+        self.assertEqual(len(pruned["claims"][1]["citations"]), 1)
+        self.assertIn("Intermittent fasting", pruned["claims"][1]["citations"][0]["title"])
+        self.assertEqual(pruned["format_version"], "1.4")
+
+        # When all citations are dropped, format_version steps back cleanly to 1.3.
+        doc_only_bad = json.loads(raw.decode("utf-8"))
+        doc_only_bad["claims"] = [doc_only_bad["claims"][0]]
+        pruned2_bytes, dropped2 = scholarly.prune_irrelevant_citations(json.dumps(doc_only_bad).encode("utf-8"))
+        self.assertEqual(dropped2, 1)
+        pruned2 = json.loads(pruned2_bytes.decode("utf-8"))
+        self.assertEqual(pruned2["format_version"], "1.3")
+        self.assertNotIn("citations", pruned2["claims"][0])
+
 
 if __name__ == "__main__":
     unittest.main()

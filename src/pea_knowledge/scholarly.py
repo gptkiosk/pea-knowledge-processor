@@ -476,3 +476,43 @@ def attach_citations(brief_doc, claim_citations):
     if attached == 0:
         doc["format_version"] = brief_doc.get("format_version", "1.3")
     return doc, attached
+
+
+def prune_irrelevant_citations(data):
+    """Audits existing `claims[i].citations` on a carried-forward brief against the current science-claim and
+    topic-relevance gates. Returns `(new_bytes, dropped_count)` when anything was pruned, else `(data, 0)`."""
+    try:
+        doc = jsonschema_lite.loads(data)
+    except Exception:
+        return data, 0
+    claims = doc.get("claims")
+    if not isinstance(claims, list) or not any(isinstance(c, dict) and c.get("citations") for c in claims):
+        return data, 0
+    topics = doc.get("topics") or []
+    title = doc.get("title") or ""
+    dropped = 0
+    remaining = 0
+    for c in claims:
+        if not isinstance(c, dict) or not c.get("citations"):
+            continue
+        cits = c.get("citations") or []
+        text = c.get("text") or ""
+        if not is_science_claim(text, topics=topics, title=title):
+            dropped += len(cits)
+            c.pop("citations", None)
+            continue
+        kept = [
+            cit for cit in cits
+            if isinstance(cit, dict) and is_paper_relevant(text, {"title": cit.get("title") or "", "abstract": cit.get("summary") or ""})
+        ]
+        dropped += len(cits) - len(kept)
+        if kept:
+            c["citations"] = kept
+            remaining += len(kept)
+        else:
+            c.pop("citations", None)
+    if dropped == 0:
+        return data, 0
+    if remaining == 0 and doc.get("format_version") == "1.4":
+        doc["format_version"] = "1.3"
+    return jsonschema_lite.dumps(doc).encode("utf-8"), dropped
