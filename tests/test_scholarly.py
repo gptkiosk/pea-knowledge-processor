@@ -196,6 +196,43 @@ class ScholarlyTests(unittest.TestCase):
             self.assertEqual(parsed["claims"][1]["citations"][0]["stance"], "limited_human_evidence")
             self.assertNotIn("citations", parsed["claims"][2])
 
+    def test_rejects_non_science_and_irrelevant_papers(self):
+        # Narrative / biographical / pop-culture claims from real shows must NOT trigger OpenAlex lookup.
+        non_science = [
+            "Ben Rogers says he and his team have collected thousands of stories from people across their studies, ranging from prison to starting a new job.",
+            "In late 1973, Ted Kennedy's 12-year-old son Ted Jr. was told he had bone cancer and that his leg would have to be amputated.",
+            "Josh says the myth that turkeys drown by looking up into rain is false.",
+            "Weger was granted parole in 2019 by a vote of nine to four, despite opposition.",
+            "Mayor Brandon Scott says that in 18 of his 42 years the city had over 300 homicides.",
+        ]
+        for claim in non_science:
+            self.assertFalse(scholarly.is_science_claim(claim, topics=["science"]), f"Should reject: {claim}")
+
+        # Even if a claim IS scientific, unrelated OpenAlex papers sharing only a name or generic word are rejected.
+        bogus_paper = {
+            "title": "A poetics of abduction: Ben Lerner's 'The Lights' and extraterrestrial intelligence",
+            "journal": "Textual Practice",
+            "year": 2026,
+            "cited_by": 0,
+            "link": "https://example.org/poetics",
+            "abstract": "Ben Lerner's The Hatred of Poetry identifies the Challenger disaster of 1986.",
+        }
+        sci_claim = "Ben Rogers says intermittent fasting triggers autophagy and improves insulin sensitivity."
+        self.assertFalse(scholarly.is_paper_relevant(sci_claim, bogus_paper))
+        self.assertIsNone(scholarly.correlate_extractive(sci_claim, bogus_paper))
+        self.assertIsNone(scholarly.correlate_model(None, sci_claim, bogus_paper))
+
+        # Model explicitly returning "irrelevant" drops the citation instead of falling back to extractive.
+        mixed_paper = scholarly.parse_openalex(OPENALEX_MIXED, limit=1)[0]
+        def irrelevant_call(system, user):
+            return json.dumps({"stance": "irrelevant", "summary": "Unrelated.", "correlation": "Unrelated."})
+        self.assertIsNone(scholarly.correlate_model(None, SAMPLE_BRIEF["claims"][0]["text"], mixed_paper, call=irrelevant_call))
+
+        # Speaker attribution is stripped from OpenAlex queries.
+        q = scholarly.build_query("Dr. David Perlmutter says elevated blood sugar increases Alzheimer's dementia risk.")
+        self.assertNotIn("Perlmutter", q)
+        self.assertIn("Alzheimer", q)
+
 
 if __name__ == "__main__":
     unittest.main()
